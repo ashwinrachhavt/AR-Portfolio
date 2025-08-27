@@ -67,14 +67,18 @@ async function optimizedPageToMarkdown(pageId: string): Promise<string> {
 }
 
 // Cache API responses for 5 minutes
-const apiCache = new Map<string, { data: any; timestamp: number }>();
+const apiCache = new Map<string, { data: any; timestamp: number; ttl?: number }>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 function getCachedResponse(key: string): any | null {
   const cached = apiCache.get(key);
   if (!cached) return null;
   
-  if (Date.now() - cached.timestamp > CACHE_TTL) {
+  // Use individual TTL or fall back to default
+  const ttl = cached.ttl || CACHE_TTL;
+  
+  // Check if expired
+  if (Date.now() - cached.timestamp > ttl) {
     apiCache.delete(key);
     return null;
   }
@@ -82,10 +86,11 @@ function getCachedResponse(key: string): any | null {
   return cached.data;
 }
 
-function setCachedResponse(key: string, data: any): void {
+function setCachedResponse(key: string, data: any, ttlMinutes: number = 5): void {
   apiCache.set(key, {
     data,
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    ttl: ttlMinutes * 60 * 1000 // Convert to milliseconds
   });
 }
 
@@ -136,17 +141,25 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const type = searchParams.get("type");
   const pageId = searchParams.get("pageId");
+  
+  // Check for cache-busting headers (for retries)
+  const cacheControl = request.headers.get('cache-control');
+  const shouldBustCache = cacheControl === 'no-cache';
 
   try {
     if (type === "database") {
       const cacheKey = "api-database";
       
-      // Check cache first
-      const cached = getCachedResponse(cacheKey);
-      if (cached) {
-        requestTimer.end();
-        console.log('📦 API Cache hit: Database');
-        return NextResponse.json({ success: true, data: cached });
+      // Check cache first (unless cache busting is requested)
+      if (!shouldBustCache) {
+        const cached = getCachedResponse(cacheKey);
+        if (cached) {
+          requestTimer.end();
+          console.log('📦 API Cache hit: Database');
+          return NextResponse.json({ success: true, data: cached });
+        }
+      } else {
+        console.log('🔄 API: Cache-busting requested for database');
       }
       
       console.log('🌐 API: Fetching database from Notion');
@@ -189,12 +202,16 @@ export async function GET(request: Request) {
     if (type === "page" && pageId) {
       const cacheKey = `api-page-${pageId}`;
       
-      // Check cache first
-      const cached = getCachedResponse(cacheKey);
-      if (cached) {
-        requestTimer.end();
-        console.log(`📦 API Cache hit: Page ${pageId.slice(0, 8)}...`);
-        return NextResponse.json({ success: true, data: cached });
+      // Check cache first (unless cache busting is requested)
+      if (!shouldBustCache) {
+        const cached = getCachedResponse(cacheKey);
+        if (cached) {
+          requestTimer.end();
+          console.log(`📦 API Cache hit: Page ${pageId.slice(0, 8)}...`);
+          return NextResponse.json({ success: true, data: cached });
+        }
+      } else {
+        console.log(`🔄 API: Cache-busting requested for page ${pageId.slice(0, 8)}...`);
       }
       
       console.log(`🌐 API: Fetching page ${pageId.slice(0, 8)}... from Notion`);
@@ -233,9 +250,16 @@ export async function GET(request: Request) {
         };
       });
       
-      // Cache successful or partial results
-      setCachedResponse(cacheKey, result);
-      console.log(`💾 API: Cached page ${pageId.slice(0, 8)}... ${result.partial ? '(partial)' : ''}`);
+      // Cache results with different TTLs based on success/failure
+      if (result.partial || !result.markdown || result.markdown.trim() === '') {
+        // Cache partial/failed results for only 1 minute for faster retries
+        setCachedResponse(cacheKey, result, 1);
+        console.log(`💾 API: Cached page ${pageId.slice(0, 8)}... (partial/failed - 1min cache)`);
+      } else {
+        // Cache successful results for 5 minutes
+        setCachedResponse(cacheKey, result);
+        console.log(`💾 API: Cached page ${pageId.slice(0, 8)}... (success - 5min cache)`);
+      }
 
       requestTimer.end();
       return NextResponse.json({

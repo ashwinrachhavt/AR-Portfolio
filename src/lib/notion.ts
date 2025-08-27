@@ -365,9 +365,16 @@ export async function getNotionPage(pageId: string): Promise<any> {
   try {
     const result = await requestPromise;
     if (result) {
-      // Cache successful results for 10 minutes (longer for individual pages)
-      pageCache.set(cacheKey, result, 10);
-      console.log(`💾 Cached page: ${pageId.slice(0, 8)}...`);
+      // Differentiate cache time based on success/partial status
+      if (result.partial) {
+        // Cache partial/failed results for only 2 minutes for faster retries
+        pageCache.set(cacheKey, result, 2);
+        console.log(`💾 Cached page: ${pageId.slice(0, 8)}... (partial - 2min cache)`);
+      } else {
+        // Cache successful results for 10 minutes
+        pageCache.set(cacheKey, result, 10);
+        console.log(`💾 Cached page: ${pageId.slice(0, 8)}...`);
+      }
     }
     return result;
   } finally {
