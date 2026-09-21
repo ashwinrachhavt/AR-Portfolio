@@ -90,9 +90,6 @@
   }
 }
 
-/* Notion-specific styles */
-@import 'react-notion-x/src/styles.css';
-
 /* Custom Notion theme overrides */
 .notion-page {
   background: transparent !important;
