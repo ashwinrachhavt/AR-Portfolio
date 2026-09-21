@@ -1,7 +1,7 @@
 import { Client } from "@notionhq/client";
-import { NotionToMarkdown } from "notion-to-md";
 import { NextResponse } from "next/server";
 import { cache } from 'react';
+import { BlogPostNotFoundError, createBlogMarkdown, queryBlogPosts, retrieveBlogPage } from "../../../lib/notion-blog";
 
 // Performance-optimized Notion client with timeouts and connection pooling
 const notion = new Client({ 
@@ -10,13 +10,7 @@ const notion = new Client({
   timeoutMs: 30000, // 30 seconds max
 });
 
-// Optimized notion-to-md with performance settings
-const n2m = new NotionToMarkdown({ 
-  notionClient: notion,
-  config: {
-    parseChildPages: false, // Skip child pages for speed
-  }
-});
+const n2m = createBlogMarkdown(notion);
 
 // Performance monitoring
 class PerformanceTimer {
@@ -165,25 +159,9 @@ export async function GET(request: Request) {
       console.log('🌐 API: Fetching database from Notion');
       const databaseTimer = new PerformanceTimer('Database Query');
       
-      const response = await circuitBreaker.execute(async () => {
-        const databaseId = process.env.NOTION_DATABASE_ID!;
+      const posts = await circuitBreaker.execute(async () => {
         return withTimeout(
-          notion.databases.query({
-            database_id: databaseId,
-            filter: {
-              property: "Status",
-              select: {
-                equals: "Blogs",
-              },
-            },
-            sorts: [
-              {
-                timestamp: "created_time", 
-                direction: "descending",
-              },
-            ],
-            page_size: 25, // Limit results for faster queries
-          }),
+          queryBlogPosts(notion),
           10000, // 10 second timeout for database queries
           'Database query'
         );
@@ -192,14 +170,16 @@ export async function GET(request: Request) {
       databaseTimer.end();
       
       // Cache the response
-      setCachedResponse(cacheKey, response.results);
-      console.log(`💾 API: Cached database (${response.results.length} posts)`);
+      setCachedResponse(cacheKey, posts);
+      console.log(`💾 API: Cached database (${posts.length} posts)`);
       
       requestTimer.end();
-      return NextResponse.json({ success: true, data: response.results });
+      return NextResponse.json({ success: true, data: posts });
     }
 
     if (type === "page" && pageId) {
+      // Validate the current blog status before serving cached or fresh content.
+      const pageData = await withTimeout(retrieveBlogPage(notion, pageId), 8000, 'Blog metadata');
       const cacheKey = `api-page-${pageId}`;
       
       // Check cache first (unless cache busting is requested)
@@ -220,33 +200,23 @@ export async function GET(request: Request) {
         const pageTimer = new PerformanceTimer(`Page Fetch ${pageId.slice(0, 8)}`);
         
         // Optimized parallel requests with individual timeouts
-        const [markdown, pageResponse] = await Promise.allSettled([
+        const [markdown] = await Promise.allSettled([
           optimizedPageToMarkdown(pageId),
-          withTimeout(
-            notion.pages.retrieve({ page_id: pageId }),
-            8000, // 8 seconds for page metadata
-            'Page metadata fetch'
-          )
         ]);
         
         pageTimer.end();
         
         // Handle partial failures gracefully
         const markdownContent = markdown.status === 'fulfilled' ? markdown.value : '';
-        const pageData = pageResponse.status === 'fulfilled' ? pageResponse.value : null;
         
         if (markdown.status === 'rejected') {
           console.warn(`⚠️  Markdown conversion failed: ${markdown.reason.message}`);
         }
         
-        if (pageResponse.status === 'rejected') {
-          console.warn(`⚠️  Page metadata fetch failed: ${pageResponse.reason.message}`);
-        }
-        
         return {
           markdown: markdownContent,
           page: pageData,
-          partial: markdown.status === 'rejected' || pageResponse.status === 'rejected'
+          partial: markdown.status === 'rejected'
         };
       });
       
@@ -275,6 +245,9 @@ export async function GET(request: Request) {
     );
   } catch (error) {
     requestTimer.end();
+    if (error instanceof BlogPostNotFoundError || error.code === 'object_not_found') {
+      return NextResponse.json({ success: false, error: "Blog post not found" }, { status: 404 });
+    }
     console.error(`❌ API Error: ${error.message}`);
     
     // Return more specific error messages

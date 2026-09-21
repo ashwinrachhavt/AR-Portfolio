@@ -260,15 +260,10 @@ async function createOptimizedNotionClient() {
 
 // Optimized server-side notion-to-md factory  
 async function createOptimizedNotionToMd() {
-  const { NotionToMarkdown } = await import('notion-to-md');
+  const { createBlogMarkdown } = await import('./notion-blog');
   const notion = await createOptimizedNotionClient();
   
-  return new NotionToMarkdown({ 
-    notionClient: notion,
-    config: {
-      parseChildPages: false, // Skip child pages for speed
-    }
-  });
+  return createBlogMarkdown(notion);
 }
 
 // Internal database fetching function
@@ -282,23 +277,9 @@ async function fetchNotionDatabase(): Promise<any[]> {
       
       try {
         const notion = await createOptimizedNotionClient();
-        const response = await withTimeout(
-          notion.databases.query({
-            database_id: process.env.NOTION_DATABASE_ID!,
-            filter: {
-              property: "Status",
-              select: {
-                equals: "Blogs",
-              },
-            },
-            sorts: [
-              {
-                timestamp: "created_time",
-                direction: "descending",
-              },
-            ],
-            page_size: 25, // Limit for faster queries
-          }),
+        const { queryBlogPosts } = await import('./notion-blog');
+        const posts = await withTimeout(
+          queryBlogPosts(notion),
           10000, // 10 second timeout
           'Server database query'
         );
@@ -307,7 +288,7 @@ async function fetchNotionDatabase(): Promise<any[]> {
         console.log(`🎯 Request queue: ${stats.queued} queued, ${stats.running} running`);
         
         timer.end();
-        return response.results as any[];
+        return posts;
       } catch (error) {
         timer.end();
         console.error("❌ Server database fetch failed:", error.message);
@@ -336,13 +317,19 @@ async function fetchNotionDatabase(): Promise<any[]> {
     } catch (error) {
       timer.end();
       console.error("❌ Client database fetch failed:", error.message);
-      return [];
+      throw error;
     }
   }
 }
 
 // Cached page fetching with request deduplication  
 export async function getNotionPage(pageId: string): Promise<any> {
+  // Recheck membership even when the page content is cached.
+  let blogPage = null;
+  if (typeof window === 'undefined') {
+    const { retrieveBlogPage } = await import('./notion-blog');
+    blogPage = await retrieveBlogPage(await createOptimizedNotionClient(), pageId);
+  }
   const cacheKey = `notion-page-${pageId}`;
   
   // Check memory cache first
@@ -359,7 +346,7 @@ export async function getNotionPage(pageId: string): Promise<any> {
   }
   
   // Create new request
-  const requestPromise = fetchNotionPage(pageId);
+  const requestPromise = fetchNotionPage(pageId, blogPage);
   requestCache.set(cacheKey, requestPromise);
   
   try {
@@ -407,7 +394,7 @@ async function optimizedServerMarkdownConversion(pageId: string): Promise<string
 }
 
 // Internal page fetching function
-async function fetchNotionPage(pageId: string): Promise<any> {
+async function fetchNotionPage(pageId: string, blogPage: any = null): Promise<any> {
   const isServer = typeof window === 'undefined';
   
   if (isServer) {
@@ -417,15 +404,8 @@ async function fetchNotionPage(pageId: string): Promise<any> {
       
       try {
         // Use Promise.allSettled for graceful partial failure handling
-        const [markdownResult, pageResult] = await Promise.allSettled([
+        const [markdownResult] = await Promise.allSettled([
           optimizedServerMarkdownConversion(pageId),
-          withTimeout(
-            createOptimizedNotionClient().then(notion => 
-              notion.pages.retrieve({ page_id: pageId })
-            ),
-            8000, // 8 seconds for page metadata
-            'Server page metadata'
-          )
         ]);
         
         const stats = requestQueue.stats;
@@ -433,14 +413,10 @@ async function fetchNotionPage(pageId: string): Promise<any> {
         
         // Handle partial failures gracefully
         const markdown = markdownResult.status === 'fulfilled' ? markdownResult.value : '';
-        const page = pageResult.status === 'fulfilled' ? pageResult.value : null;
+        const page = blogPage;
         
         if (markdownResult.status === 'rejected') {
           console.warn(`⚠️  Server markdown failed: ${markdownResult.reason.message}`);
-        }
-        
-        if (pageResult.status === 'rejected') {
-          console.warn(`⚠️  Server page metadata failed: ${pageResult.reason.message}`);
         }
         
         timer.end();
@@ -448,7 +424,7 @@ async function fetchNotionPage(pageId: string): Promise<any> {
         return {
           markdown,
           page,
-          partial: markdownResult.status === 'rejected' || pageResult.status === 'rejected'
+          partial: markdownResult.status === 'rejected'
         };
       } catch (error) {
         timer.end();

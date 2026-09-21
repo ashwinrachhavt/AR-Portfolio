@@ -2,14 +2,19 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+Use pnpm for this project. Add these values to an ignored `.env` file in the project root:
+
+```dotenv
+NOTION_API_KEY=your-notion-integration-secret
+NOTION_DATABASE_ID=your-command-center-database-id
+```
+
+Share the Command Center database with that integration. The blog lists all entries whose `Status` select is `Blogs`; article requests are restricted to that group. Keep credentials out of Git. Configure both variables in the hosting environment as well when deploying.
+
+Then run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+pnpm dev --port 3000
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

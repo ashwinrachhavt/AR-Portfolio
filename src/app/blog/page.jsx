@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { getCachedNotionDatabase, getNotionPageTitle, getNotionPageDate, getNotionPageDescription, getNotionPageTags, warmCache, getCacheStats } from "../../lib/notion";
+import { getCachedNotionDatabase, getNotionPageTitle, getNotionPageDate, getNotionPageDescription, getNotionPageTags, warmCache, getCacheStats, clearNotionCache } from "../../lib/notion";
 import Link from "next/link";
 
 
@@ -21,6 +21,7 @@ const BlogPage = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   // Fetch all blog posts
   useEffect(() => {
@@ -30,36 +31,19 @@ const BlogPage = () => {
         console.log('🔍 Fetching blog posts...');
         const pages = await getCachedNotionDatabase();
         
-        if (pages && pages.length > 0) {
-          // Filter and sort blog posts
-          // Since we're filtering server-side for "Blogs" status, just do basic validation
-          const blogPosts = pages
-            .filter(page => {
-              const title = getNotionPageTitle(page);
-              
-              const hasProperTitle = title && 
-                                    title !== 'Untitled' && 
-                                    !title.startsWith('http://') && 
-                                    !title.startsWith('https://') &&
-                                    title.trim().length > 2;
-              
-              return hasProperTitle;
-            })
-            .sort((a, b) => new Date(b.created_time) - new Date(a.created_time));
-          
-          setPosts(blogPosts);
-          setError(null);
-          
-          // Warm cache for first 5 posts in background
-          const topPostIds = blogPosts.slice(0, 5).map(post => post.id);
-          if (topPostIds.length > 0) {
-            console.log('🔥 Warming cache for top posts...');
-            warmCache(topPostIds).catch(e => console.warn('Cache warming failed:', e));
-          }
-          
-        } else {
-          setError('No blog posts found');
+        // The server returns every entry in the Notion Blogs group.
+        const blogPosts = (pages || [])
+          .sort((a, b) => new Date(b.created_time) - new Date(a.created_time));
+        setPosts(blogPosts);
+        setError(null);
+
+        // Warm cache for first 5 posts in background.
+        const topPostIds = blogPosts.slice(0, 5).map(post => post.id);
+        if (topPostIds.length > 0) {
+          console.log('🔥 Warming cache for top posts...');
+          warmCache(topPostIds).catch(e => console.warn('Cache warming failed:', e));
         }
+
       } catch (err) {
         console.error('Error fetching blog posts:', err);
         setError('Failed to load blog posts');
@@ -75,7 +59,7 @@ const BlogPage = () => {
     };
 
     fetchPosts();
-  }, []);
+  }, [retryCount]);
 
 
 
@@ -119,18 +103,17 @@ const BlogPage = () => {
         <div className="max-w-4xl mx-auto px-4 py-16">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-white mb-4">Blog</h1>
-            <p className="text-[#ADB7BE] mb-8">Currently in demo mode</p>
-            <div className="bg-[#1a1a1a] border border-[#33353F] rounded-xl p-8 text-left">
-              <h3 className="text-xl font-bold text-white mb-4">🚧 Coming Soon</h3>
+            <div role="alert" className="bg-[#1a1a1a] border border-[#33353F] rounded-xl p-8 text-left">
+              <h2 className="text-xl font-bold text-white mb-4">Posts are temporarily unavailable</h2>
               <p className="text-[#ADB7BE] mb-4">
-                The blog is ready to showcase your Notion content! To enable:
+                We couldn’t load the posts. Please try again in a moment.
               </p>
-              <ol className="text-[#ADB7BE] space-y-2 list-decimal list-inside">
-                <li>Configure your Notion integration</li>
-                <li>Add NOTION_TOKEN and NOTION_DATABASE_ID to .env.local</li>
-                <li>Share your database with the integration</li>
-                <li>Restart the development server</li>
-              </ol>
+              <button type="button" onClick={() => {
+                clearNotionCache();
+                setRetryCount(count => count + 1);
+              }} className="rounded-lg border border-neutral-600 px-4 py-2 text-white hover:bg-neutral-800">
+                Try again
+              </button>
             </div>
           </div>
         </div>
