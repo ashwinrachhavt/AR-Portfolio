@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-const { purple, pink } = require("tailwindcss/colors");
+const { neutral } = require("tailwindcss/colors");
 
 module.exports = {
   darkMode: ["class"],
@@ -18,8 +18,16 @@ module.exports = {
     },
     extend: {
       colors: {
-        primary: purple,
-        secondary: pink,
+        primary: {
+          ...neutral,
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          ...neutral,
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

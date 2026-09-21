@@ -8,22 +8,9 @@ import useContentLoader from "../../components/useContentLoader";
 import { getNotionPageTitle, getNotionPageTags } from "../../../lib/notion";
 
 // Tag component with Notion-style colors
-const Tag = ({ name, color }) => {
+const Tag = ({ name }) => {
   // Notion color mapping to Tailwind classes
-  const colorMap = {
-    blue: 'bg-blue-500/10 border-blue-500/20 text-blue-400',
-    brown: 'bg-amber-600/10 border-amber-600/20 text-amber-400',
-    gray: 'bg-gray-500/10 border-gray-500/20 text-gray-400',
-    green: 'bg-green-500/10 border-green-500/20 text-green-400',
-    orange: 'bg-orange-500/10 border-orange-500/20 text-orange-400',
-    pink: 'bg-pink-500/10 border-pink-500/20 text-pink-400',
-    purple: 'bg-purple-500/10 border-purple-500/20 text-purple-400',
-    red: 'bg-red-500/10 border-red-500/20 text-red-400',
-    yellow: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400',
-    default: 'bg-[#9333ea]/10 border-[#9333ea]/20 text-[#9333ea]'
-  };
-  
-  const colorClass = colorMap[color] || colorMap.default;
+  const colorClass = "bg-neutral-500/10 border-neutral-500/20 text-neutral-300";
   
   return (
     <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium border ${colorClass} mr-2 mb-2`}>
@@ -77,7 +64,7 @@ const BlogPostClient = ({ pageId, initialContent = null }) => {
             <div className="space-x-4">
               <button
                 onClick={retry}
-                className="inline-flex items-center px-6 py-3 bg-[#9333ea] hover:bg-[#7c2d92] text-white rounded-lg transition-colors"
+                className="inline-flex items-center px-6 py-3 bg-[#525252] hover:bg-[#404040] text-white rounded-lg transition-colors"
               >
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -107,7 +94,7 @@ const BlogPostClient = ({ pageId, initialContent = null }) => {
             <p className="text-[#ADB7BE] mb-8">The requested blog post could not be found.</p>
             <Link 
               href="/blog"
-              className="inline-flex items-center px-6 py-3 bg-[#9333ea] hover:bg-[#7c2d92] text-white rounded-lg transition-colors"
+              className="inline-flex items-center px-6 py-3 bg-[#525252] hover:bg-[#404040] text-white rounded-lg transition-colors"
             >
               ← Back to Blog
             </Link>
@@ -133,7 +120,7 @@ const BlogPostClient = ({ pageId, initialContent = null }) => {
     <div className="min-h-screen bg-[#121212] pt-20">
       {/* Navigation */}
       <div className="max-w-4xl mx-auto px-4 pt-8">
-        <Link href="/blog" className="inline-flex items-center text-[#9333ea] hover:text-[#7c2d92] transition-colors duration-300 mb-8">
+        <Link href="/blog" className="inline-flex items-center text-[#a3a3a3] hover:text-[#d4d4d4] transition-colors duration-300 mb-8">
           <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
@@ -201,7 +188,7 @@ const BlogPostClient = ({ pageId, initialContent = null }) => {
               </p>
               <button
                 onClick={retry}
-                className="inline-flex items-center px-6 py-3 bg-[#9333ea] hover:bg-[#7c2d92] text-white rounded-lg transition-colors mr-4"
+                className="inline-flex items-center px-6 py-3 bg-[#525252] hover:bg-[#404040] text-white rounded-lg transition-colors mr-4"
               >
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -236,7 +223,7 @@ const BlogPostClient = ({ pageId, initialContent = null }) => {
                 a: ({href, children}) => (
                   <a 
                     href={href} 
-                    className="text-[#9333ea] hover:text-[#7c2d92] underline transition-colors"
+                    className="text-[#a3a3a3] hover:text-[#d4d4d4] underline transition-colors"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -261,7 +248,7 @@ const BlogPostClient = ({ pageId, initialContent = null }) => {
                 
                 // Custom blockquote styles
                 blockquote: ({children}) => (
-                  <blockquote className="border-l-4 border-[#9333ea] pl-4 my-6 italic text-[#ADB7BE]">
+                  <blockquote className="border-l-4 border-[#a3a3a3] pl-4 my-6 italic text-[#ADB7BE]">
                     {children}
                   </blockquote>
                 ),

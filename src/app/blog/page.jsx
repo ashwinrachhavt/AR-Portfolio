@@ -7,21 +7,8 @@ import Link from "next/link";
 
 
 // Tag component with Notion-style colors for blog list
-const Tag = ({ name, color }) => {
-  const colorMap = {
-    blue: 'bg-blue-500/10 border-blue-500/20 text-blue-400',
-    brown: 'bg-amber-600/10 border-amber-600/20 text-amber-400',
-    gray: 'bg-gray-500/10 border-gray-500/20 text-gray-400',
-    green: 'bg-green-500/10 border-green-500/20 text-green-400',
-    orange: 'bg-orange-500/10 border-orange-500/20 text-orange-400',
-    pink: 'bg-pink-500/10 border-pink-500/20 text-pink-400',
-    purple: 'bg-purple-500/10 border-purple-500/20 text-purple-400',
-    red: 'bg-red-500/10 border-red-500/20 text-red-400',
-    yellow: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400',
-    default: 'bg-[#9333ea]/10 border-[#9333ea]/20 text-[#9333ea]'
-  };
-
-  const colorClass = colorMap[color] || colorMap.default;
+const Tag = ({ name }) => {
+  const colorClass = "bg-neutral-500/10 border-neutral-500/20 text-neutral-300";
 
   return (
     <span className={`px-3 py-1 border text-xs rounded-full font-medium ${colorClass}`}>
@@ -118,7 +105,7 @@ const BlogPage = () => {
       <div className="min-h-screen bg-[#121212] pt-20">
         <div className="max-w-4xl mx-auto px-4 py-16">
           <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#9333ea] mb-4"></div>
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#a3a3a3] mb-4"></div>
             <p className="text-[#ADB7BE]">Loading blog posts...</p>
           </div>
         </div>
@@ -193,8 +180,8 @@ const BlogPage = () => {
                   <Link 
                     href={`/blog/${post.id}`}
                     className="block bg-[#1a1a1a] border border-[#33353F] rounded-xl p-8 
-                             hover:border-[#9333ea]/50 hover:bg-[#1a1a1a]/80 transition-all duration-300
-                             transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#9333ea]/10"
+                             hover:border-[#a3a3a3]/50 hover:bg-[#1a1a1a]/80 transition-all duration-300
+                             transform hover:scale-[1.02] hover:shadow-lg hover:shadow-[#a3a3a3]/10"
                   >
                   <div className="flex flex-col space-y-4">
                     {/* Date and Reading Time */}
@@ -205,7 +192,7 @@ const BlogPage = () => {
                     </div>
 
                     {/* Title */}
-                    <h2 className="text-2xl font-bold text-white group-hover:text-[#9333ea] 
+                    <h2 className="text-2xl font-bold text-white group-hover:text-[#a3a3a3]
                                  transition-colors duration-200">
                       {title}
                     </h2>
@@ -236,7 +223,7 @@ const BlogPage = () => {
                     )}
 
                     {/* Read More Arrow */}
-                    <div className="flex items-center text-[#9333ea] font-medium text-sm 
+                    <div className="flex items-center text-[#a3a3a3] font-medium text-sm
                                   group-hover:translate-x-2 transition-transform duration-200">
                       <span>Read full post</span>
                       <svg 

@@ -1,16 +1,5 @@
-import React from "react";
+import styles from "../home.module.css";
 
-const Footer = () => {
-  return (
-    <footer className="footer z-10 border border-l-transparent border-r-transparent border-t-border bg-background text-foreground">
-      <div className="container flex justify-between p-12">
-        <span>AR</span>
-        <p className="text-muted-foreground">
-          Built by Ashwin Rachha.
-        </p>
-      </div>
-    </footer>
-  );
-};
-
-export default Footer;
+export default function Footer() {
+  return <footer className={styles.footer}><span>Ashwin Rachha</span><p>Thoughtfully built. Always evolving.</p><a href="#about">Back to top ↑</a></footer>;
+}

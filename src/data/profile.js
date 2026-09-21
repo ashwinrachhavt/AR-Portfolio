@@ -58,7 +58,10 @@ export const experienceData = [
     ],
     technologies: [
       "LangGraph",
-      "Amazon Bedrock AgentCore",
+      "Amazon Bedrock",
+      "AgentCore Runtime",
+      "AgentCore Gateway",
+      "MCP",
       "Ruby on Rails",
       "Python",
       "Composio",

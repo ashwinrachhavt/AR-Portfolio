@@ -1,52 +1,39 @@
-"use client";
-import React, { useState, useRef } from "react";
-import ProjectCard from "./ProjectCard";
-import ProjectTag from "./ProjectTag";
-import { motion, useInView } from "framer-motion";
 import { projectsData } from "@/data/profile";
+import PortfolioIcon from "./PortfolioIcon";
+import AchievementsSection from "./AchievementsSection";
+import styles from "../home.module.css";
 
-const ProjectsSection = () => {
-  const [tag, setTag] = useState("All");
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
-
-  const filteredProjects = projectsData.filter((project) => project.tag.includes(tag));
-
+export default function ProjectsSection() {
   return (
-    <section id="projects">
-      <h2 className="mb-8 mt-4 text-center text-4xl font-bold text-white md:mb-12">
-        Selected Work
-      </h2>
-      <div className="flex flex-row items-center justify-center gap-2 py-6 text-white">
-        {["All", "Web", "Agents"].map((name) => (
-          <ProjectTag
-            key={name}
-            onClick={setTag}
-            name={name}
-            isSelected={tag === name}
-          />
-        ))}
+    <section id="work" className={styles.section} aria-labelledby="work-title">
+      <div className={styles.sectionHeader}><h2 id="work-title">Selected work.</h2><p>Real workflows. Considered systems.</p></div>
+      <div className={styles.featuredWork}>
+        <article className={`${styles.feature} ${styles.silverFeature}`}>
+          <div className={styles.featureTop}><span>Loan Labs</span><span>01</span></div>
+          <h3>Less paperwork.<br />More possibility.</h3>
+          <p>Lois brings document classification, policy validation, and permission-aware agent actions into mortgage workflows.</p>
+          <div className={styles.productName}>Lois<span>Agentic mortgage workflows</span></div>
+          <a href="#role-loan-labs" className={styles.featureLink}>Explore the engineering <PortfolioIcon /></a>
+        </article>
+        <article className={`${styles.feature} ${styles.darkFeature}`}>
+          <div className={styles.featureTop}><span>Finally</span><span>02</span></div>
+          <h3>From transactions<br />to understanding.</h3>
+          <p>Classify AI combines retrieval, transaction history, and bank integrations to make bookkeeping less manual.</p>
+          <div className={styles.productName}>Classify AI<span>From prototype to production</span></div>
+          <a href="#role-finally" className={styles.featureLink}>Explore the engineering <PortfolioIcon /></a>
+        </article>
       </div>
-      <ul ref={ref} className="grid gap-8 md:grid-cols-3 md:gap-12">
-        {filteredProjects.map((project, index) => (
-          <motion.li
-            key={project.id}
-            initial={{ y: 24, opacity: 0 }}
-            animate={isInView ? { y: 0, opacity: 1 } : { y: 24, opacity: 0 }}
-            transition={{ duration: 0.25, delay: Math.min(index * 0.08, 0.4) }}
-          >
-            <ProjectCard
-              title={project.title}
-              description={project.description}
-              imgUrl={project.image}
-              gitUrl={project.gitUrl}
-              previewUrl={project.previewUrl}
-            />
-          </motion.li>
-        ))}
-      </ul>
+      <AchievementsSection />
+      <details className={styles.projectArchive}>
+        <summary>More things I’ve built <span>{projectsData.length - 1} projects <PortfolioIcon kind="plus" /></span></summary>
+        <div className={styles.projectList}>
+          {projectsData.filter(project => project.id !== 1).map(project => (
+            <a key={project.id} href={project.gitUrl} className={styles.projectRow}>
+              <h3>{project.title}</h3><p>{project.description}</p><PortfolioIcon />
+            </a>
+          ))}
+        </div>
+      </details>
     </section>
   );
-};
-
-export default ProjectsSection;
+}

@@ -82,7 +82,7 @@ export default function EveChat() {
                   className="h-11 w-11 rounded-full object-cover"
                 />
                 <div className="max-w-xl rounded-b-xl rounded-tr-xl bg-white p-5 text-black shadow-lg">
-                  <p className="mb-2 text-sm font-medium text-violet-600">
+                  <p className="mb-2 text-sm font-medium text-neutral-600">
                     Ashwin
                   </p>
                   <p>
@@ -105,7 +105,7 @@ export default function EveChat() {
                     ref={isLast ? lastMessageRef : null}
                     className="max-w-xl self-end rounded-b-xl rounded-tl-xl bg-white p-5 text-black shadow-lg"
                   >
-                    <p className="mb-2 text-sm font-medium text-violet-600">You</p>
+                    <p className="mb-2 text-sm font-medium text-neutral-600">You</p>
                     <p className="whitespace-pre-wrap">{text}</p>
                   </div>
                 );
@@ -125,7 +125,7 @@ export default function EveChat() {
                     className="h-11 w-11 rounded-full object-cover"
                   />
                   <div className="max-w-xl rounded-b-xl rounded-tr-xl bg-white p-5 text-black shadow-lg">
-                    <p className="mb-2 text-sm font-medium text-violet-600">
+                    <p className="mb-2 text-sm font-medium text-neutral-600">
                       Ashwin
                     </p>
                     <p className="whitespace-pre-wrap">{text}</p>
@@ -144,7 +144,7 @@ export default function EveChat() {
                   className="h-11 w-11 rounded-full object-cover"
                 />
                 <div className="max-w-xl rounded-b-xl rounded-tr-xl bg-white p-5 text-black shadow-lg">
-                  <p className="mb-4 text-sm font-medium text-violet-600">
+                  <p className="mb-4 text-sm font-medium text-neutral-600">
                     Ashwin
                   </p>
                   <LoadingDots />
@@ -167,7 +167,7 @@ export default function EveChat() {
                 disabled={isResuming}
                 onChange={(event) => setDraft(event.target.value)}
                 placeholder="Ask about Loan Labs, Finally, or agent systems"
-                className="h-20 w-full resize-none rounded-2xl border border-slate-700 bg-[#121212] py-4 pl-4 pr-16 text-sm text-white placeholder:text-slate-500 focus:border-violet-500 focus:outline-none focus:ring-4 focus:ring-violet-500/10"
+                className="h-20 w-full resize-none rounded-2xl border border-slate-700 bg-[#121212] py-4 pl-4 pr-16 text-sm text-white placeholder:text-slate-500 focus:border-neutral-500 focus:outline-none focus:ring-4 focus:ring-neutral-500/10"
                 onKeyDown={(event) => {
                   if (event.key === "Enter" && !event.shiftKey) {
                     event.preventDefault();
@@ -179,7 +179,7 @@ export default function EveChat() {
                 type="submit"
                 aria-label="Send"
                 disabled={!draft.trim() || isResuming}
-                className="absolute bottom-3 right-3 flex h-11 w-11 items-center justify-center rounded-full bg-violet-600 text-white hover:bg-violet-700 disabled:bg-violet-950 disabled:text-violet-400"
+                className="absolute bottom-3 right-3 flex h-11 w-11 items-center justify-center rounded-full bg-neutral-600 text-white hover:bg-neutral-700 disabled:bg-neutral-950 disabled:text-neutral-400"
               >
                 <Send size={16} />
               </button>
