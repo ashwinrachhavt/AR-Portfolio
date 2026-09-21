@@ -1,6 +1,7 @@
 import { collectPaginatedAPI, isFullPage } from "@notionhq/client";
 import type { Client } from "@notionhq/client";
 import { NotionToMarkdown } from "notion-to-md";
+import { estimateReadingTime, summarizeBlogPost } from "./blog-model.mjs";
 
 export function createBlogMarkdown(notion: Client) {
   return new NotionToMarkdown({
@@ -35,7 +36,12 @@ export async function queryBlogPosts(notion: Client, databaseId = getBlogDatabas
 
 // Check membership before reading blocks: this integration also sees private pages.
 export async function retrieveBlogPage(notion: Client, pageId: string, databaseId = getBlogDatabaseId()) {
-  const page = await notion.pages.retrieve({ page_id: pageId });
+  const page = await notion.pages.retrieve({ page_id: pageId }).catch(error => {
+    if (error?.code === "object_not_found" || error?.code === "validation_error") {
+      throw new BlogPostNotFoundError();
+    }
+    throw error;
+  });
   const normalizeId = (id: string) => id.replaceAll("-", "").toLowerCase();
   if (
     !isFullPage(page) || page.archived || page.in_trash ||
@@ -47,4 +53,19 @@ export async function retrieveBlogPage(notion: Client, pageId: string, databaseI
     throw new BlogPostNotFoundError();
   }
   return page;
+}
+
+export async function loadBlogArticle(notion: Client, pageId: string, databaseId = getBlogDatabaseId()) {
+  const page = await retrieveBlogPage(notion, pageId, databaseId).catch(error => {
+    // Only an unavailable or unpublished parent should remove a cached article.
+    if (error instanceof BlogPostNotFoundError) return null;
+    throw error;
+  });
+  if (!page) return null;
+
+  // Block-fetch failures must reject the refresh, preserving successful content.
+  const converter = createBlogMarkdown(notion);
+  const blocks = await converter.pageToMarkdown(page.id);
+  const markdown = converter.toMarkdownString(blocks).parent ?? "";
+  return { post: summarizeBlogPost(page), markdown, readingTime: estimateReadingTime(markdown) };
 }

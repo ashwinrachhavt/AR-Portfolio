@@ -18,7 +18,7 @@ async function articleOr404(id) {
   try {
     return await getBlogArticle(id);
   } catch (error) {
-    if (error instanceof BlogPostNotFoundError || error.code === "object_not_found" || error.code === "validation_error") notFound();
+    if (error instanceof BlogPostNotFoundError) notFound();
     throw error;
   }
 }
