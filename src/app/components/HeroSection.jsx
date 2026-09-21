@@ -32,8 +32,6 @@ const HeroSection = () => {
                   1400,
                   "I design fail-closed agents",
                   1400,
-                  "Talk to my Eve agent",
-                  2200,
                 ]}
                 wrapper="span"
                 speed={50}
@@ -47,12 +45,6 @@ const HeroSection = () => {
             Most recently built Lois at Loan Labs and Classify AI at Finally.
           </p>
           <div>
-            <Link
-              href="#agents"
-              className="mr-4 inline-block w-full rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 px-6 py-3 text-white hover:bg-slate-200 sm:w-fit"
-            >
-              Chat with Eve
-            </Link>
             <Link
               href="/ashwin_rachha_resume.pdf"
               target="_blank"

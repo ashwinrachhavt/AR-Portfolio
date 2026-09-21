@@ -155,7 +155,6 @@ export const projectsData = [
     image: "/images/projectsAR/6AR.png",
     tag: ["All", "Web", "Agents"],
     gitUrl: "https://github.com/AshwinRachha",
-    previewUrl: "#agents",
   },
   {
     id: 2,
@@ -185,7 +184,6 @@ export const projectsData = [
     image: "/images/projectsAR/3AR.jpg",
     tag: ["All", "Web", "Agents"],
     gitUrl: "https://github.com/AshwinRachha",
-    previewUrl: "#agents",
   },
   {
     id: 5,

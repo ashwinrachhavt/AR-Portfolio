@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="container flex justify-between p-12">
         <span>AR</span>
         <p className="text-muted-foreground">
-          Built with Next.js 16, Eve agents, and production AI systems by Ashwin Rachha.
+          Built by Ashwin Rachha.
         </p>
       </div>
     </footer>

@@ -2,7 +2,6 @@ import HeroSection from "./components/HeroSection";
 import Navbar from "./components/Navbar";
 import ExperienceSection from "./components/ExperienceSection";
 import ProjectsSection from "./components/ProjectsSection";
-import EveChat from "./components/EveChat";
 import EmailSection from "./components/EmailSection";
 import Footer from "./components/Footer";
 import AchievementsSection from "./components/AchievementsSection";
@@ -16,7 +15,6 @@ export default function Home() {
         <AchievementsSection className="mb-8" />
         <ExperienceSection className="mb-8" />
         <ProjectsSection className="mb-8" />
-        <EveChat />
         <EmailSection className="mb-8" />
       </div>
       <Footer />

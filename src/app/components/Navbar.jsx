@@ -11,7 +11,6 @@ const navLinks = [
   { title: "About", path: "#about", type: "scroll" },
   { title: "Experience", path: "#experience", type: "scroll" },
   { title: "Projects", path: "#projects", type: "scroll" },
-  { title: "Agents", path: "#agents", type: "scroll" },
   { title: "Blog", path: "/blog", type: "route" },
   { title: "Contact", path: "#contact", type: "scroll" },
 ];
@@ -37,7 +36,7 @@ const Navbar = () => {
     const progress = totalHeight > 0 ? latest / totalHeight : 0;
     setScrollProgress(Math.min(progress, 1));
 
-    const sections = ["about", "experience", "projects", "agents", "contact"];
+    const sections = ["about", "experience", "projects", "contact"];
     const navbar = document.querySelector("nav");
     const navbarHeight = navbar ? navbar.offsetHeight : 0;
 
