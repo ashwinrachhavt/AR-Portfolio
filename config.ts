@@ -1,2 +1,2 @@
-export const indexName = "portfolio-ashwin"
-export const timeout = 18000
+export const indexName = "portfolio-ashwin";
+export const timeout = 18000;

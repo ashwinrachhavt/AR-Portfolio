@@ -9,8 +9,8 @@ const ExperienceCard = ({ experience, index }) => {
       opacity: 1,
       x: 0,
       transition: {
-        duration: 0.6,
-        delay: index * 0.2,
+        duration: 0.35,
+        delay: Math.min(index * 0.08, 0.32),
         ease: "easeOut"
       }
     }
