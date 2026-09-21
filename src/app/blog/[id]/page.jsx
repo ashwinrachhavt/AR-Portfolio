@@ -1,90 +1,70 @@
-import { getCachedNotionPage, getCachedNotionDatabase, getNotionPageTitle, getNotionPageTags } from "../../../lib/notion";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from 'remark-gfm';
+import { notFound } from "next/navigation";
 import Link from "next/link";
-import BlogPostClient from './BlogPostClient';
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { getBlogArticle, getBlogIndex } from "../../../lib/blog.server";
+import { BlogPostNotFoundError } from "../../../lib/notion-blog";
+import { formatBlogDate } from "../../../lib/blog-model.mjs";
+import styles from "../blog.module.css";
 
-// ISR: Regenerate page every 5 minutes if requested
-export const revalidate = 300; // 5 minutes
+export const revalidate = 300;
 
-// Generate static params for top blog posts
 export async function generateStaticParams() {
+  const posts = await getBlogIndex();
+  return posts.map(post => ({ id: post.id }));
+}
+
+async function articleOr404(id) {
   try {
-    console.log('🏗️ Generating static params for blog posts...');
-    
-    // Only in production to avoid slowing dev builds
-    if (process.env.NODE_ENV !== 'production') {
-      return [];
-    }
-    
-    const posts = await getCachedNotionDatabase();
-    
-    // Generate static pages for top 10 posts
-    const staticParams = posts
-      .slice(0, 10)
-      .map((post) => ({
-        id: post.id,
-      }));
-      
-    console.log(`📄 Pre-generating ${staticParams.length} blog posts`);
-    return staticParams;
+    return await getBlogArticle(id);
   } catch (error) {
-    console.error('Error generating static params:', error);
-    return [];
+    if (error instanceof BlogPostNotFoundError) notFound();
+    throw error;
   }
 }
 
-// Tag component with Notion-style colors
-const Tag = ({ name, color }) => {
-  // Notion color mapping to Tailwind classes
-  const colorMap = {
-    blue: 'bg-blue-500/10 border-blue-500/20 text-blue-400',
-    brown: 'bg-amber-600/10 border-amber-600/20 text-amber-400',
-    gray: 'bg-gray-500/10 border-gray-500/20 text-gray-400',
-    green: 'bg-green-500/10 border-green-500/20 text-green-400',
-    orange: 'bg-orange-500/10 border-orange-500/20 text-orange-400',
-    pink: 'bg-pink-500/10 border-pink-500/20 text-pink-400',
-    purple: 'bg-purple-500/10 border-purple-500/20 text-purple-400',
-    red: 'bg-red-500/10 border-red-500/20 text-red-400',
-    yellow: 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400',
-    default: 'bg-[#9333ea]/10 border-[#9333ea]/20 text-[#9333ea]'
-  };
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  const { post } = await articleOr404(id);
+  return { title: `${post.title} — Ashwin Rachha`, description: post.description || `An essay by Ashwin Rachha: ${post.title}` };
+}
 
-  const colorClass = colorMap[color] || colorMap.default;
-
-  return (
-    <span className={`px-3 py-1 border text-xs rounded-full font-medium ${colorClass}`}>
-      {name}
-    </span>
-  );
+const markdownComponents = {
+  h1: ({ children }) => <h2>{children}</h2>,
+  a: ({ href, children }) => <a href={href} rel="noopener noreferrer">{children}</a>,
+  img: ({ src, alt }) => (
+    // Notion serves expiring URLs from multiple hosts; preserve them and lazy-load.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt={alt || ""} loading="lazy" decoding="async" />
+  ),
+  table: ({ children }) => <div className={styles.tableScroll}><table>{children}</table></div>,
 };
 
 export default async function BlogPost({ params }) {
-  const { id: pageId } = await params;
-  
-  try {
-    console.log(`🔍 Server: Pre-fetching blog post ${pageId.slice(0, 8)}... for SSR`);
-    
-    // Try to get initial content for SSR, but don't block if it fails
-    let initialContent = null;
-    try {
-      initialContent = await getCachedNotionPage(pageId);
-      if (initialContent && initialContent.markdown && initialContent.markdown.trim() !== '') {
-        console.log(`✅ Server: Successfully pre-fetched content for SSR`);
-      } else {
-        console.log(`⚠️  Server: Pre-fetch returned partial/empty content, will retry on client`);
-      }
-    } catch (error) {
-      console.log(`⚠️  Server: Pre-fetch failed, will load on client: ${error.message}`);
-    }
-
-    // Always render client component - it will handle loading states and retries
-    return <BlogPostClient pageId={pageId} initialContent={initialContent} />;
-    
-  } catch (error) {
-    console.error('Server error in blog post:', error);
-    
-    // Even if server fails, render client component to handle the error gracefully
-    return <BlogPostClient pageId={pageId} initialContent={null} />;
-  }
+  const { id } = await params;
+  const { post, markdown, readingTime } = await articleOr404(id);
+  return (
+    <div className={styles.readingColumn}>
+      <Link href="/blog" className={styles.backLink}><span aria-hidden="true">←</span> All writing</Link>
+      <article>
+        <header className={styles.articleHeader}>
+          <div className={styles.articleMeta}>
+            <time dateTime={post.date}>{formatBlogDate(post.date)}</time>
+            {readingTime > 0 && <><span aria-hidden="true">·</span><span>{readingTime} min read</span></>}
+          </div>
+          <h1>{post.title}</h1>
+          {post.tags.length > 0 && <p className={styles.articleTopics}>{post.tags.join(" / ")}</p>}
+        </header>
+        {markdown.trim() ? (
+          <div className={styles.prose}>
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>{markdown}</ReactMarkdown>
+          </div>
+        ) : <p className={styles.unpublished}>This piece is still taking shape. Check back soon.</p>}
+      </article>
+      <div className={styles.articleEnd}>
+        <p>Thanks for reading.</p>
+        <Link href="/blog">More writing <span aria-hidden="true">↗</span></Link>
+      </div>
+    </div>
+  );
 }

@@ -1,51 +1,27 @@
-"use client";
-import React, { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import ExperienceCard from "./experience/ExperienceCard";
-import experienceData from "./experience/experienceData";
-import "./experience/TimelineStyles.css";
+import { experienceData } from "@/data/profile";
+import PortfolioIcon from "./PortfolioIcon";
+import styles from "../home.module.css";
 
-const ExperienceSection = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+const roleIds = { "Loan Labs": "loan-labs", Finally: "finally", "UNAR Labs": "unar-labs", Outreach: "outreach" };
 
+export default function ExperienceSection() {
   return (
-    <section id="experience" className="py-16">
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 32 }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 32 }}
-        transition={{ duration: 0.4 }}
-        className="container mx-auto px-4"
-      >
-        <div className="mb-16 text-center">
-          <h2 className="mb-4 text-4xl font-bold text-white">
-            Professional Experience
-          </h2>
-          <p className="mx-auto max-w-2xl text-lg text-[#ADB7BE]">
-            Production agentic systems, financial infrastructure, and
-            high-trust product workflows from Loan Labs to Finally.
-          </p>
-        </div>
-
-        <div className="relative mx-auto max-w-6xl">
-          <div className="absolute left-1/2 hidden h-full w-1 -translate-x-1/2 bg-gradient-to-b from-primary-500 to-secondary-500 opacity-30 md:block"></div>
-          <div className="space-y-12 md:space-y-20">
-            {experienceData.map((experience, index) => (
-              <div key={experience.id} className="relative">
-                <div className="absolute left-4 top-6 md:hidden">
-                  <div className="h-4 w-4 rounded-full border-4 border-[#121212] bg-gradient-to-r from-primary-500 to-secondary-500"></div>
-                </div>
-                <div className="ml-12 md:ml-0">
-                  <ExperienceCard experience={experience} index={index} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </motion.div>
+    <section id="experience" className={styles.section} aria-labelledby="experience-title">
+      <div className={styles.sectionHeader}><h2 id="experience-title">Experience.</h2><p>From research to real-world products.</p></div>
+      <div className={styles.experienceList}>
+        {experienceData.map((role, index) => (
+          <details key={role.id} className={styles.role} open={index === 0}>
+            <summary>
+              <span className={styles.roleIdentity}><span className={styles.company}>{role.company}</span><span className={styles.position}>{role.position}</span></span>
+              <span className={styles.roleDate}>{role.duration}</span><PortfolioIcon kind="plus" className={styles.expandIcon} />
+            </summary>
+            <div id={`role-${roleIds[role.company]}`} className={styles.roleBody}>
+              <ul>{role.description.map(bullet => <li key={bullet}>{bullet}</li>)}</ul>
+              <div className={styles.tags} role="group" aria-label={`${role.company} technologies`}>{role.technologies.map(tech => <span key={tech}>{tech}</span>)}</div>
+            </div>
+          </details>
+        ))}
+      </div>
     </section>
   );
-};
-
-export default ExperienceSection;
+}

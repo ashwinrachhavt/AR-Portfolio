@@ -11,7 +11,7 @@ const inter = Inter({
 export const metadata = {
   title: "Ashwin Rachha | Applied AI Engineer",
   description:
-    "Founding and applied AI engineer building production agentic systems, financial infrastructure, and product workflows. Loan Labs, Finally, and Eve agents.",
+    "Founding and applied AI engineer building production agentic systems, financial infrastructure, and product workflows. Loan Labs and Finally.",
   icons: {
     icon: "/images/Ashwin.png",
   },

@@ -2,14 +2,23 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+Use pnpm for this project. Add these values to an ignored `.env` file in the project root:
+
+```dotenv
+NOTION_API_KEY=your-notion-integration-secret
+NOTION_DATABASE_ID=your-command-center-database-id
+```
+
+Share the Command Center database with that integration. The blog lists all entries whose `Status` select is `Blogs`; article requests are restricted to that group. Keep credentials out of Git. Configure both variables in the hosting environment as well when deploying.
+
+The blog index and articles render on the server and are prerendered at build time, so both Notion variables must be available during the build. Successful Notion responses and rendered pages are cached for five minutes, then refreshed in the background on demand. A failed background refresh retains the last successful version. New or edited posts become visible after a successful refresh; removing a post can take up to the cache refresh window. Article links prefetch on hover, focus, or touch, respecting the browser's data-saving preference. Search and topic filters run locally on a small list of public fields.
+
+Run `pnpm lint`, `pnpm typecheck`, and `pnpm build` to validate the app. On Node 24+, `node --test src/lib/*.test.mjs` also checks Notion access boundaries, pagination, nested content, metadata, and filtering.
+
+Then run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+pnpm dev --port 3000
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
