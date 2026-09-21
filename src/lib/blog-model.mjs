@@ -1,4 +1,10 @@
 const text = (items = []) => items.map(item => item.plain_text ?? item.text?.content ?? "").join("").trim();
+const authorDate = new Intl.DateTimeFormat("en-CA", {
+  year: "numeric", month: "2-digit", day: "2-digit", timeZone: "America/Los_Angeles",
+});
+const displayDate = new Intl.DateTimeFormat("en-US", {
+  month: "short", day: "numeric", year: "numeric", timeZone: "UTC",
+});
 
 // Only this small, public view of a Notion page crosses the client boundary.
 export function summarizeBlogPost(page) {
@@ -8,9 +14,7 @@ export function summarizeBlogPost(page) {
     id: page.id,
     title: text(title?.title) || "Untitled",
     // Keep the author's calendar date stable across server/browser time zones.
-    date: new Intl.DateTimeFormat("en-CA", {
-      year: "numeric", month: "2-digit", day: "2-digit", timeZone: "America/Los_Angeles",
-    }).format(new Date(page.created_time)),
+    date: authorDate.format(new Date(page.created_time)),
     tags: (properties.Tags?.multi_select ?? []).map(tag => tag.name),
     description: text(properties.Description?.rich_text ?? properties.Summary?.rich_text),
   };
@@ -25,9 +29,7 @@ export function filterBlogPosts(posts, query = "", topic = "") {
 }
 
 export function formatBlogDate(date) {
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short", day: "numeric", year: "numeric", timeZone: "UTC",
-  }).format(new Date(date));
+  return displayDate.format(new Date(date));
 }
 
 export function estimateReadingTime(markdown) {

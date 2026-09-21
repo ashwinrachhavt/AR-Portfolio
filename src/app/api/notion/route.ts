@@ -1,6 +1,5 @@
 import { Client } from "@notionhq/client";
 import { NextResponse } from "next/server";
-import { cache } from 'react';
 import { BlogPostNotFoundError, createBlogMarkdown, queryBlogPosts, retrieveBlogPage } from "../../../lib/notion-blog";
 
 // Performance-optimized Notion client with timeouts and connection pooling

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import HeroSection from "./components/HeroSection";
 import Navbar from "./components/Navbar";
 import ExperienceSection from "./components/ExperienceSection";
@@ -28,4 +29,3 @@ export default function Home() {
     </>
   );
 }
-import Link from "next/link";
