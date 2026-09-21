@@ -1,0 +1,96 @@
+{
+  "name": "Ashwin Rachha",
+  "email": "ashwin.rachha@gmail.com",
+  "phone": "+1 540 824 8748",
+  "linkedin": "https://linkedin.com/in/ashwinrachha",
+  "github": "https://github.com/ashwinrachhavt",
+  "website": "https://ashwinrachhawebsite.vercel.app",
+  "asOf": "2026-09-20",
+  "roles": [
+    {
+      "id": "loan-labs",
+      "company": "Loan Labs",
+      "title": "Applied AI Engineer",
+      "dates": "Jan 2026–Present",
+      "context": "Early-stage mortgage technology startup · Internal and pilot workflows",
+      "bullets": {
+        "architecture": "Re-architected Lois from one-off Ruby LLM calls into a LangGraph agentic system on Amazon Bedrock AgentCore for mortgage-document classification, lender-specific renaming, and policy validation.",
+        "surfaces": "Built agent-facing Rails APIs, borrower email intake, and an in-product conversational interface so users could handle loan documents and initiate agent actions in LoanOS.",
+        "permissions": "Designed fail-closed authorization for Composio integrations: tenant/owner scoping, separate write/send/merge/archive permissions, reviewed tool allowlists, and execution-time checks that invalidate revoked access.",
+        "integrations": "Connected CRM and document workflows across Google Drive, Box, Salesforce, HubSpot, Pipedrive, OneDrive, and SharePoint with fine-grained access controls and blocked delete actions.",
+        "leadership": "Introduced an AI-assisted software delivery workflow linking Linear/Notion product context, technical specifications, shared company knowledge, and senior-engineer code review."
+      }
+    },
+    {
+      "id": "finally",
+      "company": "Finally",
+      "title": "AI Product Engineer / Tech Lead",
+      "dates": "Feb 2024–Jan 2026",
+      "context": "AI bookkeeping, banking infrastructure, and corporate-card underwriting",
+      "bullets": {
+        "classify": "Joined as the first AI Product Engineer and led a three-engineer team from prototype to production on Classify AI; processed 50K+ transactions daily and reduced manual categorization by approximately 80%.",
+        "retrieval": "Built retrieval-augmented classification with LangChain, Pinecone, Elasticsearch, Redis, Celery, and Django, combining transaction history, merchant enrichment, and custom charts of accounts.",
+        "close": "Evolved bookkeeping from CSV upload to Plaid/Teller bank ingestion, OCR-supported statements, reconciliation, and QuickBooks push; helped reduce first-month close from 4+ months to approximately 2 weeks.",
+        "banking": "Architected reusable Plaid/Teller infrastructure for account linking, encrypted token storage, token lifecycle management, webhooks, transaction synchronization, and normalized account data.",
+        "underwriting": "Built cash-based underwriting with 90-day bank data, daily-balance reconstruction, weekly recalculation, audit history, and manual overrides; supported $3M+ in credit for 50+ companies in approximately three months."
+      }
+    },
+    {
+      "id": "unar",
+      "company": "UNAR Labs",
+      "title": "Machine Learning Engineer",
+      "dates": "Jun 2023–Aug 2023",
+      "bullets": {
+        "accessibility": "Built accessibility-focused backend and data pipelines for visually impaired users with OpenCV, PyTorch, Transformers, and FastAPI; deployed on GCP with Docker."
+      }
+    },
+    {
+      "id": "outreach",
+      "company": "Outreach",
+      "title": "Machine Learning Platform Engineer Intern",
+      "dates": "May 2022–Aug 2022",
+      "bullets": {
+        "platform": "Built reusable NLP inference and deployment infrastructure using PySpark, MLflow, ONNX, NVIDIA Triton, Go/Python microservices, Docker, CI/CD, and GKE."
+      }
+    },
+    {
+      "id": "mindbowser",
+      "company": "Mindbowser Inc",
+      "title": "Software Engineer, ML",
+      "dates": "Dec 2019–Feb 2021",
+      "bullets": {
+        "vision": "Developed a facial-expression recognition system for CRM meeting analysis using VGG-19 transfer learning and MongoDB GridFS."
+      }
+    }
+  ],
+  "education": [
+    {"school": "Virginia Tech", "degree": "M.S. Computer Science (Thesis)", "dates": "2021–2023", "gpa": "4.0/4.0"},
+    {"school": "PICT", "degree": "B.E. Computer Science", "dates": "2016–2020", "gpa": "8.70/10.00"}
+  ],
+  "research": {
+    "title": "Gurukul · LLM-enhanced CS education",
+    "description": "Built an adaptive learning environment using RAG and guardrails; research at IEEE FIE 2024 and IEEE SouthEastCon 2023.",
+    "thesis": "https://vtechworks.lib.vt.edu/items/3d08a8cd-effe-4e41-9830-0204637e53da",
+    "code": "https://github.com/ashwinrachha786/Gurukul_v2"
+  },
+  "variants": {
+    "applied-ai": {
+      "headline": "Applied AI Engineer | Agentic Systems & Financial Workflows",
+      "summary": "Builds AI products from architecture to user-facing workflows. Experience spans permission-aware agents, production transaction classification, backend systems, and technical leadership.",
+      "selection": {"loan-labs": ["architecture", "permissions", "surfaces"], "finally": ["classify", "retrieval", "close", "banking"], "unar": ["accessibility"], "outreach": ["platform"]},
+      "skills": "Python, TypeScript, SQL · LangGraph, LangChain, RAG, Bedrock AgentCore, Composio · Django, FastAPI, Rails APIs, React, Next.js · PostgreSQL, Redis, Celery, Pinecone, Elasticsearch · AWS, Docker, Kubernetes"
+    },
+    "ai-product": {
+      "headline": "AI Product Engineer | Product Delivery & Technical Leadership",
+      "summary": "Builds AI products end to end, from workflow design and technical specifications to production systems. Led a three-engineer team delivering AI bookkeeping and built agentic mortgage workflows.",
+      "selection": {"loan-labs": ["architecture", "surfaces", "leadership"], "finally": ["classify", "close", "banking", "underwriting"], "unar": ["accessibility"], "outreach": ["platform"]},
+      "skills": "Python, TypeScript, SQL · React, Next.js, Django, FastAPI · LangGraph, LangChain, RAG, Bedrock AgentCore · Plaid, Teller, QuickBooks, Composio · PostgreSQL, Redis, Celery, AWS, Docker · Technical specifications, team leadership"
+    },
+    "backend-fintech": {
+      "headline": "Backend Engineer | AI Platforms & Financial Infrastructure",
+      "summary": "Builds APIs, banking integrations, and asynchronous workflows for AI and fintech products. Experience includes tenant-scoped authorization, secure token management, underwriting, and ML serving.",
+      "selection": {"loan-labs": ["surfaces", "permissions", "architecture"], "finally": ["banking", "underwriting", "classify", "retrieval"], "unar": ["accessibility"], "outreach": ["platform"]},
+      "skills": "Python, Go, TypeScript, SQL · Django, FastAPI, Rails APIs · PostgreSQL, Redis, Celery, Elasticsearch · Plaid, Teller, webhooks, OAuth · AWS, GCP, Docker, Kubernetes, GKE · LangGraph, Bedrock AgentCore, MLflow, ONNX, Triton"
+    }
+  }
+}
