@@ -8,7 +8,7 @@ import { createInMemoryWorkflowLimiter } from "./workflow/handler.ts";
 const request = (body = { jobDescription: examples[0].description }, headers = {}) => new Request("https://portfolio.example/api/career-fit", { method: "POST", headers: { "Content-Type": "application/json", ...headers }, body: typeof body === "string" ? body : JSON.stringify(body) });
 const makeHandler = (options = {}) => createCareerFitHandler({ env: {}, limiter: createInMemoryWorkflowLimiter({ maxRequests: 100 }), ...options });
 const freeCatalog = { data: [{ id: "typesafe-ai/jev", pricing: { input: "0", output: "0" } }] };
-const liveEnv = { AI_GATEWAY_API_KEY: "test-only", CAREER_FIT_LIVE_ENABLED: "true" };
+const liveEnv = { AI_GATEWAY_API_KEY: "test-only", CAREER_FIT_PROVIDER: "vercel", CAREER_FIT_LIVE_ENABLED: "true" };
 const duringPromo = () => Date.parse("2026-09-22T00:00:00Z");
 
 test("every evidence claim is a verbatim public resume fact with a source", () => {
@@ -109,7 +109,7 @@ test("paid or unavailable catalog and expired promotion never invoke evaluation"
 });
 
 test("Vercel OIDC can authenticate zero-priced Jev without a separate API key", async () => {
-  const handler = makeHandler({ env: { VERCEL_OIDC_TOKEN: "test-oidc", CAREER_FIT_LIVE_ENABLED: "true" }, now: duringPromo, fetcher: async (url, init) => {
+  const handler = makeHandler({ env: { VERCEL_OIDC_TOKEN: "test-oidc", CAREER_FIT_PROVIDER: "vercel", CAREER_FIT_LIVE_ENABLED: "true" }, now: duringPromo, fetcher: async (url, init) => {
     if (url.endsWith("/models")) return Response.json(freeCatalog);
     assert.equal(init.headers.Authorization, "Bearer test-oidc");
     return Response.json({ answers: Object.fromEntries(capabilities.map(item => [item.id, { probability: .1 }])) });
