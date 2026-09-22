@@ -1,0 +1,18 @@
+# Deploy application sources; environment variables come from Vercel settings.
+.env
+.env.*
+**/.env
+**/.env.*
+.eve
+.serena
+.gstack
+.claude
+.codex
+.agents
+.output
+.git
+.next
+.vercel
+node_modules
+*.tsbuildinfo
+**/.DS_Store
