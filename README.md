@@ -27,6 +27,18 @@ You can start editing the page by modifying `app/page.js`. The page auto-updates
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
+## AI Workflow Readiness Lab
+
+Open `/tools/workflow-readiness` for a no-account workflow form, a readable example, and an exportable AI Workflow Brief. The page and example render without a model request. Generated briefs identify software, model-assisted work, human approval, readiness gaps, evaluation proposals, and a first experiment. Results can be copied, downloaded as Markdown, or printed to PDF.
+
+Set `OPENAI_API_KEY` in the ignored `.env` file for local generation and in the hosting environment when deploying. `WORKFLOW_LAB_MODEL` optionally overrides the default `gpt-4.1-mini`. `WORKFLOW_LAB_PROVIDER=gateway` explicitly selects the existing Vercel AI Gateway integration using `AI_GATEWAY_API_KEY`; the default provider is direct OpenAI. A request uses only its selected provider and does not fall back or retry automatically.
+
+`POST /api/workflow-readiness` validates input and output, accepts at most 24 KiB of request data, caps model output, and cancels generation after 45 seconds. Human-review steps are required for high-stakes workflows and requests for approval of every result. Submissions and generated briefs stay in browser memory and are not saved to an application database or analytics. Submitted text is processed by OpenAI (through Vercel when gateway mode is selected); provider retention settings still apply. Direct requests use `store: false`.
+
+The endpoint's in-process limiter allows five accepted attempts per client per ten minutes and two concurrent generations per process. This is best-effort protection: separate server instances and restarts do not share limits. Before a public rollout, configure hosting-level rate limits or a shared limiter and provider spending controls. Do not treat this process-local limiter as a global budget cap.
+
+Run the regression tests with `node --experimental-strip-types --test src/lib/*.test.mjs src/lib/workflow/*.test.mjs`, then `pnpm lint`, `pnpm typecheck`, and `pnpm build`. Live generation additionally requires a valid provider credential; example mode and deterministic tests do not.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
