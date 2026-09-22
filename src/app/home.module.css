@@ -23,6 +23,18 @@
 
 .hero { position: relative; display: grid; grid-template-columns: 1fr 240px; column-gap: 46px; padding-top: 118px; }
 .heroContent h1 { font-size: clamp(48px, 6.25vw, 80px); line-height: 1.06; letter-spacing: -.065em; font-weight: 600; }
+.heroContent > .heroEyebrow { font-size: 12px; letter-spacing: .035em; margin: 0 0 22px; color: #b0b0bb; }
+.experiments { padding-top: 55px; scroll-margin-top: 110px; }
+.experimentGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.experimentGrid > a { padding: 30px; border: 1px solid #36363d; border-radius: 16px; display: flex; flex-direction: column; background: #151518; }
+.experimentGrid > a:hover { border-color: #86868b; }
+.experimentGrid h3 { font-size: 28px; letter-spacing: -1px; line-height: 1.2; margin: 8px 0 18px; }
+.experimentGrid p { color: #b0b0bb; font-size: 14px; line-height: 1.7; }
+.experimentAction { margin-top: 28px; font-size: 13px; }
+.interests { padding-top: 70px; max-width: 770px; }
+.interests h2 { font-size: 32px; line-height: 1.25; letter-spacing: -1px; margin-bottom: 20px; }
+.interests > p:not(.sectionLabel) { color: #b9b9c3; font-size: 16px; line-height: 1.9; }
+.interests > p.interestNote { color: #9999a5; font-size: 12px; margin-top: 16px; }
 .heroContent h1 span { color: #8e8e93; }
 .heroContent > p { max-width: 570px; color: #b9b9bf; font-size: 18px; line-height: 1.75; margin-top: 32px; letter-spacing: -.2px; }
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 28px; margin-top: 34px; }
@@ -120,6 +132,10 @@
 }
 
 @media (max-width: 700px) {
+  .experimentGrid { grid-template-columns: 1fr; }
+  .experimentGrid > a { padding: 25px; }
+  .experiments { padding-top: 28px; }
+  .interests { padding-top: 48px; }
   .toolInvitation { flex-direction: column; align-items: start; gap: 18px; padding: 28px 0; }
   .toolInvitation h2 { font-size: 25px; }
   .main, .nav, .footer { width: calc(100% - 40px); }

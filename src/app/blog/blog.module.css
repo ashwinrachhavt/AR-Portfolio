@@ -36,6 +36,10 @@
 .newsletter p:not(.eyebrow) { color: #b9b9bf; font-size: 14px; line-height: 1.7; }
 .newsletter a { display: inline-block; margin-top: 20px; text-decoration: underline; text-underline-offset: 5px; }
 .newsletter iframe { border: 0; width: 100%; max-width: 480px; background: #fff; border-radius: 8px; }
+.subscribeActions { display: flex; align-items: center; flex-wrap: wrap; gap: 24px; }
+.subscribeActions button { margin-top: 20px; font-size: 13px; color: #c4c4cf; padding-block: 8px; }
+.subscribeActions button:hover { text-decoration: underline; text-underline-offset: 5px; }
+.newsletter p.subscribeNote { font-size: 11px; margin-top: 18px; color: #a1a1aa; }
 .arrow { height: 22px; width: 22px; align-self: start; margin-top: 6px; color: #86868b; transition: color .15s; }
 .postLink:hover .arrow { color: #fff; }
 .closing { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 64px 0 80px; font-size: 14px; }
