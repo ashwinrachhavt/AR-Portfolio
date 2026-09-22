@@ -2,18 +2,20 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-Use pnpm for this project. Add these values to an ignored `.env` file in the project root:
+Use Node.js 22.18 or later and pnpm for this project. Install dependencies with `pnpm install`. Add these values to an ignored `.env` file in the project root to include the existing Notion archive:
 
 ```dotenv
 NOTION_API_KEY=your-notion-integration-secret
 NOTION_DATABASE_ID=your-command-center-database-id
 ```
 
-Share the Command Center database with that integration. The blog lists all entries whose `Status` select is `Blogs`; article requests are restricted to that group. Keep credentials out of Git. Configure both variables in the hosting environment as well when deploying.
+Share the Command Center database with that integration. The remote blog archive lists entries whose `Status` select is `Blogs`; Notion article requests are restricted to that group. Keep credentials out of Git. Configure both variables in the hosting environment as well when deploying.
 
-The blog index and articles render on the server and are prerendered at build time, so both Notion variables must be available during the build. Successful Notion responses and rendered pages are cached for five minutes, then refreshed in the background on demand. A failed background refresh retains the last successful version. New or edited posts become visible after a successful refresh; removing a post can take up to the cache refresh window. Article links prefetch on hover, focus, or touch, respecting the browser's data-saving preference. Search and topic filters run locally on a small list of public fields.
+The blog index and articles render on the server and are prerendered at build time. Configure both Notion variables during the build to include the remote archive. Reviewed Markdown articles in `src/content/writing/` are compiled into a static catalog before each build and take precedence over Notion articles with the same ID. The revised MCP and Buzz articles retain their original URLs. If Notion is unavailable, the index can still serve the reviewed local articles.
 
-Run `pnpm lint`, `pnpm typecheck`, and `pnpm build` to validate the app. On Node 24+, `node --test src/lib/*.test.mjs` also checks Notion access boundaries, pagination, nested content, metadata, and filtering.
+Successful Notion responses and rendered pages are cached for five minutes, then refreshed in the background on demand. A failed background refresh retains the last successful version. Notion edits become visible after a successful refresh; removing a remote post can take up to the cache refresh window. Local editions change through a repository build and deployment. Article links prefetch on hover, focus, or touch, respecting the browser's data-saving preference. Search and topic filters run locally on public metadata.
+
+Run `pnpm test`, `pnpm lint`, `pnpm typecheck`, and `pnpm build` to validate the app. Tests cover public career evidence, request and provider boundaries, publication imports, Notion access, feeds, and the Workflow Readiness Lab. Provider behavior is mocked; tests do not make live model requests.
 
 Then run the development server:
 
@@ -23,9 +25,45 @@ pnpm dev --port 3000
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+You can start editing the page by modifying `src/app/page.js`. The page auto-updates as you edit the file. Keep career claims consistent with `src/content/resume.json`.
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+
+## Career Fit Navigator
+
+Open `/fit` to explore three role examples or submit a role description. The site maps requirements to 12 capabilities, selects from ten verbatim public résumé facts, links the supporting `/work/[id]` pages, and identifies evidence gaps. Examples and keyword mapping work without any provider credential. Results are labeled by mode and are conversation starters, not hiring scores. The homepage connects this explorer, the Readiness Lab, writing, and interests in product design and adoption.
+
+Jev is wired through Vercel AI Gateway to answer fixed capability questions. The application owns the evidence and final wording. Keep `CAREER_FIT_LIVE_ENABLED=false`: live Jev is disabled in this release because the owner requires free access and the checked model catalog lists a nonzero input price. Enabling it would require an `AI_GATEWAY_API_KEY` or `VERCEL_OIDC_TOKEN`, verified account-level zero-spend protection, and exactly zero input/output prices in the live catalog. Unknown or nonzero pricing uses keyword mapping; the integration stops before `2026-09-25T00:00:00Z`. There is no paid-provider fallback. The catalog check is not a billing guarantee, and no live accuracy evaluation has been performed. See the [release record](docs/releases/2026-09-22-combined-website.md) for the checked sources and limitations.
+
+## Publish from Obsidian or Notion
+
+Prepare one approved Markdown note with this exact frontmatter shape. The parser accepts a small YAML subset; use JSON-style double quotes and a JSON array for tags:
+
+```markdown
+---
+id: "my-public-idea"
+title: "An idea worth testing"
+date: "2026-09-22"
+description: "A short summary for the writing index and feeds."
+tags: ["AI", "Product"]
+published: true
+---
+
+Your reviewed, public article goes here.
+```
+
+Import that single note, or take a snapshot of a Notion page already published with `Status` set to `Blogs` in the configured database:
+
+```bash
+pnpm content:import "/absolute/path/to/approved-note.md" --publish
+pnpm content:notion <published-blog-page-id> --publish
+```
+
+Each command copies the approved article into `src/content/writing/` and rebuilds `src/content/published-writing.json`. Review both files, preview `/blog/<id>`, run the checks above, and commit/deploy them with the site. `pnpm content:build` rebuilds the catalog after manually editing an existing local edition; `pnpm build` also runs it. Import refuses an existing article ID rather than overwriting it. To revise an imported article, edit its existing source file explicitly.
+
+This is one-way publication into a static catalog. It does not watch an Obsidian vault, import linked notes, write back to Notion, or synchronize edits between editors. Replace wikilinks and private or expiring attachment URLs with reviewed public links before import. Only the documented frontmatter fields are accepted. The importer checks metadata, duplicates, and common secret patterns; editorial review is still required. The user's actual vault has not been accessed.
+
+Newsletter invitations on the homepage and blog are optional and skippable. All articles stay free. The current destination is the verified [Substack profile](https://substack.com/@ashwinrachha); a working publication feed/embed URL is not configured. Substack handles email addresses and unsubscribe preferences. This app has no subscriber database and does not identify visitors from a page view. Read the [writing and subscription guide](docs/cms-content-plan.md) for configuration and publication details.
 
 ## AI Workflow Readiness Lab
 
@@ -37,7 +75,7 @@ Set `OPENAI_API_KEY` in the ignored `.env` file for local generation and in the 
 
 The endpoint's in-process limiter allows five accepted attempts per client per ten minutes and two concurrent generations per process. This is best-effort protection: separate server instances and restarts do not share limits. Before a public rollout, configure hosting-level rate limits or a shared limiter and provider spending controls. Do not treat this process-local limiter as a global budget cap.
 
-Run the regression tests with `node --experimental-strip-types --test src/lib/*.test.mjs src/lib/workflow/*.test.mjs`, then `pnpm lint`, `pnpm typecheck`, and `pnpm build`. Live generation additionally requires a valid provider credential; example mode and deterministic tests do not.
+Run the regression tests with `pnpm test`, then `pnpm lint`, `pnpm typecheck`, and `pnpm build`. Live generation additionally requires a valid provider credential; example mode and deterministic tests do not.
 
 ## Learn More
 
@@ -47,6 +85,8 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+
+Project references: [release record](docs/releases/2026-09-22-combined-website.md), [original Navigator proposal and implemented scope](docs/specs/career-fit-navigator.md), [Readiness Lab design](docs/superpowers/specs/2026-09-21-workflow-readiness-design.md), [Readiness Lab implementation plan](docs/superpowers/plans/2026-09-21-workflow-readiness.md), [résumé variants](resumes/README.md), and [public agent instructions](agent/instructions.md). Older [performance notes](performance-tips.md) and [implementation logs](src/changelog/) describe historical versions; use this README for current setup and behavior.
 
 ## Deploy on Vercel
 
