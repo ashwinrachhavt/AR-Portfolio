@@ -38,6 +38,12 @@ The [evaluation record](evaluations/jev-2026-09-22.json) contains public synthet
 
 Five cases passed on the first evaluation run. The embedded-instruction case encountered a provider error, then passed a separate recheck; the original failure remains in the record. An earlier full-question probe also returned HTTP 503. Successful inference durations in this small sample were approximately 0.26–0.43 seconds, excluding pricing/credit checks. This is a small smoke evaluation, not an accuracy benchmark or reliability guarantee. Production does not automatically retry provider failures.
 
+## Validation before deployment
+
+All 94 automated tests, `pnpm lint`, `pnpm typecheck`, and `pnpm build` passed for the activation change. The added regression checks cover the dedicated credential, exact promotion rate and date window, untouched-credit requirement, and rejected missing or nonzero receipts. Automated provider tests remain mocked; the real authenticated probes are recorded separately above.
+
+Production environment variables are configured for this release. Changing those variables requires a new deployment to update both the rendered form and the server adapter. After deployment, verify a public `/fit` submission returns `mode: jev` with `analysis.provider: vercel`, renders the requirement breakdown, and leaves gateway balances unchanged. The earlier successful UI browser check used fixture data and does not establish that the public deployment is making real Jev calls. The six live API cases establish the checked account's current access, not end-to-end production verification.
+
 ## Recruiter experience and API
 
 The initial examples say **Illustrative example · no AI call**. With live configuration, **Explore this role with Jev** submits public role text. The server checks access, sends twelve fixed boolean questions to `POST https://ai-gateway.vercel.sh/v1/evaluate` using `typesafe-ai/jev`, and matches returned requirement signals against approved public résumé evidence. No private recruiter information or generated biography is used.
