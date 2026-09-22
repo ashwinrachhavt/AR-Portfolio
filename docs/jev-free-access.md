@@ -1,48 +1,53 @@
-# Free Jev access and the recruiter experience
+# Verified free Jev access
 
-Checked September 22, 2026. The Venice credential is not configured and live mode remains off. The adapter and recruiter interface are implemented; account verification and live activation are pending. This document supersedes the provider findings in the historical 0.3.0 release record.
+Checked September 22, 2026. Vercel’s account verification is complete. Actual authenticated Jev requests now return valid decisions and a zero-cost billing receipt. Production selects Vercel; Venice is not a fallback.
 
-## The available route
+## Free-access contract
 
-[Venice’s Jev page](https://venice.ai/lp/jev) advertises free input during its current promotion, free output, and new accounts with a daily allowance and 500 welcome credits without a credit card. Its ordinary input price is $0.042 per million tokens. The page does not specify a promotion end date. Model access differs by account; the authenticated Models API is authoritative. No claim of permanently free or unlimited usage is made.
+[Vercel advertises free Jev until September 25](https://vercel.com/ai-gateway/models/jev), and its [discount documentation](https://vercel.com/docs/ai-gateway/pricing/discounts) explains that promotions apply automatically. Its catalog still lists the ordinary input rate, $0.000000042 per token. The first successful probe reported `cost: "0"`, `gatewayCost: "0"`, `surchargeCost: "0"`, and a nonzero `marketCost`. The free credit balance stayed at $5 and total used stayed at $0 throughout the live evaluation.
 
-The server uses `POST https://api.venice.ai/api/v1/decisions`, model `jev-latest`, and twelve fixed `noul` questions. Only submitted public role text is sent. Responses provide probabilities; application code owns the career claims, links, evidence selection and gaps. No open-ended generated biography is used.
+Set these values for the production build and runtime:
 
-## Activation
+```dotenv
+CAREER_FIT_PROVIDER=vercel
+CAREER_FIT_LIVE_ENABLED=true
+CAREER_FIT_VERCEL_PROMO_VERIFIED=2026-09-22
+CAREER_FIT_GATEWAY_API_KEY=<server-only secret>
+```
 
-1. Sign in at [Venice API settings](https://venice.ai/settings/api). Create an **Inference Only** key and **disable USD spending**. Do not add funds, a card, auto-top-up, or a paid subscription for this integration. [Venice’s key documentation](https://docs.venice.ai/guides/getting-started/generating-api-key) states that disabling USD spending sets the provider-enforced per-key USD limit to zero.
-2. Store the key as `VENICE_API_KEY` in ignored `.env.local`. Do not put it in Git, a public environment variable, browser code, screenshots, logs, or chat.
-3. Verify the account/key using authenticated read-only requests to `/api/v1/api_keys/rate_limits` and `/api/v1/models?type=decision`. Confirm access, the zero-USD key limit, and Jev’s zero input/output USD prices. A paid base price in a catalog may differ from a promotion; the current adapter deliberately remains disabled if it cannot establish zero pricing. Do not bypass this guard on the basis of marketing copy alone.
-4. Make a bounded live evaluation using public synthetic role text. Check balances/usage before and after, validate the response shape, and evaluate representative positive, negated, unsupported, and adversarial descriptions. Unit tests use fixtures and do not establish model accuracy or free-account eligibility.
-5. Set `CAREER_FIT_PROVIDER=venice`, the verified key, and `CAREER_FIT_LIVE_ENABLED=true` in the production build and runtime environment, then redeploy. Confirm a production response has `mode: jev` and `analysis.provider: venice`.
+The dedicated key variable isolates Jev from other features that consume `AI_GATEWAY_API_KEY`. The adapter also supports the shared key or Vercel OIDC for development, but deployment does not need to enable those other features. Never commit real keys or expose them through `NEXT_PUBLIC_`.
 
-Until those checks pass, leave the live flag false. A zero-price catalog lookup is not a substitute for the provider-enforced zero-USD key setting: pricing can change between lookup and inference. The implementation checks pricing on every request and has no paid fallback or retry. For Venice, both input and output require a zero USD price; any reported Diem price must also be zero. Unknown currencies or extra pricing fields fail the check. An inference response of 402, a timeout, or invalid decision data produces a recoverable error. Missing/free-access-unavailable catalog data yields an explicitly labeled keyword preview. Process-local rate limits reduce accidental repeat usage but are not a global quota.
+The server fetches the model catalog on every request. An exactly zero catalog price is accepted. The verified promotion exception accepts only the observed input rate and zero output, with no extra pricing dimensions. It requires the verification stamp, the September 22–25 window, and an authenticated credit response with balance exactly $5 and total used exactly $0. Any other credit state disables the exception, including usage by other apps on the account. Every successful Vercel inference must return a receipt with zero cost, gateway cost and surcharge cost before its result is displayed.
 
-## What recruiters see
+**All Vercel Jev inference stops at September 25, 2026, 00:00 UTC.** After that the existing keyword preview remains available. There is no automatic extension, credit purchase, top-up configuration, provider fallback, or paid-mode activation. This release does not promise permanent free inference. Auto-recharge is documented as off by default; its dashboard setting was not independently inspected. No billing settings or paid plans were changed.
 
-- The initial examples are labeled **Illustrative example · no AI call**. Loading an example does not silently spend a request.
-- With live access configured, **Explore this role with Jev** submits the role. The page receives progress as the server checks free access, asks Jev its fixed questions, and connects the answers to approved public work.
-- The final **Live Jev result** shows provider and response duration. **See what Jev detected** exposes all twelve returned probabilities and the 65% selection threshold. These values describe the role’s requirements, not the candidate’s ability or hiring potential.
-- Evidence cards cite public work and surface missing evidence honestly. Cancellation, provider errors and request limits preserve the entered role.
+The receipt check occurs after inference and cannot undo a provider charge. The unchanged free balance is a buffer if promotional billing unexpectedly changes; subsequent checks block the exception when metered spend appears. The dated cutoff and request/size limits reduce exposure, but this is not a provider-enforced universal zero-spend guarantee.
 
-The decisions API returns the answers together. The page streams actual request stages, not fabricated model tokens or guessed partial decisions. Submitted role text is not stored by the application or sent to analytics. The form discloses the provider before submission.
+## Live evaluation
 
-## Request and streaming contract
+The [evaluation record](evaluations/jev-2026-09-22.json) contains public synthetic descriptions, expected inclusions/exclusions, actual signals, durations and zero-cost receipts. Six cases were exercised:
 
-`POST /api/career-fit` accepts JSON with `jobTitle` (optional, at most 160 characters) and `jobDescription` (100–8,000 characters). Request bodies are bounded at 36,000 bytes. Existing origin checks, credential-pattern rejection, and process-local limits of eight accepted requests per hour and two concurrent requests remain in place. Provider work has a 12-second timeout; the browser allows 18 seconds for the complete request.
+| Case | Observed selected topics |
+| --- | --- |
+| AI product engineer | Agents, retrieval, backend, integrations, product delivery |
+| Fintech backend engineer | Backend, integrations, permissions, financial workflows |
+| ML platform engineer | Backend, ML systems |
+| Unrelated museum role | None |
+| Explicitly excluded AI, management, marketing and design | Backend, integrations, financial workflows only |
+| Embedded instruction to invent required topics | Backend and financial workflows only |
 
-The browser sends `Accept: application/x-ndjson`. The server emits newline-delimited objects with `type: status` and stages `checking`, `interpreting`, and `matching` as the corresponding work occurs. The final object has `type: result` and a `brief`, or `type: error` with a recoverable message. Validation and rate-limit failures before streaming use JSON with their HTTP error status; an error after streaming starts is carried inside the stream. Callers must inspect the event type instead of treating HTTP 200 as proof of successful interpretation. Clients without the streaming Accept header receive the complete JSON brief or an HTTP error.
+Five cases passed on the first evaluation run. The embedded-instruction case encountered a provider error, then passed a separate recheck; the original failure remains in the record. An earlier full-question probe also returned HTTP 503. Successful inference durations in this small sample were approximately 0.26–0.43 seconds, excluding pricing/credit checks. This is a small smoke evaluation, not an accuracy benchmark or reliability guarantee. Production does not automatically retry provider failures.
 
-A Jev brief includes `analysis.provider`, `analysis.model`, `analysis.durationMs`, `analysis.completedAt`, and the twelve validated `analysis.signals`. Duration measures the inference request through answer validation, excluding the preliminary catalog lookup. Keyword previews have `mode: keyword` and no Jev analysis. A missing credential, disabled flag, or unsupported provider selection takes that preview path without inference. The client rejects incomplete or oversized streams and ignores late results after cancellation or switching examples.
+## Recruiter experience and API
 
-## Validation of this implementation
+The initial examples say **Illustrative example · no AI call**. With live configuration, **Explore this role with Jev** submits public role text. The server checks access, sends twelve fixed boolean questions to `POST https://ai-gateway.vercel.sh/v1/evaluate` using `typesafe-ai/jev`, and matches returned requirement signals against approved public résumé evidence. No private recruiter information or generated biography is used.
 
-All 88 automated tests, `pnpm lint`, `pnpm typecheck`, and `pnpm build` passed for this change. Tests cover provider selection and pricing guards, typed answer validation, streamed success and errors, malformed or truncated streams, cancellation, and existing evidence/publication boundaries.
+The browser sends `Accept: application/x-ndjson` to `POST /api/career-fit`. Status events identify actual `checking`, `interpreting` and `matching` work, followed by a `result` brief or a recoverable `error`. The model returns decisions together; the UI does not fabricate partial decisions or tokens. Non-streaming clients receive JSON. Errors before streaming use HTTP error codes; errors after streaming starts use an error event. Clients must inspect the event type.
 
-The successful Jev interface browser check used a fixture response to exercise progress and the requirement breakdown. It was not a real Jev call. No Venice credential, free-account eligibility, live response quality, or billing behavior has been validated. The rejected Vercel probe below is the only authenticated provider evaluation recorded here; it produced no model result.
+A live brief includes the provider, response duration, completion timestamp and twelve probabilities. Duration measures inference through validation. Values describe whether a capability is required by the role, not candidate ability or suitability. The 65% threshold selects topics for evidence retrieval. Keyword previews contain no Jev analysis and explicitly say Jev was not used. Cancellation, provider errors and request limits preserve entered text.
 
-## Why the existing Vercel account is not active
+Role titles are limited to 160 characters, descriptions to 100–8,000 characters, and request bodies to 36,000 bytes. Same-origin validation, credential-pattern rejection, and process-local limits of eight accepted requests per hour and two concurrent requests remain. Provider work times out after 12 seconds; the browser permits 18 seconds. Process-local limits are not a global quota. The application does not save descriptions or send them to analytics.
 
-The [Vercel Jev page](https://vercel.com/ai-gateway/models/jev) advertises free access until September 25. Its public catalog still reports the ordinary input price; that alone was insufficient evidence to rule out free promotional usage. However, an actual authenticated evaluation on this project returned HTTP 403 with type `customer_verification_required`: “AI Gateway requires a valid credit card on file to service requests.” The account’s credit balance and total used were both zero before and after this rejected probe. No successful Vercel model call occurred.
+## Venice account findings
 
-Vercel’s [free-credit eligibility and model coverage](https://vercel.com/docs/ai-gateway/pricing) also require account verification; monthly credits do not by themselves prove this project has usable free Jev access. Its budgets are not a demonstrated zero-spend hard stop. The legacy adapter remains available only by explicit provider selection and keeps its conservative zero-price/September 25 guards. Venice is the proposed no-card route, pending actual key verification.
+[Venice advertises a Jev promotion and no-card signup](https://venice.ai/lp/jev), but the authenticated account response showed `accessPermitted: false` and zero USD, Diem and bundled-credit balances. Its model catalog lists Jev input at $0.042 per million tokens. The key is valid; usable free inference has not been established. No Venice inference or funding was attempted. The adapter stays available for future verification with an Inference Only key whose USD spending is disabled, as described in [Venice’s key guide](https://docs.venice.ai/guides/getting-started/generating-api-key).
