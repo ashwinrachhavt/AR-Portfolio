@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.1 — 2026-09-22
+
+- Add a Venice Jev adapter for its advertised free promotion. Activation awaits a verified account key with USD spending disabled; live inference remains off.
+- Stream actual analysis stages and show Jev’s requirement probabilities, provider, and response time after successful inference. Clearly distinguish examples and keyword previews.
+- Reject unknown or nonzero pricing, preserve entered text on errors and cancellation, and validate streamed results before rendering.
+- Correct the free-access findings: Vercel’s catalog alone does not establish promotional billing, but this account’s actual probe requires card verification.
+- Validate with 88 automated tests, lint, type checking, a production build, and desktop/mobile browser checks. Provider success is mocked; live Venice billing and accuracy are unverified.
+
 ## 0.3.0 — 2026-09-22
 
 - Reposition the portfolio around product engineering, building with AI, and curiosity about product design and adoption.

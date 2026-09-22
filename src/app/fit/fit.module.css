@@ -18,6 +18,27 @@
 .input :is(input, textarea, button):focus-visible, .results a:focus-visible { outline: 2px solid #c4c4ff; outline-offset: 4px; }
 .count { font-size: 11px; color: #a1a1aa; text-align: right; }
 .note { color: #a1a1aa; font-size: 12px; line-height: 1.7; }
+.note a { text-decoration: underline; text-underline-offset: 3px; }
+.progress, .receipt { border: 1px solid #414148; border-radius: 12px; padding: 20px; margin-top: 20px; font-size: 13px; }
+.progress ol { display: grid; gap: 18px; list-style: none; margin-bottom: 22px; }
+.progress li { display: flex; align-items: center; gap: 12px; color: #85858e; }
+.progress li[data-state="active"] { color: #eeeef3; }
+.progress li[data-state="done"] { color: #b7d7bd; }
+.progress li > span { font-size: 11px; width: 20px; flex-shrink: 0; }
+.receipt > p { display: flex; align-items: center; gap: 8px; color: #c9dfce; }
+.receipt > p > span:last-child { margin-left: auto; color: #a1a1aa; font-variant-numeric: tabular-nums; }
+.liveDot { width: 6px; height: 6px; border-radius: 50%; background: #9aceaa; }
+.receipt details { border-top: 1px solid #36363d; margin-top: 16px; padding-top: 16px; }
+.receipt summary { cursor: pointer; color: #d4d4dc; }
+.receipt summary:focus-visible { outline: 2px solid #c4c4ff; outline-offset: 4px; }
+.receipt details > p { margin-block: 14px; }
+.signals { display: grid; gap: 12px; list-style: none; }
+.signals li { display: grid; grid-template-columns: minmax(0, 1fr) 60px 32px; align-items: center; gap: 10px; color: #b9b9c3; font-size: 11px; }
+.signals meter { width: 100%; height: 6px; }
+.signals meter::-webkit-meter-bar { background: #36363d; border: 0; }
+.signals meter::-webkit-meter-optimum-value { background: #b5b5d2; }
+.signals meter::-moz-meter-bar { background: #b5b5d2; }
+.signals li > span:last-child { text-align: right; font-variant-numeric: tabular-nums; }
 .primary { display: flex; gap: 20px; justify-content: space-between; align-items: center; margin-top: 16px; border-radius: 999px; padding: 15px 22px; background: #ededf0; color: #171719; font-size: 14px; text-decoration: none; }
 .primary:disabled { opacity: .6; cursor: wait; }
 .cancel { padding: 10px; color: #c8c8ce; font-size: 13px; }
