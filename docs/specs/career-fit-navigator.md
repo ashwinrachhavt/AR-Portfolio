@@ -1,7 +1,9 @@
 # Career Fit Navigator — Feature Specification
 
 ## Status
-Draft specification for an interactive, evidence-backed portfolio feature powered by Jev / TypeSafe System One primitives.
+Original design proposal, with a combined website release implemented on September 22, 2026. The owner explicitly chose one release and ended the interactive review. [Combined release scope and validation](../releases/2026-09-22-combined-website.md) records the actual implementation and supersedes the phased delivery section below.
+
+The shipped implementation uses 12 capabilities, 10 verbatim public résumé evidence items, three examples, source pages, and deterministic ranking. Jev integration uses Vercel's typed evaluation API with a free-only pricing check and an expiry cutoff. Live interpretation is disabled: the current model catalog lists a nonzero input price, and the owner requires free access. Keyword results are explicitly labeled. Role-family/seniority classification, the larger taxonomy, strong/partial labels, a Jev essay embed, and a live-model evaluation corpus from this proposal are not implemented or claimed complete. The sections below retain the original design for reference, not an additional release commitment.
 
 ## Summary
 Career Fit Navigator lets a hiring manager, founder, recruiter, or collaborator paste a job title and non-confidential job description and receive a structured Role Brief. The Role Brief maps the role to Ashwin Rachha's public, curated, and source-linked evidence: relevant case studies, capabilities, outcomes, and appropriate discussion areas.

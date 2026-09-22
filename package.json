@@ -1,13 +1,17 @@
 {
   "name": "portfolio-website",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "engines": {
-    "node": ">=20.9.0"
+    "node": ">=22.18.0"
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/publish-writing.mjs build && next build",
+    "content:build": "node scripts/publish-writing.mjs build",
+    "content:import": "node --env-file-if-exists=.env scripts/publish-writing.mjs import",
+    "content:notion": "node --experimental-strip-types --env-file-if-exists=.env scripts/publish-writing.mjs notion",
+    "test": "node --experimental-strip-types --test src/lib/*.test.mjs src/lib/workflow/*.test.mjs",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"

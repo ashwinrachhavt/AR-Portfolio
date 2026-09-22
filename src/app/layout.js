@@ -9,9 +9,9 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Ashwin Rachha | Applied AI Engineer",
+  title: "Ashwin Rachha | Product Engineer · Building with AI",
   description:
-    "Founding and applied AI engineer building production agentic systems, financial infrastructure, and product workflows. Loan Labs and Finally.",
+    "Product engineer building with AI. Explore my work, interactive experiments, and writing on engineering, product design, and bringing ideas to life.",
   icons: {
     icon: "/images/Ashwin.png",
   },

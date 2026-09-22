@@ -75,7 +75,7 @@ export function createInMemoryWorkflowLimiter(options: LimiterOptions = {}): Wor
 
 const sharedLimiter = createInMemoryWorkflowLimiter();
 
-class PayloadTooLargeError extends Error {}
+export class PayloadTooLargeError extends Error {}
 
 function jsonResponse(payload: unknown, status: number, extraHeaders?: HeadersInit): Response {
   return Response.json(payload, {
@@ -87,7 +87,7 @@ function jsonResponse(payload: unknown, status: number, extraHeaders?: HeadersIn
   });
 }
 
-function isSameOriginBrowserRequest(request: Request): boolean {
+export function isSameOriginBrowserRequest(request: Request): boolean {
   const fetchSite = request.headers.get("sec-fetch-site");
   if (fetchSite === "cross-site") return false;
 
@@ -107,7 +107,7 @@ function requestIdentity(request: Request): string {
   return identity.slice(0, 128);
 }
 
-async function readBoundedBody(request: Request, limit: number): Promise<string> {
+export async function readBoundedBody(request: Request, limit: number): Promise<string> {
   const contentLength = request.headers.get("content-length");
   if (contentLength && /^\d+$/.test(contentLength) && Number(contentLength) > limit) {
     throw new PayloadTooLargeError();
