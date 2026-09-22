@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.2 — 2026-09-22
+
+- Activate Vercel’s verified free Jev promotion with a dedicated career-fit credential. Live authenticated decisions report zero cost and preserve the free credit balance.
+- Admit the known promotional base rate only with a dated verification stamp and untouched free credits; require zero-cost receipts and stop all Vercel Jev inference at September 25, 00:00 UTC.
+- Record six live synthetic role checks, including unrelated requirements, negation and embedded instructions. All produced expected signals on successful responses; transient provider errors remain documented.
+- Validate with 94 automated tests, lint, type checking and a production build. Venice authenticates but reports no usable API balance, so it remains unused.
+
 ## 0.3.1 — 2026-09-22
 
 - Add a Venice Jev adapter for its advertised free promotion. Activation awaits a verified account key with USD spending disabled; live inference remains off.
