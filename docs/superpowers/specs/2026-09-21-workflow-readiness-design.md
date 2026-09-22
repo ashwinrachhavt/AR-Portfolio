@@ -1,0 +1,13 @@
+# AI Workflow Readiness Lab
+
+Approved direction: build Phase 1 of the portfolio-product proposal. One no-account form produces a structured, exportable AI Workflow Brief. Reuse the portfolio's monochrome design and shared navigation/footer. Add a Tools link and homepage invitation. Route: `/tools/workflow-readiness`.
+
+Inputs: task, current process/owner, input data/systems, desired output, consequences of mistakes (low/moderate/high), and human approval (always/exceptions/none). Examples and useful introductory content load without an AI call. Results contain a job statement, a recommended pattern, typed workflow steps, seven readiness areas, evaluation proposals, risks, assumptions, and a next experiment. Mark recommendations as proposals based on submitted information; use evidence and gaps rather than a numerical readiness score.
+
+Readiness areas are data, retrieval, workflow, evaluation, observability, human review, and risk. Status labels are Defined, Needs work, and Unknown. Every area contains evidence from the submission (or states that it was not supplied) and a specific next action. High-stakes workflows and requests for universal approval require a human step. Do not invent facts, measurements, external sources, or permission to act.
+
+Visitors can edit inputs, cancel a pending request, retry a failed request, copy the brief, download Markdown, and print/save PDF. Show a clearly labeled example independently of generation. No public brief database, integration access, private Notion context, or action execution. Do not store raw submissions in logs or analytics. Browser-session state only.
+
+Architecture: server-rendered Next.js page, small interactive React form and results view, Zod schemas shared by server validation and tests, and a server-only OpenAI request. Use existing dependencies; direct Responses API fetch is sufficient. Model is configurable with WORKFLOW_LAB_MODEL, default gpt-4.1-mini, using existing OPENAI_API_KEY. One request per submit, 45-second timeout, bounded input/output, explicit errors, no automatic model retry. Keep credentials on the server. Best-effort in-process anonymous request limits must be described accurately; production-wide quotas require a shared limiter or hosting configuration and are not guaranteed by process memory.
+
+Acceptance: real successful generation with the configured key; labeled example; complete and sparse valid inputs; validation, timeout, provider failure, malformed output, rate limiting, preserved form state; keyboard/mobile navigation; working copy/download/print; no regression to portfolio/blog routes; tests, lint, typecheck, and build pass. Existing patch PR #4 remains separate. No deployment or merge is part of this task.

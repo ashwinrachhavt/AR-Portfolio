@@ -14,6 +14,10 @@ export default function Home() {
       <Navbar />
       <main id="main" className={styles.main}>
         <HeroSection />
+        <section className={styles.toolInvitation} aria-labelledby="tool-title">
+          <div><p className={styles.sectionLabel}>A tool for your next idea</p><h2 id="tool-title">Make your AI workflow buildable.</h2><p>Map the system, find the gaps, and leave with a practical first experiment.</p></div>
+          <Link href="/tools/workflow-readiness">Try the Readiness Lab <span aria-hidden="true">↗</span></Link>
+        </section>
         <ProjectsSection />
         <ExperienceSection />
         <section id="writing" className={styles.writing} aria-labelledby="writing-title">

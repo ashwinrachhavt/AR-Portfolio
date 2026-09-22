@@ -6,7 +6,7 @@ export default function Navbar({ activeSection }) {
       <nav className={styles.nav} aria-label="Main navigation">
         <Link href="/#about" className={styles.wordmark}>Ashwin Rachha<span aria-hidden="true">.</span></Link>
         <div className={styles.navLinks}>
-          <Link href="/#work">Work</Link><Link href="/#experience">Experience</Link><Link href={activeSection === "writing" ? "/blog" : "/#writing"} aria-current={activeSection === "writing" ? "page" : undefined}>Writing</Link><Link href="/#contact">Contact</Link>
+          <Link href="/#work">Work</Link><Link href="/#experience">Experience</Link><Link href="/tools/workflow-readiness" aria-current={activeSection === "tools" ? "page" : undefined}>Tools</Link><Link href={activeSection === "writing" ? "/blog" : "/#writing"} aria-current={activeSection === "writing" ? "page" : undefined}>Writing</Link><Link href="/#contact">Contact</Link>
         </div>
       </nav>
     </header>
