@@ -38,6 +38,10 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Vercel
 
+Deploy the latest `main` commit after merging a PR. Check the deployment's **Source** commit and the **Detected Next.js version** build-log line: this project pins Next.js and `eslint-config-next` to `16.3.5`. [Next.js security releases](https://nextjs.org/blog/august-2026-security-release) require patched dependencies; keep both packages and their lockfiles in sync when upgrading.
+
+Vercel's **Redeploy** action rebuilds the selected deployment's source. Retrying the historical `933996c` deployment still installs Next.js `15.5.2` and is blocked by Vercel. Create a deployment from the current `main` branch instead. Keep Vercel's vulnerability protection enabled.
+
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
