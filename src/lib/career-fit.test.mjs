@@ -3,12 +3,14 @@ import assert from "node:assert/strict";
 import resume from "../content/resume.json" with { type: "json" };
 import { capabilities, evidence, examples, buildRoleBrief, keywordCapabilities } from "./career-fit.mjs";
 import { createCareerFitHandler, hasFreeJevPrice, JEV_FREE_ACCESS_END } from "./career-fit-handler.ts";
+import { hasVerifiedJevPromotion } from "./jev.ts";
 import { createInMemoryWorkflowLimiter } from "./workflow/handler.ts";
 
 const request = (body = { jobDescription: examples[0].description }, headers = {}) => new Request("https://portfolio.example/api/career-fit", { method: "POST", headers: { "Content-Type": "application/json", ...headers }, body: typeof body === "string" ? body : JSON.stringify(body) });
 const makeHandler = (options = {}) => createCareerFitHandler({ env: {}, limiter: createInMemoryWorkflowLimiter({ maxRequests: 100 }), ...options });
 const freeCatalog = { data: [{ id: "typesafe-ai/jev", pricing: { input: "0", output: "0" } }] };
 const liveEnv = { AI_GATEWAY_API_KEY: "test-only", CAREER_FIT_PROVIDER: "vercel", CAREER_FIT_LIVE_ENABLED: "true" };
+const freeReceipt = { gateway: { cost: "0", gatewayCost: "0", surchargeCost: "0" } };
 const duringPromo = () => Date.parse("2026-09-22T00:00:00Z");
 
 test("every evidence claim is a verbatim public resume fact with a source", () => {
@@ -72,7 +74,7 @@ test("Jev receives only fixed questions; no generated claim or URL reaches the b
   const handler = makeHandler({ env: liveEnv, now: duringPromo, fetcher: async (url, init) => {
     if (url.endsWith("/models")) { assert.equal(init.body, undefined); return Response.json(freeCatalog); }
     assert.equal(url, "https://ai-gateway.vercel.sh/v1/evaluate"); outgoing = JSON.parse(init.body);
-    return Response.json({ answers: Object.fromEntries(capabilities.map(item => [item.id, { probability: item.id === "agents" ? .9 : .1 }])), claim: "Invented accomplishment", href: "https://attacker.example" });
+    return Response.json({ providerMetadata: freeReceipt, answers: Object.fromEntries(capabilities.map(item => [item.id, { probability: item.id === "agents" ? .9 : .1 }])), claim: "Invented accomplishment", href: "https://attacker.example" });
   } });
   const response = await handler(request()); const result = await response.json();
   assert.equal(result.mode, "jev"); assert.equal(outgoing.model, "typesafe-ai/jev");
@@ -112,7 +114,69 @@ test("Vercel OIDC can authenticate zero-priced Jev without a separate API key", 
   const handler = makeHandler({ env: { VERCEL_OIDC_TOKEN: "test-oidc", CAREER_FIT_PROVIDER: "vercel", CAREER_FIT_LIVE_ENABLED: "true" }, now: duringPromo, fetcher: async (url, init) => {
     if (url.endsWith("/models")) return Response.json(freeCatalog);
     assert.equal(init.headers.Authorization, "Bearer test-oidc");
-    return Response.json({ answers: Object.fromEntries(capabilities.map(item => [item.id, { probability: .1 }])) });
+    return Response.json({ providerMetadata: freeReceipt, answers: Object.fromEntries(capabilities.map(item => [item.id, { probability: .1 }])) });
+  } });
+  assert.equal((await (await handler(request())).json()).mode, "jev");
+});
+
+const basePriceCatalog = { data: [{ id: "typesafe-ai/jev", pricing: { input: "0.000000042", output: "0" } }] };
+const verifiedPromoEnv = { ...liveEnv, CAREER_FIT_VERCEL_PROMO_VERIFIED: "2026-09-22" };
+
+test("verified promotion admits only the exact known base rate within its dates", () => {
+  assert.equal(hasVerifiedJevPromotion(basePriceCatalog, verifiedPromoEnv, duringPromo()), true);
+  for (const [catalog, env, timestamp] of [
+    [basePriceCatalog, liveEnv, duringPromo()],
+    [basePriceCatalog, verifiedPromoEnv, JEV_FREE_ACCESS_END],
+    [basePriceCatalog, verifiedPromoEnv, duringPromo() - 1],
+    [{ data: [{ id: "typesafe-ai/jev", pricing: { input: "0.000000043", output: "0" } }] }, verifiedPromoEnv, duringPromo()],
+    [{ data: [{ id: "typesafe-ai/jev", pricing: { input: "0.000000042", output: "0", fee: "1" } }] }, verifiedPromoEnv, duringPromo()],
+  ]) assert.equal(hasVerifiedJevPromotion(catalog, env, timestamp), false);
+});
+
+test("promotional base rate needs untouched free credits and a zero-cost receipt", async () => {
+  const calls = [];
+  const handler = makeHandler({ env: verifiedPromoEnv, now: duringPromo, fetcher: async url => {
+    calls.push(url);
+    if (url.endsWith("/models")) return Response.json(basePriceCatalog);
+    if (url.endsWith("/credits")) return Response.json({ balance: "5", total_used: "0" });
+    return Response.json({ providerMetadata: freeReceipt, answers: Object.fromEntries(capabilities.map(item => [item.id, { probability: .1 }])) });
+  } });
+  assert.equal((await (await handler(request())).json()).mode, "jev");
+  assert.deepEqual(calls.map(url => url.split("/").at(-1)), ["models", "credits", "evaluate"]);
+});
+
+test("any metered spend, different balance or unavailable credits blocks promotional inference", async () => {
+  for (const credits of [{ balance: "5", total_used: ".000001" }, { balance: "0", total_used: "0" }, { balance: "10", total_used: "0" }, { balance: null, total_used: "0" }, { balance: "5" }, null]) {
+    const handler = makeHandler({ env: verifiedPromoEnv, now: duringPromo, fetcher: async url => {
+      if (url.endsWith("/models")) return Response.json(basePriceCatalog);
+      assert.ok(url.endsWith("/credits"), "must not perform inference");
+      return credits ? Response.json(credits) : new Response("Unavailable", { status: 503 });
+    } });
+    assert.equal((await (await handler(request())).json()).mode, "keyword");
+  }
+});
+
+test("nonzero or missing gateway cost receipts are rejected without exposing provider data", async () => {
+  for (const gateway of [undefined, { cost: ".000001", gatewayCost: "0", surchargeCost: "0" }, { cost: "0", gatewayCost: "0", surchargeCost: ".1" }, { cost: "0" }]) {
+    const handler = makeHandler({ env: liveEnv, now: duringPromo, fetcher: async url => url.endsWith("/models") ? Response.json(freeCatalog) : Response.json({ providerMetadata: gateway ? { gateway } : undefined, answers: Object.fromEntries(capabilities.map(item => [item.id, { probability: .1 }])) }) });
+    assert.equal((await handler(request())).status, 503);
+  }
+});
+
+test("promotion expiry during credit verification prevents inference", async () => {
+  let currentTime = duringPromo();
+  const handler = makeHandler({ env: verifiedPromoEnv, now: () => currentTime, fetcher: async url => {
+    if (url.endsWith("/models")) return Response.json(basePriceCatalog);
+    assert.ok(url.endsWith("/credits")); currentTime = JEV_FREE_ACCESS_END;
+    return Response.json({ balance: "5", total_used: "0" });
+  } });
+  assert.equal((await (await handler(request())).json()).mode, "keyword");
+});
+
+test("a career-fit credential works without enabling the shared gateway credential", async () => {
+  const handler = makeHandler({ env: { CAREER_FIT_PROVIDER: "vercel", CAREER_FIT_LIVE_ENABLED: "true", CAREER_FIT_GATEWAY_API_KEY: "fit-only" }, now: duringPromo, fetcher: async (url, init) => {
+    assert.equal(init.headers.Authorization, "Bearer fit-only");
+    return url.endsWith("/models") ? Response.json(freeCatalog) : Response.json({ providerMetadata: freeReceipt, answers: Object.fromEntries(capabilities.map(item => [item.id, { probability: .1 }])) });
   } });
   assert.equal((await (await handler(request())).json()).mode, "jev");
 });
