@@ -1,0 +1,356 @@
+{
+  "version": 1,
+  "reviewedAt": "2026-09-23",
+  "sourceDigest": "251d65a1f40baca954365153fe121444ab20580a6fd0c3e6341b2c594c42e6c9",
+  "items": [
+    {
+      "id": "lois-agents",
+      "title": "Lois: agents for mortgage workflows",
+      "project": "lois",
+      "capabilities": [
+        "agents",
+        "backend",
+        "fintech"
+      ],
+      "discussion": "How did you choose which steps belonged in the agent workflow?",
+      "kind": "work",
+      "company": "Loan Labs",
+      "role": "Applied AI Engineer",
+      "period": "Jan 2026–Present",
+      "context": "Early-stage mortgage technology startup · Internal and pilot workflows",
+      "claim": "Re-architected Lois from one-off Ruby LLM calls into a LangGraph agentic system on Amazon Bedrock AgentCore for mortgage-document classification, lender-specific renaming, and policy validation.",
+      "href": "/work/loan-labs#architecture",
+      "sourceLabel": "Read the public work",
+      "sources": [],
+      "details": [
+        {
+          "claim": "Built agent-facing Rails APIs, borrower email intake, and an in-product conversational interface so users could handle loan documents and initiate agent actions in LoanOS.",
+          "href": "/work/loan-labs#surfaces",
+          "factRef": "roles.loan-labs.bullets.surfaces"
+        }
+      ],
+      "limitation": "Internal and pilot workflows; no claim of broad customer rollout.",
+      "factRef": "roles.loan-labs.bullets.architecture"
+    },
+    {
+      "id": "agent-permissions",
+      "title": "Permission-aware agent actions",
+      "project": "lois",
+      "capabilities": [
+        "agents",
+        "permissions",
+        "integrations"
+      ],
+      "discussion": "How did you handle revoked access and actions that needed review?",
+      "kind": "work",
+      "company": "Loan Labs",
+      "role": "Applied AI Engineer",
+      "period": "Jan 2026–Present",
+      "context": "Early-stage mortgage technology startup · Internal and pilot workflows",
+      "claim": "Designed fail-closed authorization for Composio integrations: tenant/owner scoping, separate write/send/merge/archive permissions, reviewed tool allowlists, and execution-time checks that invalidate revoked access.",
+      "href": "/work/loan-labs#permissions",
+      "sourceLabel": "Read the public work",
+      "sources": [],
+      "details": [
+        {
+          "claim": "Connected CRM and document workflows across Google Drive, Box, Salesforce, HubSpot, Pipedrive, OneDrive, and SharePoint with fine-grained access controls and blocked delete actions.",
+          "href": "/work/loan-labs#integrations",
+          "factRef": "roles.loan-labs.bullets.integrations"
+        }
+      ],
+      "limitation": "Internal and pilot workflows; no claim of broad customer rollout.",
+      "factRef": "roles.loan-labs.bullets.permissions"
+    },
+    {
+      "id": "product-surfaces",
+      "title": "From agent APIs to a product interface",
+      "project": "lois",
+      "capabilities": [
+        "product",
+        "backend",
+        "integrations"
+      ],
+      "discussion": "How did the product interface make agent actions understandable to users?",
+      "kind": "work",
+      "company": "Loan Labs",
+      "role": "Applied AI Engineer",
+      "period": "Jan 2026–Present",
+      "context": "Early-stage mortgage technology startup · Internal and pilot workflows",
+      "claim": "Built agent-facing Rails APIs, borrower email intake, and an in-product conversational interface so users could handle loan documents and initiate agent actions in LoanOS.",
+      "href": "/work/loan-labs#surfaces",
+      "sourceLabel": "Read the public work",
+      "sources": [],
+      "details": [
+        {
+          "claim": "Re-architected Lois from one-off Ruby LLM calls into a LangGraph agentic system on Amazon Bedrock AgentCore for mortgage-document classification, lender-specific renaming, and policy validation.",
+          "href": "/work/loan-labs#architecture",
+          "factRef": "roles.loan-labs.bullets.architecture"
+        }
+      ],
+      "limitation": "Internal and pilot workflows; no claim of broad customer rollout.",
+      "factRef": "roles.loan-labs.bullets.surfaces"
+    },
+    {
+      "id": "ai-delivery",
+      "title": "AI-assisted product development",
+      "project": "ai-delivery",
+      "capabilities": [
+        "product",
+        "leadership"
+      ],
+      "discussion": "Where did engineering review fit into the AI-assisted delivery workflow?",
+      "kind": "work",
+      "company": "Loan Labs",
+      "role": "Applied AI Engineer",
+      "period": "Jan 2026–Present",
+      "context": "Early-stage mortgage technology startup · Internal and pilot workflows",
+      "claim": "Introduced an AI-assisted software delivery workflow linking Linear/Notion product context, technical specifications, shared company knowledge, and senior-engineer code review.",
+      "href": "/work/loan-labs#leadership",
+      "sourceLabel": "Read the public work",
+      "sources": [],
+      "details": [],
+      "limitation": "Internal and pilot workflows; no claim of broad customer rollout.",
+      "factRef": "roles.loan-labs.bullets.leadership"
+    },
+    {
+      "id": "classify-ai",
+      "title": "Classify AI: prototype to production",
+      "project": "classify-ai",
+      "capabilities": [
+        "product",
+        "leadership",
+        "fintech"
+      ],
+      "discussion": "What was your contribution, and how did the team measure categorization quality?",
+      "kind": "work",
+      "company": "Finally",
+      "role": "AI Product Engineer / Tech Lead",
+      "period": "Feb 2024–Jan 2026",
+      "context": "AI bookkeeping, banking infrastructure, and corporate-card underwriting",
+      "claim": "Joined as the first AI Product Engineer and led a three-engineer team from prototype to production on Classify AI; processed 50K+ transactions daily and reduced manual categorization by approximately 80%.",
+      "href": "/work/finally#classify",
+      "sourceLabel": "Read the public work",
+      "sources": [],
+      "details": [
+        {
+          "claim": "Built retrieval-augmented classification with LangChain, Pinecone, Elasticsearch, Redis, Celery, and Django, combining transaction history, merchant enrichment, and custom charts of accounts.",
+          "href": "/work/finally#retrieval",
+          "factRef": "roles.finally.bullets.retrieval"
+        }
+      ],
+      "limitation": "Technical leadership of three engineers; this does not establish formal people-management responsibility.",
+      "factRef": "roles.finally.bullets.classify"
+    },
+    {
+      "id": "retrieval-platform",
+      "title": "Retrieval-backed classification",
+      "project": "classify-ai",
+      "capabilities": [
+        "retrieval",
+        "backend",
+        "fintech"
+      ],
+      "discussion": "How did you evaluate retrieval quality for transaction classification?",
+      "kind": "work",
+      "company": "Finally",
+      "role": "AI Product Engineer / Tech Lead",
+      "period": "Feb 2024–Jan 2026",
+      "context": "AI bookkeeping, banking infrastructure, and corporate-card underwriting",
+      "claim": "Built retrieval-augmented classification with LangChain, Pinecone, Elasticsearch, Redis, Celery, and Django, combining transaction history, merchant enrichment, and custom charts of accounts.",
+      "href": "/work/finally#retrieval",
+      "sourceLabel": "Read the public work",
+      "sources": [],
+      "details": [
+        {
+          "claim": "Joined as the first AI Product Engineer and led a three-engineer team from prototype to production on Classify AI; processed 50K+ transactions daily and reduced manual categorization by approximately 80%.",
+          "href": "/work/finally#classify",
+          "factRef": "roles.finally.bullets.classify"
+        }
+      ],
+      "limitation": "Technical leadership of three engineers; this does not establish formal people-management responsibility.",
+      "factRef": "roles.finally.bullets.retrieval"
+    },
+    {
+      "id": "banking-platform",
+      "title": "Reusable banking infrastructure",
+      "project": "banking-platform",
+      "capabilities": [
+        "integrations",
+        "backend",
+        "fintech",
+        "permissions"
+      ],
+      "discussion": "How did you handle token lifecycle changes and reliable transaction synchronization?",
+      "kind": "work",
+      "company": "Finally",
+      "role": "AI Product Engineer / Tech Lead",
+      "period": "Feb 2024–Jan 2026",
+      "context": "AI bookkeeping, banking infrastructure, and corporate-card underwriting",
+      "claim": "Architected reusable Plaid/Teller infrastructure for account linking, encrypted token storage, token lifecycle management, webhooks, transaction synchronization, and normalized account data.",
+      "href": "/work/finally#banking",
+      "sourceLabel": "Read the public work",
+      "sources": [],
+      "details": [
+        {
+          "claim": "Evolved bookkeeping from CSV upload to Plaid/Teller bank ingestion, OCR-supported statements, reconciliation, and QuickBooks push; helped reduce first-month close from 4+ months to approximately 2 weeks.",
+          "href": "/work/finally#close",
+          "factRef": "roles.finally.bullets.close"
+        }
+      ],
+      "limitation": "A team outcome, not a claim of sole attribution.",
+      "factRef": "roles.finally.bullets.banking"
+    },
+    {
+      "id": "reconciliation",
+      "title": "A shorter path to the first close",
+      "project": "reconciliation",
+      "capabilities": [
+        "fintech",
+        "product",
+        "integrations"
+      ],
+      "discussion": "What changed in the first-month close workflow, and what did you own?",
+      "kind": "work",
+      "company": "Finally",
+      "role": "AI Product Engineer / Tech Lead",
+      "period": "Feb 2024–Jan 2026",
+      "context": "AI bookkeeping, banking infrastructure, and corporate-card underwriting",
+      "claim": "Evolved bookkeeping from CSV upload to Plaid/Teller bank ingestion, OCR-supported statements, reconciliation, and QuickBooks push; helped reduce first-month close from 4+ months to approximately 2 weeks.",
+      "href": "/work/finally#close",
+      "sourceLabel": "Read the public work",
+      "sources": [],
+      "details": [
+        {
+          "claim": "Architected reusable Plaid/Teller infrastructure for account linking, encrypted token storage, token lifecycle management, webhooks, transaction synchronization, and normalized account data.",
+          "href": "/work/finally#banking",
+          "factRef": "roles.finally.bullets.banking"
+        }
+      ],
+      "limitation": "A team outcome, not a claim of sole attribution.",
+      "factRef": "roles.finally.bullets.close"
+    },
+    {
+      "id": "nlp-platform",
+      "title": "NLP inference and deployment",
+      "project": "nlp-platform",
+      "capabilities": [
+        "ml",
+        "backend"
+      ],
+      "discussion": "What tradeoffs did you make between model quality and serving cost?",
+      "kind": "work",
+      "company": "Outreach",
+      "role": "Machine Learning Platform Engineer Intern",
+      "period": "May 2022–Aug 2022",
+      "context": null,
+      "claim": "Built reusable NLP inference and deployment infrastructure using PySpark, MLflow, ONNX, NVIDIA Triton, Go/Python microservices, Docker, CI/CD, and GKE.",
+      "href": "/work/outreach#platform",
+      "sourceLabel": "Read the public work",
+      "sources": [],
+      "details": [],
+      "limitation": null,
+      "factRef": "roles.outreach.bullets.platform"
+    },
+    {
+      "id": "accessible-systems",
+      "title": "ML for accessible experiences",
+      "project": "accessible-systems",
+      "capabilities": [
+        "ml",
+        "backend",
+        "product"
+      ],
+      "discussion": "How did accessibility needs influence the backend and data pipelines?",
+      "kind": "work",
+      "company": "UNAR Labs",
+      "role": "Machine Learning Engineer",
+      "period": "Jun 2023–Aug 2023",
+      "context": null,
+      "claim": "Built accessibility-focused backend and data pipelines for visually impaired users with OpenCV, PyTorch, Transformers, and FastAPI; deployed on GCP with Docker.",
+      "href": "/work/unar#accessibility",
+      "sourceLabel": "Read the public work",
+      "sources": [],
+      "details": [],
+      "limitation": null,
+      "factRef": "roles.unar.bullets.accessibility"
+    },
+    {
+      "id": "cash-underwriting",
+      "title": "Cash-based underwriting",
+      "project": "cash-underwriting",
+      "capabilities": [
+        "underwriting",
+        "fintech",
+        "backend"
+      ],
+      "discussion": "How did audit history and manual overrides fit into underwriting decisions?",
+      "kind": "work",
+      "company": "Finally",
+      "role": "AI Product Engineer / Tech Lead",
+      "period": "Feb 2024–Jan 2026",
+      "context": "AI bookkeeping, banking infrastructure, and corporate-card underwriting",
+      "claim": "Built cash-based underwriting with 90-day bank data, daily-balance reconstruction, weekly recalculation, audit history, and manual overrides; supported $3M+ in credit for 50+ companies in approximately three months.",
+      "href": "/work/finally#underwriting",
+      "sourceLabel": "Read the public work",
+      "sources": [],
+      "details": [
+        {
+          "claim": "Architected reusable Plaid/Teller infrastructure for account linking, encrypted token storage, token lifecycle management, webhooks, transaction synchronization, and normalized account data.",
+          "href": "/work/finally#banking",
+          "factRef": "roles.finally.bullets.banking"
+        }
+      ],
+      "limitation": null,
+      "factRef": "roles.finally.bullets.underwriting"
+    },
+    {
+      "id": "gurukul-research",
+      "title": "Gurukul: learning with RAG and guardrails",
+      "project": "gurukul",
+      "capabilities": [
+        "education",
+        "retrieval"
+      ],
+      "discussion": "How did you evaluate whether the learning environment helped students?",
+      "kind": "research",
+      "company": "Gurukul",
+      "role": "Gurukul · LLM-enhanced CS education",
+      "period": null,
+      "context": null,
+      "claim": "Built an adaptive learning environment using RAG and guardrails; research at IEEE FIE 2024 and IEEE SouthEastCon 2023.",
+      "href": "https://vtechworks.lib.vt.edu/items/3d08a8cd-effe-4e41-9830-0204637e53da",
+      "sourceLabel": "Read the thesis",
+      "sources": [
+        {
+          "label": "Explore the research code",
+          "href": "https://github.com/ashwinrachha786/Gurukul_v2"
+        }
+      ],
+      "details": [],
+      "limitation": "Research evidence; this does not establish a commercial deployment.",
+      "factRef": "research.description"
+    },
+    {
+      "id": "computer-vision",
+      "title": "Facial-expression recognition for CRM",
+      "project": "computer-vision",
+      "capabilities": [
+        "vision",
+        "ml"
+      ],
+      "discussion": "What were the limitations of recognizing expressions in meeting analysis?",
+      "kind": "work",
+      "company": "Mindbowser Inc",
+      "role": "Software Engineer, ML",
+      "period": "Dec 2019–Feb 2021",
+      "context": null,
+      "claim": "Developed a facial-expression recognition system for CRM meeting analysis using VGG-19 transfer learning and MongoDB GridFS.",
+      "href": "/work/mindbowser#vision",
+      "sourceLabel": "Read the public work",
+      "sources": [],
+      "details": [],
+      "limitation": null,
+      "factRef": "roles.mindbowser.bullets.vision"
+    }
+  ]
+}

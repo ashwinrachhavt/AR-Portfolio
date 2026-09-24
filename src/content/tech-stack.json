@@ -1,0 +1,467 @@
+{
+  "profileSource": "https://github.com/ashwinrachhavt/ashwinrachhavt/blob/a52c7522c3d1fe07db598a071fab657bf649ee20/README.md",
+  "resumeSource": "src/content/resume.json",
+  "groups": [
+    {
+      "title": "Languages & product",
+      "items": [
+        {
+          "name": "Python",
+          "source": "resume",
+          "icon": "/images/stack/s-python.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/python.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Go",
+          "source": "resume",
+          "icon": "/images/stack/s-go.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/go.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "TypeScript",
+          "source": "resume",
+          "icon": "/images/stack/s-typescript.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/typescript.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Ruby",
+          "source": "resume",
+          "icon": "/images/stack/s-ruby.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/ruby.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "SQL",
+          "source": "resume",
+          "icon": "/images/stack/concept-database.svg",
+          "iconSource": "Original generic symbol; this item has no brand logo",
+          "iconKind": "concept"
+        },
+        {
+          "name": "React",
+          "source": "resume",
+          "icon": "/images/stack/s-react.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/react.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Next.js",
+          "source": "resume",
+          "icon": "/images/stack/s-nextdotjs.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/nextdotjs.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Tailwind CSS",
+          "source": "profile",
+          "icon": "/images/stack/s-tailwindcss.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/tailwindcss.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Django",
+          "source": "resume",
+          "icon": "/images/stack/s-django.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/django.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "FastAPI",
+          "source": "resume",
+          "icon": "/images/stack/s-fastapi.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/fastapi.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Rails APIs",
+          "source": "resume",
+          "icon": "/images/stack/s-rubyonrails.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/rubyonrails.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Clerk",
+          "source": "profile",
+          "icon": "/images/stack/s-clerk.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/clerk.svg",
+          "iconKind": "brand"
+        }
+      ]
+    },
+    {
+      "title": "AI & agent systems",
+      "items": [
+        {
+          "name": "LangGraph",
+          "source": "resume",
+          "icon": "/images/stack/s-langgraph.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/langgraph.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "LangChain",
+          "source": "resume",
+          "icon": "/images/stack/s-langchain.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/langchain.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Amazon Bedrock",
+          "source": "resume",
+          "icon": "/images/stack/l-bedrock-color.svg",
+          "iconSource": "https://raw.githubusercontent.com/lobehub/lobe-icons/5c1ecb4fb06b92519a39102482d4e8273f000422/packages/static-svg/icons/bedrock-color.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "AgentCore Runtime",
+          "source": "profile",
+          "icon": "/images/stack/l-bedrock-color.svg",
+          "iconSource": "https://raw.githubusercontent.com/lobehub/lobe-icons/5c1ecb4fb06b92519a39102482d4e8273f000422/packages/static-svg/icons/bedrock-color.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "AgentCore Gateway",
+          "source": "profile",
+          "icon": "/images/stack/l-bedrock-color.svg",
+          "iconSource": "https://raw.githubusercontent.com/lobehub/lobe-icons/5c1ecb4fb06b92519a39102482d4e8273f000422/packages/static-svg/icons/bedrock-color.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "MCP",
+          "source": "profile",
+          "icon": "/images/stack/l-mcp.svg",
+          "iconSource": "https://raw.githubusercontent.com/lobehub/lobe-icons/5c1ecb4fb06b92519a39102482d4e8273f000422/packages/static-svg/icons/mcp.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Composio",
+          "source": "resume",
+          "icon": "/images/stack/f-composio-dev.png",
+          "iconSource": "https://www.google.com/s2/favicons?domain=composio.dev&sz=64",
+          "iconKind": "brand"
+        },
+        {
+          "name": "GPT-4",
+          "source": "profile",
+          "icon": "/images/stack/l-openai.svg",
+          "iconSource": "https://raw.githubusercontent.com/lobehub/lobe-icons/5c1ecb4fb06b92519a39102482d4e8273f000422/packages/static-svg/icons/openai.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "PyTorch",
+          "source": "resume",
+          "icon": "/images/stack/s-pytorch.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/pytorch.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Hugging Face",
+          "source": "profile",
+          "icon": "/images/stack/s-huggingface.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/huggingface.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Transformers",
+          "source": "resume",
+          "icon": "/images/stack/s-huggingface.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/huggingface.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "OpenCV",
+          "source": "resume",
+          "icon": "/images/stack/s-opencv.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/opencv.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "MLflow",
+          "source": "resume",
+          "icon": "/images/stack/s-mlflow.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/mlflow.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "ONNX",
+          "source": "resume",
+          "icon": "/images/stack/s-onnx.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/onnx.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "NVIDIA Triton",
+          "source": "resume",
+          "icon": "/images/stack/s-nvidia.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/nvidia.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Weights & Biases",
+          "source": "profile",
+          "icon": "/images/stack/s-weightsandbiases.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/weightsandbiases.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "VGG-19",
+          "source": "resume",
+          "icon": "/images/stack/concept-network.svg",
+          "iconSource": "Original generic symbol; this item has no brand logo",
+          "iconKind": "concept"
+        }
+      ]
+    },
+    {
+      "title": "Data & retrieval",
+      "items": [
+        {
+          "name": "PostgreSQL",
+          "source": "resume",
+          "icon": "/images/stack/s-postgresql.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/postgresql.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Redis",
+          "source": "resume",
+          "icon": "/images/stack/s-redis.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/redis.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Celery",
+          "source": "resume",
+          "icon": "/images/stack/s-celery.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/celery.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Pinecone",
+          "source": "resume",
+          "icon": "/images/stack/f-pinecone-io.png",
+          "iconSource": "https://www.google.com/s2/favicons?domain=pinecone.io&sz=64",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Elasticsearch",
+          "source": "resume",
+          "icon": "/images/stack/s-elasticsearch.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/elasticsearch.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "MongoDB / GridFS",
+          "source": "resume",
+          "icon": "/images/stack/s-mongodb.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/mongodb.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "PySpark",
+          "source": "resume",
+          "icon": "/images/stack/s-apachespark.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/apachespark.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Snowflake SQL",
+          "source": "profile",
+          "icon": "/images/stack/s-snowflake.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/snowflake.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Prisma",
+          "source": "profile",
+          "icon": "/images/stack/s-prisma.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/prisma.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Supabase",
+          "source": "profile",
+          "icon": "/images/stack/s-supabase.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/supabase.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "FAISS",
+          "source": "profile",
+          "icon": "/images/stack/concept-database.svg",
+          "iconSource": "Original generic symbol; this item has no brand logo",
+          "iconKind": "concept"
+        }
+      ]
+    },
+    {
+      "title": "Cloud & delivery",
+      "items": [
+        {
+          "name": "AWS",
+          "source": "resume",
+          "icon": "/images/stack/l-aws-color.svg",
+          "iconSource": "https://raw.githubusercontent.com/lobehub/lobe-icons/5c1ecb4fb06b92519a39102482d4e8273f000422/packages/static-svg/icons/aws-color.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Google Cloud",
+          "source": "resume",
+          "icon": "/images/stack/s-googlecloud.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/googlecloud.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "GKE",
+          "source": "resume",
+          "icon": "/images/stack/s-googlecloud.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/googlecloud.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Docker",
+          "source": "resume",
+          "icon": "/images/stack/s-docker.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/docker.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Kubernetes",
+          "source": "resume",
+          "icon": "/images/stack/s-kubernetes.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/kubernetes.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Argo CD",
+          "source": "profile",
+          "icon": "/images/stack/s-argo.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/argo.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Vercel",
+          "source": "profile",
+          "icon": "/images/stack/s-vercel.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/vercel.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Datadog",
+          "source": "profile",
+          "icon": "/images/stack/s-datadog.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/datadog.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Sentry",
+          "source": "profile",
+          "icon": "/images/stack/s-sentry.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/sentry.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Linear",
+          "source": "resume",
+          "icon": "/images/stack/s-linear.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/linear.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Notion",
+          "source": "resume",
+          "icon": "/images/stack/s-notion.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/notion.svg",
+          "iconKind": "brand"
+        }
+      ]
+    },
+    {
+      "title": "Business integrations",
+      "items": [
+        {
+          "name": "Plaid",
+          "source": "resume",
+          "icon": "/images/stack/f-plaid-com.png",
+          "iconSource": "https://www.google.com/s2/favicons?domain=plaid.com&sz=64",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Teller",
+          "source": "resume",
+          "icon": "/images/stack/f-teller-io.png",
+          "iconSource": "https://www.google.com/s2/favicons?domain=teller.io&sz=64",
+          "iconKind": "brand"
+        },
+        {
+          "name": "QuickBooks",
+          "source": "resume",
+          "icon": "/images/stack/s-quickbooks.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/quickbooks.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Google Drive",
+          "source": "resume",
+          "icon": "/images/stack/s-googledrive.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/googledrive.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Box",
+          "source": "resume",
+          "icon": "/images/stack/s-box.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/box.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Salesforce",
+          "source": "resume",
+          "icon": "/images/stack/d-salesforce-salesforce-original.svg",
+          "iconSource": "https://raw.githubusercontent.com/devicons/devicon/7330accdbc47e2dc0c19789a48533c4a3c50fe58/icons/salesforce/salesforce-original.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "HubSpot",
+          "source": "resume",
+          "icon": "/images/stack/s-hubspot.svg",
+          "iconSource": "https://raw.githubusercontent.com/simple-icons/simple-icons/b86d5c9a0bdd4f3f5c30898a63654dd32f39fd76/icons/hubspot.svg",
+          "iconKind": "brand"
+        },
+        {
+          "name": "Pipedrive",
+          "source": "resume",
+          "icon": "/images/stack/f-pipedrive-com.png",
+          "iconSource": "https://www.google.com/s2/favicons?domain=pipedrive.com&sz=64",
+          "iconKind": "brand"
+        },
+        {
+          "name": "OneDrive",
+          "source": "resume",
+          "icon": "/images/stack/f-onedrive-live-com.png",
+          "iconSource": "https://www.google.com/s2/favicons?domain=onedrive.live.com&sz=64",
+          "iconKind": "brand"
+        },
+        {
+          "name": "SharePoint",
+          "source": "resume",
+          "icon": "/images/stack/f-sharepoint-com.png",
+          "iconSource": "https://www.google.com/s2/favicons?domain=sharepoint.com&sz=64",
+          "iconKind": "brand"
+        }
+      ]
+    }
+  ],
+  "patterns": [
+    "RAG",
+    "Guardrails",
+    "OCR",
+    "NLP",
+    "OAuth",
+    "Webhooks",
+    "CI/CD"
+  ]
+}

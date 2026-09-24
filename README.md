@@ -31,7 +31,9 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 ## Career Fit Navigator
 
-Open `/fit` to explore three role examples or submit a role description. The site maps requirements to 12 capabilities, selects from ten verbatim public résumé facts, links the supporting `/work/[id]` pages, and identifies evidence gaps. Examples and keyword mapping work without any provider credential. Results are labeled by mode and are conversation starters, not hiring scores. The homepage connects this explorer, the Readiness Lab, writing, and interests in product design and adoption.
+Open `/fit` to explore three role examples or submit a role description. The site maps requirements to 15 capabilities and selects complementary results from 13 approved public evidence entries, including underwriting, Gurukul research, and computer vision. Visitors can adjust topics, prioritize an area, expand source-linked details, and explore all related work without another AI request. Examples and keyword mapping work without any provider credential. Results are labeled by mode and are conversation starters, not hiring scores.
+
+The browser and API use a validated, versioned snapshot derived from `src/content/resume.json` and the reviewed supporting catalog. Run `pnpm evidence:build` after approved content changes; `pnpm evidence:check` blocks stale or invalid snapshots during the production build. See [publication, source reconciliation, ranking, and measurement](docs/career-evidence.md). The profile README is never fetched at runtime.
 
 Jev answers fixed capability questions; application code selects the evidence and final wording. The production configuration uses **Vercel’s verified free Jev promotion**. Recruiters see actual request stages, requirement probabilities and response time alongside cited public work. These probabilities describe the role, never the candidate’s suitability. Examples make no AI call; fallback results explicitly say Jev was not used.
 

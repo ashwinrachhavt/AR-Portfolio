@@ -73,6 +73,21 @@
     "thesis": "https://vtechworks.lib.vt.edu/items/3d08a8cd-effe-4e41-9830-0204637e53da",
     "code": "https://github.com/ashwinrachha786/Gurukul_v2"
   },
+  "projects": [
+    {
+      "id": "command-center",
+      "title": "Command Center",
+      "description": "A personal workspace for opportunities, relationships, tasks, and research agents. It brings source-backed research, versioned documents, and human-reviewed actions into one place.",
+      "category": "Personal project",
+      "code": "https://github.com/ashwinrachhavt/command-center"
+    },
+    {
+      "id": "alfred",
+      "title": "Alfred / Polymath",
+      "description": "A personal knowledge system that brings notes and web research together, using agentic retrieval to explore ideas and answer questions.",
+      "category": "Personal project"
+    }
+  ],
   "variants": {
     "applied-ai": {
       "headline": "Applied AI Engineer | Agentic Systems & Financial Workflows",

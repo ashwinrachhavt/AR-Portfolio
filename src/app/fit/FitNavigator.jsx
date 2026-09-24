@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import { track } from "@vercel/analytics";
-import { buildRoleBrief, capabilities, examples, keywordCapabilities } from "../../lib/career-fit.mjs";
+import { buildRoleBrief, examples, keywordCapabilities } from "../../lib/career-fit.mjs";
 import { readCareerFitResponse } from "../../lib/career-fit-stream.mjs";
+import EvidenceExplorer from "./EvidenceExplorer";
 import styles from "./fit.module.css";
 
 const stages = [
@@ -19,6 +20,7 @@ export default function FitNavigator({ live = false, provider = "venice" }) {
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [stage, setStage] = useState("");
+  const [explorerVersion, setExplorerVersion] = useState(0);
   const controller = useRef(null);
   const version = useRef(0);
   useEffect(() => () => controller.current?.abort(), []);
@@ -26,6 +28,7 @@ export default function FitNavigator({ live = false, provider = "venice" }) {
     version.current += 1; controller.current?.abort();
     const example = examples[index]; setTitle(example.title); setDescription(example.description);
     setBrief(buildRoleBrief(keywordCapabilities(example.description), "example")); setError(""); setPending(false); setStage("");
+    setExplorerVersion(value => value + 1);
     track("career_fit_example_loaded", { example: index });
   }
   async function submit(event) {
@@ -42,7 +45,6 @@ export default function FitNavigator({ live = false, provider = "venice" }) {
       if (current === version.current && !abort.signal.aborted) { setError(failure.name === "TimeoutError" ? "This took too long. Try again or explore an example." : failure.message); track("career_fit_failed"); }
     } finally { if (current === version.current) setPending(false); }
   }
-  const label = id => capabilities.find(item => item.id === id)?.label || id;
   return <>
     <div className={styles.layout}>
       <section className={styles.input} aria-labelledby="role-heading">
@@ -64,24 +66,16 @@ export default function FitNavigator({ live = false, provider = "venice" }) {
           {stage ? <ol>{stages.map((item, index) => <li key={item.id} data-state={index < stages.findIndex(item => item.id === stage) ? "done" : item.id === stage ? "active" : "waiting"}><span aria-hidden="true">{index < stages.findIndex(item => item.id === stage) ? "✓" : `0${index + 1}`}</span>{item.label}</li>)}</ol> : <p>Sending your role for analysis…</p>}
           <p className={styles.note}>Results appear when the analysis finishes. You can cancel at any time.</p>
         </div>}
-        <div aria-live="polite" aria-busy={pending}>{brief && <>
+        <div aria-busy={pending}>{brief && <>
           <p className={styles.note}>{brief.mode === "jev" ? "Jev interpreted your role in this request. Every career claim below comes from my approved public work." : "This preview uses keyword matching. It can miss negation and unstated requirements. No live Jev interpretation was performed."}</p>
           {brief.mode === "jev" && brief.analysis && <div className={styles.receipt}>
             <p><span className={styles.liveDot} aria-hidden="true" />Jev via {brief.analysis.provider === "venice" ? "Venice" : "Vercel"}<span>{(brief.analysis.durationMs / 1000).toFixed(1)}s</span></p>
             <details><summary>See what Jev detected</summary>
-              <p className={styles.note}>Each value is Jev’s estimate that the role requires this capability. It is not a score of my ability or suitability. Values of 65% or more select topics for the evidence below.</p>
+              <p className={styles.note}>Each value is Jev’s estimate that the role requires this capability. It is not a score of my ability or suitability. Values of 65% or more select the initial topics. You can adjust those topics below.</p>
               <ul className={styles.signals}>{brief.analysis.signals.map(item => <li key={item.id}><span>{item.label}</span><meter min="0" max="1" value={item.probability} aria-label={`${item.label}: estimated requirement likelihood`} /><span>{Math.round(item.probability * 100)}%</span></li>)}</ul>
             </details>
           </div>}
-          <div className={styles.tags}>{brief.capabilities.map(item => <span key={item.id}>{item.label}</span>)}</div>
-          {brief.evidence.length ? brief.evidence.map((item, index) => <article className={styles.evidence} key={item.id}>
-            <p className={styles.eyebrow}>0{index + 1} / {item.company}</p><h3>{item.title}</h3><p>{item.claim}</p>
-            <p className={styles.overlap}>Related to {item.overlap.map(label).join(" · ")}</p>
-            {item.limitation && <p className={styles.note}>{item.limitation}</p>}
-            <a href={item.href} onClick={() => track("career_fit_source_opened", { evidence: item.id })}>Read the public work <span aria-hidden="true">↗</span></a>
-          </article>) : <p className={styles.empty}>No clear overlap surfaced. This catalog is limited; it doesn’t establish what I can or cannot do. Browse my work or start a conversation.</p>}
-          {brief.gaps.length > 0 && <aside className={styles.gaps}><h3>Worth a conversation</h3><p>{brief.gaps.map(item => item.label).join(", ")}: no direct public evidence in this catalog. Interests and adjacent experience aren’t proof of these requirements.</p></aside>}
-          <div className={styles.prompts}><h3>Ask me about</h3><ul>{brief.prompts.map(prompt => <li key={prompt}>{prompt}</li>)}</ul></div>
+          <EvidenceExplorer key={explorerVersion} brief={brief} />
           <a className={styles.primary} href="mailto:ashwin.rachha@gmail.com?subject=Let%E2%80%99s%20explore%20working%20together" onClick={() => track("career_fit_contact_cta_clicked")}>Start the conversation <span aria-hidden="true">↗</span></a>
         </>}</div>
       </section>

@@ -1,43 +1,9 @@
-import resume from "../content/resume.json" with { type: "json" };
+import snapshot from "../content/generated/career-evidence.json" with { type: "json" };
+import { capabilities } from "./career-capabilities.mjs";
+export { capabilities };
 
-// Claims are selected from the public resume, never generated from role text.
-export const capabilities = [
-  { id: "agents", label: "AI agents", pattern: /\b(agent(?:ic|s)?|langgraph|tool.using)\b/i },
-  { id: "retrieval", label: "Retrieval & RAG", pattern: /\b(rag|retrieval|search|classification|pinecone)\b/i },
-  { id: "backend", label: "Backend & APIs", pattern: /\b(back.end|apis?|django|rails|fastapi|microservices)\b/i },
-  { id: "integrations", label: "Integrations", pattern: /\b(integrations?|oauth|webhooks?|plaid|teller|crm)\b/i },
-  { id: "product", label: "Product delivery", pattern: /\b(product|full.stack|end.to.end|user.facing|founding)\b/i },
-  { id: "permissions", label: "Permissions & trust", pattern: /\b(permissions?|authorization|access.control|tenant|security)\b/i },
-  { id: "fintech", label: "Financial workflows", pattern: /\b(fintech|financial|banking|mortgage|bookkeeping|reconciliation|underwriting)\b/i },
-  { id: "ml", label: "ML systems", pattern: /\b(mlops|machine.learning|inference|triton|onnx|model.serving)\b/i },
-  { id: "leadership", label: "Technical leadership", pattern: /\b(technical.lead|tech.lead|engineering.lead|mentoring)\b/i },
-  { id: "design", label: "Product design", pattern: /\b(product.design|ux|user.research|figma|design.system)\b/i },
-  { id: "growth", label: "Sales & growth", pattern: /\b(sales|marketing|conversion|growth|brand|go.to.market)\b/i },
-  { id: "management", label: "People management", pattern: /\b(people.management|direct.reports|performance.reviews|hiring.manager|manage.a.team)\b/i },
-];
-
-const selection = [
-  ["lois-agents", "Lois: agents for mortgage workflows", "loan-labs", "architecture", ["agents", "backend", "fintech"]],
-  ["agent-permissions", "Permission-aware agent actions", "loan-labs", "permissions", ["agents", "permissions", "integrations"]],
-  ["product-surfaces", "From agent APIs to a product interface", "loan-labs", "surfaces", ["product", "backend", "integrations"]],
-  ["ai-delivery", "AI-assisted product development", "loan-labs", "leadership", ["product", "leadership"]],
-  ["classify-ai", "Classify AI: prototype to production", "finally", "classify", ["product", "leadership", "fintech"]],
-  ["retrieval-platform", "Retrieval-backed classification", "finally", "retrieval", ["retrieval", "backend", "fintech"]],
-  ["banking-platform", "Reusable banking infrastructure", "finally", "banking", ["integrations", "backend", "fintech", "permissions"]],
-  ["reconciliation", "A shorter path to the first close", "finally", "close", ["fintech", "product", "integrations"]],
-  ["nlp-platform", "NLP inference and deployment", "outreach", "platform", ["ml", "backend"]],
-  ["accessible-systems", "ML for accessible experiences", "unar", "accessibility", ["ml", "backend", "product"]],
-];
-
-export const evidence = selection.map(([id, title, roleId, bullet, tags]) => {
-  const role = resume.roles.find(item => item.id === roleId);
-  if (!role?.bullets[bullet]) throw new Error(`Missing approved evidence: ${id}`);
-  return { id, title, company: role.company, claim: role.bullets[bullet], capabilities: tags,
-    href: `/work/${roleId}`, sourceLabel: `${role.company} · public work`,
-    limitation: roleId === "loan-labs" ? "Internal and pilot workflows; no claim of broad customer rollout." :
-      bullet === "classify" ? "Technical leadership of three engineers; this does not establish formal people-management responsibility." :
-      bullet === "close" ? "A team outcome, not a claim of sole attribution." : null };
-});
+// Only the validated, published snapshot is available to the browser or API.
+export const evidence = snapshot.items;
 
 export const examples = [
   { title: "Founding AI product engineer", description: "Build a user-facing AI product from prototype to production. Own agent workflows, retrieval and RAG, backend APIs, third-party integrations, and the product experience in a small team." },
@@ -49,19 +15,41 @@ export function keywordCapabilities(text) {
   return capabilities.filter(item => item.pattern.test(text)).map(item => item.id);
 }
 
-export function buildRoleBrief(ids, mode = "keyword") {
+export function buildRoleBrief(ids, mode = "keyword", { priority = null, limit = 3 } = {}) {
   const selected = capabilities.filter(item => ids.includes(item.id));
-  const ranked = evidence.map(item => ({ ...item, overlap: item.capabilities.filter(id => ids.includes(id)) }))
-    .filter(item => item.overlap.length > 0)
-    // Preserve the curated public-work order for equally relevant evidence.
-    .sort((a, b) => b.overlap.length - a.overlap.length);
+  const candidates = evidence.map(item => ({ ...item, overlap: item.capabilities.filter(id => ids.includes(id)) }))
+    .filter(item => item.overlap.length > 0);
+  const ranked = [];
+  const covered = new Set(), projects = new Set(), companies = new Set();
+  const preferred = selected.some(item => item.id === priority) ? priority : null;
+  while (candidates.length) {
+    // A visitor's explicit priority wins. Within one matching topic of the best
+    // remaining result, prefer uncovered requirements and different projects.
+    const focused = preferred ? candidates.filter(item => item.overlap.includes(preferred)) : [];
+    const pool = focused.length ? focused : candidates;
+    const bestOverlap = Math.max(...pool.map(item => item.overlap.length));
+    const comparable = pool.filter(item => item.overlap.length >= bestOverlap - 1);
+    const uncovered = item => item.overlap.filter(id => !covered.has(id)).length;
+    comparable.sort((a, b) => uncovered(b) - uncovered(a) ||
+      Number(projects.has(a.project)) - Number(projects.has(b.project)) ||
+      b.overlap.length - a.overlap.length ||
+      Number(companies.has(a.company)) - Number(companies.has(b.company)));
+    const next = comparable[0];
+    ranked.push(next);
+    next.overlap.forEach(id => covered.add(id)); projects.add(next.project); companies.add(next.company);
+    candidates.splice(candidates.indexOf(next), 1);
+  }
   const gaps = selected.filter(item => !ranked.some(proof => proof.overlap.includes(item.id)));
   return {
     mode,
     capabilities: selected.map(({ id, label }) => ({ id, label })),
-    evidence: ranked.slice(0, 3),
+    evidence: ranked.slice(0, Math.max(0, limit)),
+    totalEvidence: ranked.length,
     gaps: gaps.map(({ id, label }) => ({ id, label })),
     prompts: [
+      ...(ids.includes("underwriting") ? ["How did you make underwriting decisions auditable and allow manual overrides?"] : []),
+      ...(ids.includes("education") ? ["How would you evaluate learning outcomes and the role of guardrails?"] : []),
+      ...(ids.includes("vision") ? ["What limitations would you investigate before using expression recognition?"] : []),
       ...(ids.includes("agents") ? ["How would you decide which actions an agent can take, and which need review?"] : []),
       ...(ids.includes("product") ? ["What would you ship first, and what evidence would change that decision?"] : []),
       ...(ids.includes("retrieval") ? ["How would you evaluate retrieval quality before adding more model complexity?"] : []),

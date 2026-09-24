@@ -7,7 +7,9 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/publish-writing.mjs build && next build",
+    "build": "pnpm evidence:check && node scripts/publish-writing.mjs build && next build",
+    "evidence:build": "node scripts/publish-career-evidence.mjs",
+    "evidence:check": "node scripts/publish-career-evidence.mjs --check",
     "content:build": "node scripts/publish-writing.mjs build",
     "content:import": "node --env-file-if-exists=.env scripts/publish-writing.mjs import",
     "content:notion": "node --experimental-strip-types --env-file-if-exists=.env scripts/publish-writing.mjs notion",

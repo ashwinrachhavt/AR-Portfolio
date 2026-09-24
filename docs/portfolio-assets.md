@@ -1,0 +1,11 @@
+# Reading shelf and technology catalog
+
+The five current reads in `src/content/reading.json` were supplied directly by Ashwin. The Philosophy Book is represented by the DK edition. No ratings, completion progress, endorsements, or personal takeaways have been inferred. Each entry records its cover source and a book information link. Covers are stored as local WebP files in `public/images/books/` with their original aspect ratios; copyright remains with the respective rights holders.
+
+`src/content/tech-stack.json` records 61 technology entries and seven patterns/protocols found in the three résumé variants, role bullets, and the current public GitHub profile. Each entry identifies whether its career source is `resume` or `profile`. The catalog is a presentation of documented technologies, not a proficiency rating. Vendor services connected by Lois are grouped as business integrations. Alternate names are consolidated (for example, GCP as Google Cloud, TS as TypeScript, and MongoDB/GridFS together).
+
+The public profile is pinned to commit `a52c7522c3d1fe07db598a071fab657bf649ee20`. This version supersedes the older cached README that contained inconsistent bookkeeping and Outreach metrics. No career metrics were imported by this change. The career résumé and Jev evidence catalog remain separate from the reading and technology presentation data.
+
+Logos are local assets from pinned Simple Icons, Devicon, and Lobe Icons revisions. Their original licenses are retained in `public/images/stack/LICENSES.txt`. Per-asset URLs are recorded in the catalog. The remaining brand icons are vendor favicons, retrieved once through Google's favicon service and stored locally. AgentCore uses the Bedrock mark, GKE uses the Google Cloud mark, and Transformers uses the Hugging Face mark. SQL, FAISS, and VGG-19 use clearly generic database/network symbols because those catalog entries do not have a supplied brand logo. Patterns such as RAG and webhooks are rendered as text.
+
+All assets and content are served from this repository. Visitors do not trigger requests to the profile README, icon collections, or cover services. When adding technologies, verify the résumé or public profile source and preserve its provenance.

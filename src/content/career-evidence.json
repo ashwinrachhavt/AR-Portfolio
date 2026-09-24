@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "reviewedAt": "2026-09-23",
+  "items": [
+    {
+      "id": "lois-agents",
+      "title": "Lois: agents for mortgage workflows",
+      "project": "lois",
+      "source": { "kind": "role", "id": "loan-labs", "bullet": "architecture" },
+      "capabilities": ["agents", "backend", "fintech"],
+      "details": ["surfaces"],
+      "discussion": "How did you choose which steps belonged in the agent workflow?"
+    },
+    {
+      "id": "agent-permissions",
+      "title": "Permission-aware agent actions",
+      "project": "lois",
+      "source": { "kind": "role", "id": "loan-labs", "bullet": "permissions" },
+      "capabilities": ["agents", "permissions", "integrations"],
+      "details": ["integrations"],
+      "discussion": "How did you handle revoked access and actions that needed review?"
+    },
+    {
+      "id": "product-surfaces",
+      "title": "From agent APIs to a product interface",
+      "project": "lois",
+      "source": { "kind": "role", "id": "loan-labs", "bullet": "surfaces" },
+      "capabilities": ["product", "backend", "integrations"],
+      "details": ["architecture"],
+      "discussion": "How did the product interface make agent actions understandable to users?"
+    },
+    {
+      "id": "ai-delivery",
+      "title": "AI-assisted product development",
+      "project": "ai-delivery",
+      "source": { "kind": "role", "id": "loan-labs", "bullet": "leadership" },
+      "capabilities": ["product", "leadership"],
+      "details": [],
+      "discussion": "Where did engineering review fit into the AI-assisted delivery workflow?"
+    },
+    {
+      "id": "classify-ai",
+      "title": "Classify AI: prototype to production",
+      "project": "classify-ai",
+      "source": { "kind": "role", "id": "finally", "bullet": "classify" },
+      "capabilities": ["product", "leadership", "fintech"],
+      "details": ["retrieval"],
+      "discussion": "What was your contribution, and how did the team measure categorization quality?"
+    },
+    {
+      "id": "retrieval-platform",
+      "title": "Retrieval-backed classification",
+      "project": "classify-ai",
+      "source": { "kind": "role", "id": "finally", "bullet": "retrieval" },
+      "capabilities": ["retrieval", "backend", "fintech"],
+      "details": ["classify"],
+      "discussion": "How did you evaluate retrieval quality for transaction classification?"
+    },
+    {
+      "id": "banking-platform",
+      "title": "Reusable banking infrastructure",
+      "project": "banking-platform",
+      "source": { "kind": "role", "id": "finally", "bullet": "banking" },
+      "capabilities": ["integrations", "backend", "fintech", "permissions"],
+      "details": ["close"],
+      "discussion": "How did you handle token lifecycle changes and reliable transaction synchronization?"
+    },
+    {
+      "id": "reconciliation",
+      "title": "A shorter path to the first close",
+      "project": "reconciliation",
+      "source": { "kind": "role", "id": "finally", "bullet": "close" },
+      "capabilities": ["fintech", "product", "integrations"],
+      "details": ["banking"],
+      "discussion": "What changed in the first-month close workflow, and what did you own?"
+    },
+    {
+      "id": "nlp-platform",
+      "title": "NLP inference and deployment",
+      "project": "nlp-platform",
+      "source": { "kind": "role", "id": "outreach", "bullet": "platform" },
+      "capabilities": ["ml", "backend"],
+      "details": [],
+      "discussion": "What tradeoffs did you make between model quality and serving cost?"
+    },
+    {
+      "id": "accessible-systems",
+      "title": "ML for accessible experiences",
+      "project": "accessible-systems",
+      "source": { "kind": "role", "id": "unar", "bullet": "accessibility" },
+      "capabilities": ["ml", "backend", "product"],
+      "details": [],
+      "discussion": "How did accessibility needs influence the backend and data pipelines?"
+    },
+    {
+      "id": "cash-underwriting",
+      "title": "Cash-based underwriting",
+      "project": "cash-underwriting",
+      "source": { "kind": "role", "id": "finally", "bullet": "underwriting" },
+      "capabilities": ["underwriting", "fintech", "backend"],
+      "details": ["banking"],
+      "discussion": "How did audit history and manual overrides fit into underwriting decisions?"
+    },
+    {
+      "id": "gurukul-research",
+      "title": "Gurukul: learning with RAG and guardrails",
+      "project": "gurukul",
+      "source": { "kind": "research" },
+      "capabilities": ["education", "retrieval"],
+      "details": [],
+      "discussion": "How did you evaluate whether the learning environment helped students?"
+    },
+    {
+      "id": "computer-vision",
+      "title": "Facial-expression recognition for CRM",
+      "project": "computer-vision",
+      "source": { "kind": "role", "id": "mindbowser", "bullet": "vision" },
+      "capabilities": ["vision", "ml"],
+      "details": [],
+      "discussion": "What were the limitations of recognizing expressions in meeting analysis?"
+    }
+  ]
+}

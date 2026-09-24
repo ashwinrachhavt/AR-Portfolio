@@ -1,0 +1,17 @@
+export const capabilities = [
+  { id: "agents", label: "AI agents", pattern: /\b(agent(?:ic|s)?|langgraph|tool.using)\b/i },
+  { id: "retrieval", label: "Retrieval & RAG", pattern: /\b(rag|retrieval|search|classification|pinecone)\b/i },
+  { id: "backend", label: "Backend & APIs", pattern: /\b(back.end|apis?|django|rails|fastapi|microservices)\b/i },
+  { id: "integrations", label: "Integrations", pattern: /\b(integrations?|oauth|webhooks?|plaid|teller|crm)\b/i },
+  { id: "product", label: "Product delivery", pattern: /\b(product|full.stack|end.to.end|user.facing|founding)\b/i },
+  { id: "permissions", label: "Permissions & trust", pattern: /\b(permissions?|authorization|access.control|tenant|security)\b/i },
+  { id: "fintech", label: "Financial workflows", pattern: /\b(fintech|financial|banking|mortgage|bookkeeping|reconciliation|underwriting)\b/i },
+  { id: "ml", label: "ML systems", pattern: /\b(mlops|machine.learning|inference|triton|onnx|model.serving)\b/i },
+  { id: "underwriting", label: "Underwriting", pattern: /\b(underwriting|credit.risk|credit.limits?)\b/i },
+  { id: "education", label: "Learning systems", pattern: /\b(edtech|education|learning.environments?|learning.platforms?|tutoring|lms|socratic)\b/i },
+  { id: "vision", label: "Computer vision", pattern: /\b(computer.vision|facial.expression|image.recognition|vgg.?19|opencv)\b/i },
+  { id: "leadership", label: "Technical leadership", pattern: /\b(technical.lead|tech.lead|engineering.lead|mentoring)\b/i },
+  { id: "design", label: "Product design", pattern: /\b(product.design|ux|user.research|figma|design.system)\b/i },
+  { id: "growth", label: "Sales & growth", pattern: /\b(sales|marketing|conversion|growth|brand|go.to.market)\b/i },
+  { id: "management", label: "People management", pattern: /\b(people.management|direct.reports|performance.reviews|hiring.manager|manage.a.team)\b/i },
+];

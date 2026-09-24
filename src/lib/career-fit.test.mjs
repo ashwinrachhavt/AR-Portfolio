@@ -14,9 +14,14 @@ const freeReceipt = { gateway: { cost: "0", gatewayCost: "0", surchargeCost: "0"
 const duringPromo = () => Date.parse("2026-09-22T00:00:00Z");
 
 test("every evidence claim is a verbatim public resume fact with a source", () => {
-  const claims = resume.roles.flatMap(role => Object.values(role.bullets));
+  const claims = [...resume.roles.flatMap(role => Object.values(role.bullets)), resume.research.description];
   assert.equal(new Set(evidence.map(item => item.id)).size, evidence.length);
-  for (const item of evidence) { assert.ok(claims.includes(item.claim)); assert.match(item.href, /^\/work\/[a-z-]+$/); }
+  for (const item of evidence) {
+    assert.ok(claims.includes(item.claim));
+    if (item.kind === "research") assert.equal(item.href, resume.research.thesis);
+    else assert.match(item.href, /^\/work\/[a-z-]+#[a-z-]+$/);
+    for (const detail of item.details) assert.ok(claims.includes(detail.claim));
+  }
 });
 
 test("unrelated and unsupported requirements never fabricate evidence", () => {
@@ -39,6 +44,9 @@ for (const [text, included, excluded] of [
   ["Product design with Figma", "design", "fintech"],
   ["Sales, marketing and conversion", "growth", "backend"],
   ["People management with direct reports", "management", "leadership"],
+  ["Cash-based underwriting and credit risk", "underwriting", "vision"],
+  ["Build tutoring tools for an education platform", "education", "management"],
+  ["Computer vision and facial expression recognition", "vision", "underwriting"],
 ]) test(`keyword evaluation: ${text}`, () => { const ids = keywordCapabilities(text); assert.ok(ids.includes(included)); assert.ok(!ids.includes(excluded)); });
 
 test("retrieval excludes zero-overlap evidence and caps results deterministically", () => {
