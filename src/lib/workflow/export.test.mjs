@@ -13,7 +13,7 @@ test("export preserves the full brief, approval boundary, and original descripti
   assert.ok(markdown.includes(exampleInput.task));
   assert.ok(markdown.includes("Approve every result"));
   assert.ok(markdown.includes("Proposed target:"));
-  assert.ok(markdown.includes("AI-generated proposal"));
+  assert.ok(markdown.includes("Free rules-based proposal"));
   assert.ok(markdown.includes(approvalPolicy(exampleInput)));
 });
 
@@ -37,4 +37,12 @@ test("download filenames are bounded and cannot contain paths", () => {
   assert.equal(briefFilename("../../Vendor / Review"), "vendor-review-brief.md");
   assert.equal(briefFilename("💡"), "workflow-brief.md");
   assert.ok(briefFilename("a".repeat(200)).length < 90);
+});
+
+test("exports retain the distinction between Jev interpretation and local scenario edits", () => {
+  assert.ok(briefToMarkdown(exampleBrief, exampleInput, false, "Jev signals · authored rules").includes("Jev signals · authored rules"));
+  const adjusted = briefToMarkdown(exampleBrief, { ...exampleInput, stakes: "high", approval: "none" }, false, "Your scenario · free rules");
+  assert.ok(adjusted.includes("Your scenario · free rules"));
+  assert.ok(adjusted.includes("Human approval is required before every consequential action"));
+  assert.ok(!adjusted.includes("AI-generated"));
 });

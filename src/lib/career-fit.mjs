@@ -49,12 +49,12 @@ export function keywordCapabilities(text) {
   return capabilities.filter(item => item.pattern.test(text)).map(item => item.id);
 }
 
-export function buildRoleBrief(ids, mode = "keyword") {
+export function buildRoleBrief(ids, mode = "keyword", priorityId = null) {
   const selected = capabilities.filter(item => ids.includes(item.id));
   const ranked = evidence.map(item => ({ ...item, overlap: item.capabilities.filter(id => ids.includes(id)) }))
     .filter(item => item.overlap.length > 0)
     // Preserve the curated public-work order for equally relevant evidence.
-    .sort((a, b) => b.overlap.length - a.overlap.length);
+    .sort((a, b) => (b.overlap.length + (b.overlap.includes(priorityId) ? 3 : 0)) - (a.overlap.length + (a.overlap.includes(priorityId) ? 3 : 0)));
   const gaps = selected.filter(item => !ranked.some(proof => proof.overlap.includes(item.id)));
   return {
     mode,

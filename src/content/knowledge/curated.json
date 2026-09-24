@@ -1,0 +1,386 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-09-23",
+  "sourceNotionPage": "2572e26208a580679928ed6aba063cf5",
+  "records": [
+    {
+      "status": "public",
+      "updatedAt": "2026-09-23",
+      "id": "concept-agents",
+      "kind": "concept",
+      "title": "Agents & trust",
+      "summary": "Design agents around explicit identity, permissions, and recoverable work.",
+      "body": "The agent is only one part of a system. Its requests still need an identity, a resource, permission checks, and a record of what actually happened.",
+      "topics": [
+        "agents"
+      ],
+      "source": {
+        "title": "Editorial map of the public collection",
+        "url": "/knowledge",
+        "revision": "2026-09-23"
+      },
+      "relations": []
+    },
+    {
+      "status": "public",
+      "updatedAt": "2026-09-23",
+      "id": "concept-retrieval",
+      "kind": "concept",
+      "title": "Retrieval & context",
+      "summary": "Find relevant evidence before deciding what to do.",
+      "body": "A useful context connects a question to the material that can answer it. This collection links explanations, source passages, and applied experience so the evidence remains inspectable.",
+      "topics": [
+        "retrieval"
+      ],
+      "source": {
+        "title": "Editorial map of the public collection",
+        "url": "/knowledge",
+        "revision": "2026-09-23"
+      },
+      "relations": []
+    },
+    {
+      "status": "public",
+      "updatedAt": "2026-09-23",
+      "id": "concept-fintech",
+      "kind": "concept",
+      "title": "Financial systems",
+      "summary": "Trace financial workflows from ingestion to reviewed decisions.",
+      "body": "Bank ingestion, classification, reconciliation, and underwriting share a need for reliable inputs and records of decisions. The projects here describe Ashwin’s approved experience, not financial advice.",
+      "topics": [
+        "fintech"
+      ],
+      "source": {
+        "title": "Editorial map of the public collection",
+        "url": "/knowledge",
+        "revision": "2026-09-23"
+      },
+      "relations": []
+    },
+    {
+      "status": "public",
+      "updatedAt": "2026-09-23",
+      "id": "concept-infrastructure",
+      "kind": "concept",
+      "title": "Reliable infrastructure",
+      "summary": "Make system boundaries and failure behavior understandable.",
+      "body": "An API, worker, or model deployment becomes useful when its dependencies and failure modes are explicit. Explore the underlying evidence for state ownership, serving infrastructure, and banking integrations.",
+      "topics": [
+        "infrastructure"
+      ],
+      "source": {
+        "title": "Editorial map of the public collection",
+        "url": "/knowledge",
+        "revision": "2026-09-23"
+      },
+      "relations": []
+    },
+    {
+      "status": "public",
+      "updatedAt": "2026-09-23",
+      "id": "concept-learning",
+      "kind": "concept",
+      "title": "Learning & access",
+      "summary": "Use technology to help people understand and participate.",
+      "body": "Adaptive learning and accessibility are connected by a practical question: how can a system make a task easier for the person using it? Gurukul and UNAR Labs are two areas of Ashwin’s work.",
+      "topics": [
+        "learning"
+      ],
+      "source": {
+        "title": "Editorial map of the public collection",
+        "url": "/knowledge",
+        "revision": "2026-09-23"
+      },
+      "relations": []
+    },
+    {
+      "status": "public",
+      "updatedAt": "2026-09-23",
+      "id": "concept-product",
+      "kind": "concept",
+      "title": "Product thinking",
+      "summary": "Connect system behavior to a useful human experience.",
+      "body": "What happened, what can happen next, and what needs a person's attention? Clear product feedback makes technical boundaries usable.",
+      "topics": [
+        "product"
+      ],
+      "source": {
+        "title": "Editorial map of the public collection",
+        "url": "/knowledge",
+        "revision": "2026-09-23"
+      },
+      "relations": []
+    },
+    {
+      "status": "public",
+      "updatedAt": "2026-09-23",
+      "id": "note-own-context",
+      "kind": "note",
+      "title": "Own the context you give an agent",
+      "summary": "An agent can only reason over the context it receives.",
+      "body": "Reading takeaway from the 12-Factor Agents notes: deliberately assemble instructions, retrieved evidence, previous tool results, and relevant history. Treat context construction as application code that can be inspected and tested.",
+      "topics": [
+        "agents",
+        "retrieval"
+      ],
+      "source": {
+        "title": "AI Engineering — reading notes",
+        "url": "/blog/2572e262-08a5-8067-9928-ed6aba063cf5",
+        "revision": "2025-11-06",
+        "locator": "Own Your Context"
+      },
+      "relations": [
+        {
+          "type": "derived-from",
+          "target": "publication-ai-engineering"
+        },
+        {
+          "type": "references",
+          "target": "reference-12-factor-agents"
+        },
+        {
+          "type": "about",
+          "target": "concept-agents"
+        },
+        {
+          "type": "about",
+          "target": "concept-retrieval"
+        }
+      ]
+    },
+    {
+      "status": "public",
+      "updatedAt": "2026-09-23",
+      "id": "note-tools-structured-actions",
+      "kind": "note",
+      "title": "A tool call is a proposal for deterministic code",
+      "summary": "Separate model output from permission to execute it.",
+      "body": "The AI Engineering notes describe tools as structured outputs: a model proposes a JSON action, application code decides how to execute it, and the result returns to the context. A valid tool call does not itself grant authority.",
+      "topics": [
+        "agents",
+        "infrastructure"
+      ],
+      "source": {
+        "title": "AI Engineering — reading notes",
+        "url": "/blog/2572e262-08a5-8067-9928-ed6aba063cf5",
+        "revision": "2025-11-06",
+        "locator": "Tools Are Structured Outputs"
+      },
+      "relations": [
+        {
+          "type": "derived-from",
+          "target": "publication-ai-engineering"
+        },
+        {
+          "type": "references",
+          "target": "reference-12-factor-agents"
+        },
+        {
+          "type": "about",
+          "target": "concept-agents"
+        },
+        {
+          "type": "about",
+          "target": "concept-infrastructure"
+        }
+      ]
+    },
+    {
+      "status": "public",
+      "updatedAt": "2026-09-23",
+      "id": "note-own-control-flow",
+      "kind": "note",
+      "title": "Keep the control flow inspectable",
+      "summary": "Pauses, retries, and human review belong in the application design.",
+      "body": "The notes on owning control flow call out actions that should pause a loop, wait for a person, or resume after an event. Make those transitions visible instead of assuming every tool result should lead straight to another model call.",
+      "topics": [
+        "agents",
+        "product"
+      ],
+      "source": {
+        "title": "AI Engineering — reading notes",
+        "url": "/blog/2572e262-08a5-8067-9928-ed6aba063cf5",
+        "revision": "2025-11-06",
+        "locator": "Own your control flow"
+      },
+      "relations": [
+        {
+          "type": "derived-from",
+          "target": "publication-ai-engineering"
+        },
+        {
+          "type": "references",
+          "target": "reference-12-factor-agents"
+        },
+        {
+          "type": "about",
+          "target": "concept-agents"
+        },
+        {
+          "type": "about",
+          "target": "concept-product"
+        }
+      ]
+    },
+    {
+      "status": "public",
+      "updatedAt": "2026-09-23",
+      "id": "note-focused-agents",
+      "kind": "note",
+      "title": "Prefer focused agents with bounded responsibilities",
+      "summary": "A small agent is easier to inspect than a universal assistant.",
+      "body": "Reading takeaway: keep an agent focused on a specific job and its required context. The notes connect narrower scope with manageable histories, clearer responsibilities, and easier debugging. Test that claim on the actual task rather than treating size as a guarantee.",
+      "topics": [
+        "agents",
+        "infrastructure"
+      ],
+      "source": {
+        "title": "AI Engineering — reading notes",
+        "url": "/blog/2572e262-08a5-8067-9928-ed6aba063cf5",
+        "revision": "2025-11-06",
+        "locator": "Small Focused Agents"
+      },
+      "relations": [
+        {
+          "type": "derived-from",
+          "target": "publication-ai-engineering"
+        },
+        {
+          "type": "references",
+          "target": "reference-12-factor-agents"
+        },
+        {
+          "type": "about",
+          "target": "concept-agents"
+        },
+        {
+          "type": "about",
+          "target": "concept-infrastructure"
+        }
+      ]
+    },
+    {
+      "status": "public",
+      "updatedAt": "2026-09-23",
+      "id": "note-prompt-ownership",
+      "kind": "note",
+      "title": "Version prompts like other application code",
+      "summary": "Prompt changes deserve tests and an inspectable history.",
+      "body": "The AI Engineering notes recommend retaining control of prompt text rather than hiding it inside a framework. Keep representative inputs and expected behavior alongside each version so changes can be compared.",
+      "topics": [
+        "agents",
+        "product"
+      ],
+      "source": {
+        "title": "AI Engineering — reading notes",
+        "url": "/blog/2572e262-08a5-8067-9928-ed6aba063cf5",
+        "revision": "2025-11-06",
+        "locator": "Own Your Prompts"
+      },
+      "relations": [
+        {
+          "type": "derived-from",
+          "target": "publication-ai-engineering"
+        },
+        {
+          "type": "references",
+          "target": "reference-12-factor-agents"
+        },
+        {
+          "type": "about",
+          "target": "concept-agents"
+        },
+        {
+          "type": "about",
+          "target": "concept-product"
+        }
+      ]
+    },
+    {
+      "status": "public",
+      "updatedAt": "2026-09-23",
+      "id": "note-recoverable-state",
+      "kind": "note",
+      "title": "Give resumable work an explicit state",
+      "summary": "A paused task needs enough information to resume and explain itself.",
+      "body": "The notes discuss serializable execution context and simple launch, pause, and resume interfaces. For a real workflow, identify what must survive a process restart and what cannot safely be reconstructed from conversation alone.",
+      "topics": [
+        "agents",
+        "infrastructure"
+      ],
+      "source": {
+        "title": "AI Engineering — reading notes",
+        "url": "/blog/2572e262-08a5-8067-9928-ed6aba063cf5",
+        "revision": "2025-11-06",
+        "locator": "Unify Execution State"
+      },
+      "relations": [
+        {
+          "type": "derived-from",
+          "target": "publication-ai-engineering"
+        },
+        {
+          "type": "references",
+          "target": "reference-12-factor-agents"
+        },
+        {
+          "type": "about",
+          "target": "concept-agents"
+        },
+        {
+          "type": "about",
+          "target": "concept-infrastructure"
+        }
+      ]
+    },
+    {
+      "status": "public",
+      "updatedAt": "2026-09-23",
+      "id": "publication-ai-engineering",
+      "kind": "publication",
+      "title": "AI Engineering",
+      "summary": "A collection of reading notes on context, tools, control flow, and focused agents.",
+      "body": "Public Notion blog notes, originally created August 22, 2025. This collection indexes selected paraphrased takeaways from the 12-Factor Agents section and links to the original notes. Third-party ideas remain attributed to their authors; they are not claims of Ashwin’s original research.",
+      "topics": [
+        "agents",
+        "retrieval",
+        "infrastructure"
+      ],
+      "source": {
+        "title": "AI Engineering — reading notes",
+        "url": "/blog/2572e262-08a5-8067-9928-ed6aba063cf5",
+        "revision": "2025-11-06"
+      },
+      "relations": [
+        {
+          "type": "references",
+          "target": "reference-12-factor-agents"
+        }
+      ]
+    },
+    {
+      "status": "public",
+      "updatedAt": "2026-09-23",
+      "id": "reference-12-factor-agents",
+      "kind": "reference",
+      "title": "12-Factor Agents · HumanLayer",
+      "summary": "A reference collected in Ashwin’s AI Engineering notes.",
+      "body": "Dex Horthy’s 12-Factor Agents project discusses principles for reliable LLM applications, including owning prompts, context, and control flow. The linked notes record Ashwin’s reading of those ideas. Consult the primary reference for the full argument.",
+      "topics": [
+        "agents",
+        "infrastructure"
+      ],
+      "source": {
+        "title": "HumanLayer · 12-Factor Agents",
+        "url": "https://github.com/humanlayer/12-factor-agents",
+        "revision": "accessed-2026-09-23"
+      },
+      "relations": [
+        {
+          "type": "about",
+          "target": "concept-agents"
+        }
+      ]
+    }
+  ]
+}

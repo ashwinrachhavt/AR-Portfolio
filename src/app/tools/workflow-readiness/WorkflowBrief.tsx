@@ -1,16 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import type { WorkflowBrief as Brief, WorkflowInput } from "@/lib/workflow/schema";
+import type { WorkflowBrief as Brief, WorkflowInput, WorkflowMethod } from "@/lib/workflow/schema";
 import { approvalPolicy } from "@/lib/workflow/schema";
+import { buildWorkflowBrief, detectWorkflowSignals, workflowSignals } from "@/lib/workflow/rules";
 import { approvalLabels, areaLabels, briefFilename, briefToMarkdown, kindLabels, statusLabels } from "@/lib/workflow/export";
 import styles from "./workflow.module.css";
 
-type Props = { brief: Brief; input: WorkflowInput; isExample: boolean; onEdit: () => void };
+type Props = { brief: Brief; input: WorkflowInput; isExample: boolean; method?: WorkflowMethod; onEdit: () => void };
 
-export default function WorkflowBrief({ brief, input, isExample, onEdit }: Props) {
+export default function WorkflowBrief({ brief: originalBrief, input: originalInput, isExample, method, onEdit }: Props) {
   const [copyState, setCopyState] = useState("");
-  const markdown = briefToMarkdown(brief, input, isExample);
+  const [input, setInput] = useState(originalInput);
+  const [signalIds, setSignalIds] = useState<string[]>(method?.signalIds ?? detectWorkflowSignals(originalInput));
+  const [adjusted, setAdjusted] = useState(false);
+  const brief = adjusted ? buildWorkflowBrief(input, signalIds) : originalBrief;
+  const methodLabel = adjusted ? "Your scenario · free rules" : method?.mode === "jev" ? "Jev signals · authored rules" : "Free rules · no AI call";
+  const markdown = briefToMarkdown(brief, input, isExample, methodLabel);
+
+  function changeScenario(field: "stakes" | "approval", value: string) {
+    setInput(previous => ({ ...previous, [field]: value }));
+    setAdjusted(true);
+    setCopyState("");
+  }
 
   async function copy() {
     try { await navigator.clipboard.writeText(markdown); setCopyState("Brief copied."); }
@@ -40,11 +52,24 @@ export default function WorkflowBrief({ brief, input, isExample, onEdit }: Props
     <p className={styles.copyStatus} role="status">{copyState}</p>
     <header className={styles.briefHeader}>
       <p className={styles.sectionLabel}>{isExample ? "Example brief" : "Your workflow brief"} <span>· Proposal for review</span></p>
+      {!isExample && <p className={styles.methodStatus}>{methodLabel}</p>}
       <h2 id="brief-title" tabIndex={-1}>{brief.title}</h2>
       <p>{brief.jobToBeDone}</p>
       <div className={styles.context}><span>{input.stakes === "high" ? "High" : input.stakes === "moderate" ? "Moderate" : "Low"} stated stakes</span><span>{approvalLabels[input.approval]}</span></div>
       <p className={styles.approvalBoundary}><strong>Approval boundary</strong>{approvalPolicy(input)}</p>
     </header>
+    {!isExample && <section className={styles.scenario} aria-labelledby="scenario-title">
+      <h3 id="scenario-title">Explore the tradeoffs</h3>
+      <p>Change the boundaries or correct a detected signal. The brief updates on this device without another AI request.</p>
+      <div className={styles.scenarioFields}>
+        <label>Consequences of error<select value={input.stakes} onChange={event => changeScenario("stakes", event.target.value)}><option value="low">Low</option><option value="moderate">Moderate</option><option value="high">High</option></select></label>
+        <label>Approval preference<select value={input.approval} onChange={event => changeScenario("approval", event.target.value)}><option value="always">Every result or action</option><option value="exceptions">Exceptions and uncertainty</option><option value="none">No routine approval</option></select></label>
+      </div>
+      <fieldset className={styles.signalChoices}><legend>Workflow signals</legend>{workflowSignals.map(item => <label key={item.id}><input type="checkbox" checked={signalIds.includes(item.id)} onChange={() => { setSignalIds(previous => previous.includes(item.id) ? previous.filter(id => id !== item.id) : [...previous, item.id]); setAdjusted(true); setCopyState(""); }} />{item.label}</label>)}</fieldset>
+      <p className={styles.methodStatus} role="status">{methodLabel}{method?.fallback && !adjusted ? " · Free Jev was unavailable" : ""}. {brief.steps.length} proposed steps; {brief.steps.filter(step => step.kind === "human").length} human review step.</p>
+      {adjusted && <button type="button" className={styles.textButton} onClick={() => { setInput(originalInput); setSignalIds(method?.signalIds ?? detectWorkflowSignals(originalInput)); setAdjusted(false); setCopyState(""); }}>Reset to original brief</button>}
+      {method?.mode === "jev" && method.analysis && <details className={styles.methodDetails}><summary>Original Jev interpretation</summary><p>Jev via {method.analysis.provider === "vercel" ? "Vercel" : "Venice"} · {(method.analysis.durationMs / 1000).toFixed(1)}s. Estimates select signals at 65%; they are not readiness scores. {adjusted ? "Your current choices override this original interpretation." : "The brief text comes from authored rules."}</p><ul>{method.analysis.signals.map(item => <li key={item.id}>{item.label}: {Math.round(item.probability * 100)}%</li>)}</ul></details>}
+    </section>}
     <section className={styles.briefSection} aria-labelledby="pattern-title">
       <div className={styles.sectionHeading}><span>01</span><h3 id="pattern-title">The system pattern</h3></div>
       <h4 className={styles.patternTitle}>{brief.recommendation.pattern}</h4>
@@ -86,7 +111,7 @@ export default function WorkflowBrief({ brief, input, isExample, onEdit }: Props
       <dt>Task</dt><dd>{input.task}</dd><dt>Current process</dt><dd>{input.currentProcess}</dd>
       <dt>Inputs and systems</dt><dd>{input.inputs}</dd><dt>Desired output</dt><dd>{input.desiredOutput}</dd>
     </dl></details>
-    <p className={styles.disclaimer}>{isExample ? "This example illustrates the kind of brief you can create." : "AI-generated from your description."} Confirm assumptions, test the proposed system, and review it with the people responsible for the workflow.</p>
+    <p className={styles.disclaimer}>{isExample ? "This example illustrates the kind of brief you can create." : "An authored planning template based on your description and selected signals. This lab has not verified your systems or measured readiness."} Confirm assumptions, test the proposed system, and review it with the people responsible for the workflow.</p>
     <div className={styles.contact}><div><h3>Ready to turn this into a working system?</h3><p>I build AI products around the details that make them useful.</p></div><a href="mailto:ashwin.rachha@gmail.com?subject=AI%20workflow%20conversation">Start a conversation ↗</a></div>
     <p className={styles.printCredit}>Built by Ashwin Rachha · AI Workflow Readiness Lab</p>
   </article>;

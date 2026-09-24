@@ -4,6 +4,7 @@ import Footer from "@/app/components/Footer";
 import home from "@/app/home.module.css";
 import WorkflowLab from "./WorkflowLab";
 import styles from "./workflow.module.css";
+import { jevConnection } from "@/lib/jev";
 
 export const metadata: Metadata = {
   title: "AI Workflow Readiness Lab | Ashwin Rachha",
@@ -11,6 +12,8 @@ export const metadata: Metadata = {
 };
 
 export default function WorkflowReadinessPage() {
+  const connection = jevConnection(process.env);
+  const live = process.env.WORKFLOW_LAB_LIVE_ENABLED === "true" && Boolean(connection);
   return <>
     <a className={home.skipLink} href="#main">Skip to content</a>
     <Navbar activeSection="tools" />
@@ -19,7 +22,7 @@ export default function WorkflowReadinessPage() {
         <h1>AI Workflow<br /><span>Readiness Lab.</span></h1>
         <div><p>Turn an ambiguous AI workflow into a system you can evaluate, build, and operate.</p><p className={styles.heroNote}>A useful first brief. A clearer next step.</p></div>
       </header>
-      <WorkflowLab />
+      <WorkflowLab live={live} provider={connection?.provider} />
     </main>
     <Footer topId="main" />
   </>;

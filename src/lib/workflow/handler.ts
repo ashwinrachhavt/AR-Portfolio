@@ -1,8 +1,8 @@
-import { generateWorkflowBrief, WorkflowGenerationError } from "./generate.ts";
+import { generateWorkflowBrief, WorkflowGenerationError, type GenerationOptions, type WorkflowMethod } from "./generate.ts";
 import {
   hasRequiredHumanStep,
   workflowBriefSchema,
-  workflowInputSchema,
+  workflowRequestSchema,
   type WorkflowBrief,
   type WorkflowInput,
 } from "./schema.ts";
@@ -11,7 +11,7 @@ export const MAX_REQUEST_BYTES = 24 * 1_024;
 
 type WorkflowGenerator = (
   input: WorkflowInput,
-  options?: { signal?: AbortSignal },
+  options?: GenerationOptions,
 ) => Promise<WorkflowBrief>;
 
 type LimiterLease = { release: () => void };
@@ -171,7 +171,7 @@ export function createWorkflowHandler(options: HandlerOptions = {}) {
       return jsonResponse({ error: "Request body must be valid JSON." }, 400);
     }
 
-    const input = workflowInputSchema.safeParse(decoded);
+    const input = workflowRequestSchema.safeParse(decoded);
     if (!input.success) {
       return jsonResponse({
         error: "Please correct the highlighted fields.",
@@ -189,12 +189,14 @@ export function createWorkflowHandler(options: HandlerOptions = {}) {
     }
 
     try {
-      const generated = await generate(input.data, { signal: request.signal });
+      const { interpretation, ...description } = input.data;
+      let method: WorkflowMethod | undefined;
+      const generated = await generate(description, { signal: request.signal, interpretation, onMethod: value => { method = value; } });
       const brief = workflowBriefSchema.safeParse(generated);
       if (!brief.success || !hasRequiredHumanStep(input.data, brief.data)) {
         return jsonResponse({ error: "The workflow brief could not be generated. Please try again." }, 502);
       }
-      return jsonResponse({ brief: brief.data }, 200);
+      return jsonResponse({ brief: brief.data, ...(method ? { method } : {}) }, 200);
     } catch (error) {
       if (error instanceof WorkflowGenerationError) {
         if (error.kind === "configuration") {
