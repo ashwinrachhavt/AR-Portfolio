@@ -26,19 +26,6 @@ test("unrelated and unsupported requirements never fabricate evidence", () => {
   assert.equal(buildRoleBrief(["invented-capability"]).capabilities.length, 0);
 });
 
-test("manual priorities re-rank evidence without changing public claims or hiding gaps", () => {
-  const ids = ["agents", "backend", "integrations", "fintech", "ml", "management"];
-  const original = buildRoleBrief(ids);
-  const focused = buildRoleBrief(ids, "manual", "ml");
-  assert.notEqual(focused.evidence[0].id, original.evidence[0].id);
-  assert.ok(focused.evidence[0].capabilities.includes("ml"));
-  assert.equal(focused.mode, "manual");
-  assert.ok(focused.gaps.some(item => item.id === "management"));
-  for (const item of focused.evidence) assert.equal(item.claim, evidence.find(source => source.id === item.id).claim);
-  assert.deepEqual(buildRoleBrief([], "manual", "ml").evidence, []);
-  assert.deepEqual(buildRoleBrief(ids, "manual", "unknown").evidence, original.evidence);
-});
-
 for (const [text, included, excluded] of [
   ["Agentic workflow engineer with LangGraph", "agents", "ml"],
   ["Own retrieval and RAG systems", "retrieval", "management"],

@@ -7,21 +7,17 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/publish-writing.mjs build && node scripts/build-knowledge.mjs && next build",
+    "build": "node scripts/publish-writing.mjs build && next build",
     "content:build": "node scripts/publish-writing.mjs build",
     "content:import": "node --env-file-if-exists=.env scripts/publish-writing.mjs import",
     "content:notion": "node --experimental-strip-types --env-file-if-exists=.env scripts/publish-writing.mjs notion",
-    "test": "node --experimental-strip-types --test src/lib/*.test.mjs src/lib/workflow/*.test.mjs agent/lib/*.test.mjs",
+    "test": "node --experimental-strip-types --test src/lib/*.test.mjs src/lib/workflow/*.test.mjs",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
-    "knowledge:build": "node scripts/build-knowledge.mjs",
-    "knowledge:import": "node scripts/build-knowledge.mjs"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@ai-sdk/openai": "4.0.71",
     "@heroicons/react": "^2.2.0",
-    "@huggingface/transformers": "3.8.1",
     "@notionhq/client": "^2.3.0",
     "@vercel/analytics": "^1.5.0",
     "ai": "^7.0.107",

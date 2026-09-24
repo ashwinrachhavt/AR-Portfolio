@@ -1,4 +1,4 @@
-import { PHASE_DEVELOPMENT_SERVER } from "next/constants.js";
+import { withEve } from "eve/next";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -19,12 +19,4 @@ const nextConfig = {
   },
 };
 
-export default async function config(phase, context) {
-  // The public site uses on-device retrieval. Ollama/Eve belongs to local dev,
-  // so production must not provision an unused agent service or proxy to it.
-  if (phase === PHASE_DEVELOPMENT_SERVER) {
-    const { withEve } = await import("eve/next");
-    return withEve(nextConfig)(phase, context);
-  }
-  return nextConfig;
-}
+export default withEve(nextConfig);

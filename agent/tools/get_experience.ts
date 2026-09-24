@@ -1,9 +1,26 @@
 import { defineTool } from "eve/tools";
 import { z } from "zod";
-import { getPublicExperience } from "../lib/public-profile.ts";
+import { experienceData } from "../../src/data/profile";
 
 export default defineTool({
-  description: "Return approved resume experience, optionally filtered by company. An unknown company returns no results.",
-  inputSchema: z.strictObject({ company: z.string().trim().min(1).max(100).optional() }),
-  execute: ({ company }) => getPublicExperience(company),
+  description:
+    "Return Ashwin's work experience, optionally filtered by company name.",
+  inputSchema: z.object({
+    company: z
+      .string()
+      .optional()
+      .describe("Optional company name such as Loan Labs, Finally, UNAR Labs, or Outreach."),
+  }),
+  execute({ company }) {
+    if (!company) {
+      return experienceData;
+    }
+
+    const needle = company.toLowerCase();
+    const matches = experienceData.filter((role) =>
+      role.company.toLowerCase().includes(needle)
+    );
+
+    return matches.length > 0 ? matches : experienceData;
+  },
 });
