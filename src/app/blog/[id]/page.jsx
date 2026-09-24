@@ -7,6 +7,7 @@ import { BlogPostNotFoundError } from "../../../lib/notion-blog";
 import { formatBlogDate } from "../../../lib/blog-model.mjs";
 import styles from "../blog.module.css";
 import NewsletterInvite from "../../components/NewsletterInvite";
+import ArticleExperiment from "../../components/ArticleExperiment";
 import { newsletterSubscription } from "../../../lib/writing-sources.mjs";
 
 export const revalidate = 300;
@@ -63,6 +64,7 @@ export default async function BlogPost({ params }) {
           </div>
         ) : <p className={styles.unpublished}>This piece is still taking shape. Check back soon.</p>}
       </article>
+      <ArticleExperiment key={id} articleId={id} />
       <div className={styles.articleEnd}>
         <p>Thanks for reading.</p>
         <Link href="/blog">More writing <span aria-hidden="true">↗</span></Link>

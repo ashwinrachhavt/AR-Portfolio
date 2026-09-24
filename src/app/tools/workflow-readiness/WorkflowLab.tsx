@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { workflowBriefSchema, workflowInputSchema, type WorkflowBrief as Brief, type WorkflowInput } from "@/lib/workflow/schema";
+import { workflowBriefSchema, workflowInputSchema, workflowMethodSchema, type WorkflowMethod, type WorkflowBrief as Brief, type WorkflowInput } from "@/lib/workflow/schema";
+import { buildWorkflowBrief, detectWorkflowSignals } from "@/lib/workflow/rules";
 import { exampleBrief, exampleInput } from "@/lib/workflow/example";
 import WorkflowBrief from "./WorkflowBrief";
 import styles from "./workflow.module.css";
@@ -14,9 +15,10 @@ const fields = [
   { name: "desiredOutput", label: "What should come out?", placeholder: "A recommendation, a draft, a reviewed action…", min: 5, max: 1000, rows: 3 },
 ] as const;
 
-export default function WorkflowLab() {
+export default function WorkflowLab({ live = false, provider = "venice" }: { live?: boolean; provider?: string }) {
   const [input, setInput] = useState<WorkflowInput>(emptyInput);
-  const [result, setResult] = useState<{ brief: Brief; input: WorkflowInput; isExample: boolean } | null>(null);
+  const [result, setResult] = useState<{ brief: Brief; input: WorkflowInput; isExample: boolean; method?: WorkflowMethod } | null>(null);
+  const [useJev, setUseJev] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
@@ -67,6 +69,13 @@ export default function WorkflowLab() {
       setError("Check the highlighted fields and try again.");
       return;
     }
+    if (!useJev || !live) {
+      setError("");
+      setFieldErrors({});
+      setResult({ brief: buildWorkflowBrief(parsed.data), input: parsed.data, isExample: false,
+        method: workflowMethodSchema.parse({ mode: "rules", signalIds: detectWorkflowSignals(parsed.data) }) });
+      return;
+    }
     request.current?.abort();
     const controller = new AbortController();
     request.current = controller;
@@ -77,7 +86,7 @@ export default function WorkflowLab() {
     try {
       const response = await fetch("/api/workflow-readiness", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parsed.data), signal: controller.signal,
+        body: JSON.stringify({ ...parsed.data, interpretation: "jev" }), signal: controller.signal,
       });
       const data = await response.json().catch(() => null);
       if (request.current !== controller) return;
@@ -86,8 +95,9 @@ export default function WorkflowLab() {
         throw new Error(data?.error || "The brief could not be generated. Please try again.");
       }
       const validated = workflowBriefSchema.safeParse(data?.brief);
-      if (!validated.success) throw new Error("The response was incomplete. Please try again.");
-      setResult({ brief: validated.data, input: parsed.data, isExample: false });
+      const method = workflowMethodSchema.safeParse(data?.method);
+      if (!validated.success || !method.success) throw new Error("The response was incomplete. Please try again.");
+      setResult({ brief: validated.data, input: parsed.data, isExample: false, method: method.data });
     } catch (failure) {
       if (request.current !== controller) return;
       setError(controller.signal.aborted
@@ -121,9 +131,10 @@ export default function WorkflowLab() {
             <option value="always">Every result or action</option><option value="exceptions">Exceptions and uncertainty</option><option value="none">No routine approval</option>
           </select></div>
         </fieldset>
-        <p className={styles.privacy}>No account needed. On submission, your description is sent to OpenAI to generate the brief. Leave out confidential or personal data.</p>
+        {live && <label className={styles.jevOption}><input type="checkbox" checked={useJev} disabled={pending} onChange={event => setUseJev(event.target.checked)} /> Use free Jev interpretation when available</label>}
+        <p className={styles.privacy}>{useJev && live ? `Your description will be sent to Jev through ${provider === "vercel" ? "Vercel AI Gateway" : "Venice"} only after free access checks pass. If unavailable, this lab uses free rules. Leave out confidential or personal data.` : "Free rules run in your browser. No account or AI request is needed, and your description stays on this device."}</p>
         {error && <p className={styles.error} role="alert">{error}</p>}
-        <div className={styles.submitRow}><button className={styles.primaryButton} type="submit" disabled={pending}>{pending ? <><span className={styles.spinner} aria-hidden="true" /> Drafting your brief…</> : <>Create my brief <span aria-hidden="true">↗</span></>}</button>{pending && <button type="button" className={styles.textButton} onClick={cancel}>Cancel</button>}</div>
+        <div className={styles.submitRow}><button className={styles.primaryButton} type="submit" disabled={pending}>{pending ? <><span className={styles.spinner} aria-hidden="true" /> Interpreting your workflow…</> : <>Create my free brief <span aria-hidden="true">↗</span></>}</button>{pending && <button type="button" className={styles.textButton} onClick={cancel}>Cancel</button>}</div>
         <p className={styles.pendingMessage} role="status">{pending ? "Connecting your workflow, evaluation, and review requirements. You can cancel at any time." : ""}</p>
       </form>
     </section>

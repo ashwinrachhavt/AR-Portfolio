@@ -1,16 +1,12 @@
 import { defineTool } from "eve/tools";
 import { z } from "zod";
-import { projectsData } from "../../src/data/profile";
+import { searchKnowledge } from "../../src/lib/knowledge.mjs";
+import { resultLimit } from "../lib/knowledge-schemas.ts";
 
 export default defineTool({
-  description: "Return selected projects from Ashwin's portfolio.",
-  inputSchema: z.object({}),
-  execute() {
-    return projectsData.map((project) => ({
-      title: project.title,
-      description: project.description,
-      tags: project.tag,
-      url: project.gitUrl,
-    }));
+  description: "Return public project records and evidence from the shared knowledge corpus, optionally filtered by a search phrase.",
+  inputSchema: z.strictObject({ query: z.string().trim().max(300).default(""), limit: resultLimit.default(10) }),
+  execute({ query, limit }) {
+    return searchKnowledge({ query, kind: "project", limit }).map(({ record }) => record);
   },
 });

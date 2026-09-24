@@ -33,7 +33,7 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 
 Open `/fit` to explore three role examples or submit a role description. The site maps requirements to 12 capabilities, selects from ten verbatim public résumé facts, links the supporting `/work/[id]` pages, and identifies evidence gaps. Examples and keyword mapping work without any provider credential. Results are labeled by mode and are conversation starters, not hiring scores. The homepage connects this explorer, the Readiness Lab, writing, and interests in product design and adoption.
 
-Jev answers fixed capability questions; application code selects the evidence and final wording. The production configuration uses **Vercel’s verified free Jev promotion**. Recruiters see actual request stages, requirement probabilities and response time alongside cited public work. These probabilities describe the role, never the candidate’s suitability. Examples make no AI call; fallback results explicitly say Jev was not used.
+The default experience evaluates requirements locally with no model request. Optional Jev use is explicitly selected by the visitor and checks the verified free-access conditions before inference. Jev answers fixed capability questions; application code selects the evidence and final wording. Probabilities describe the role, never the candidate’s suitability. Changing a requirement updates the relevant evidence interactively.
 
 Live activation uses `CAREER_FIT_PROVIDER=vercel`, `CAREER_FIT_LIVE_ENABLED=true`, `CAREER_FIT_VERCEL_PROMO_VERIFIED=2026-09-22`, and the server-only `CAREER_FIT_GATEWAY_API_KEY`. The dedicated credential variable keeps other AI features from becoming enabled by this change. The base catalog price differs from the promotional charge: actual authenticated Jev receipts reported zero cost and left the free $5 balance untouched. Six synthetic role cases produced expected signals, including negation and an embedded instruction attempt; provider errors occurred during validation and remain recoverable in the interface.
 
@@ -75,13 +75,11 @@ Newsletter invitations on the homepage and blog are optional and skippable. All 
 
 Open `/tools/workflow-readiness` for a no-account workflow form, a readable example, and an exportable AI Workflow Brief. The page and example render without a model request. Generated briefs identify software, model-assisted work, human approval, readiness gaps, evaluation proposals, and a first experiment. Results can be copied, downloaded as Markdown, or printed to PDF.
 
-Set `OPENAI_API_KEY` in the ignored `.env` file for local generation and in the hosting environment when deploying. `WORKFLOW_LAB_MODEL` optionally overrides the default `gpt-4.1-mini`. `WORKFLOW_LAB_PROVIDER=gateway` explicitly selects the existing Vercel AI Gateway integration using `AI_GATEWAY_API_KEY`; the default provider is direct OpenAI. A request uses only its selected provider and does not fall back or retry automatically.
+The default brief is generated locally from reviewed rules, with no provider credentials or network inference. Change risk, approval, and workflow assumptions to update the steps and readiness signals. Optional Jev interpretation is explicit and uses the same strict free-access gate as Career Fit. Legacy OpenAI and Gateway model settings do not enable a paid fallback.
 
-`POST /api/workflow-readiness` validates input and output, accepts at most 24 KiB of request data, caps model output, and cancels generation after 45 seconds. Human-review steps are required for high-stakes workflows and requests for approval of every result. Submissions and generated briefs stay in browser memory and are not saved to an application database or analytics. Submitted text is processed by OpenAI (through Vercel when gateway mode is selected); provider retention settings still apply. Direct requests use `store: false`.
+`POST /api/workflow-readiness` validates bounded input/output and returns rules by default. Human-review steps are required for high-stakes workflows and requests for approval of every result. Submissions are not saved to an application database. Optional Jev receives only the inputs needed for the selected interpretation. The endpoint has a best-effort in-process limiter; see [the operating limits](docs/jev-free-access.md).
 
-The endpoint's in-process limiter allows five accepted attempts per client per ten minutes and two concurrent generations per process. This is best-effort protection: separate server instances and restarts do not share limits. Before a public rollout, configure hosting-level rate limits or a shared limiter and provider spending controls. Do not treat this process-local limiter as a global budget cap.
-
-Run the regression tests with `pnpm test`, then `pnpm lint`, `pnpm typecheck`, and `pnpm build`. Live generation additionally requires a valid provider credential; example mode and deterministic tests do not.
+Run the regression tests with `pnpm test`, then `pnpm lint`, `pnpm typecheck`, and `pnpm build`. The default labs work without provider credentials; optional Jev requires configured and verified free access.
 
 ## Learn More
 
@@ -103,3 +101,9 @@ Vercel's **Redeploy** action rebuilds the selected deployment's source. Retrying
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Portfolio assistant and knowledge
+
+The homepage assistant consumes a reviewed 51-record collection built from public career facts, seven projects, two local essays, and selected Notion reading notes. Visitors get source search with citations and optional on-device semantic search. The ontology is an internal data layer. `/knowledge` opens the assistant; `/knowledge/<id>` provides the original source and context. The seven project panes and two interactive article exercises use reviewed React components.
+
+Eve-generated replies are available in explicitly enabled local development using Ollama. Production builds exclude the local Eve service and use free source retrieval. See [knowledge operations](docs/knowledge-library.md), [local Eve setup](docs/eve-knowledge.md), and [implementation/validation notes](docs/releases/2026-09-23-knowledge-library.md).

@@ -1,21 +1,9 @@
 import { defineTool } from "eve/tools";
 import { z } from "zod";
-import { profile } from "../../src/data/profile";
+import { getPublicProfile } from "../lib/public-profile.ts";
 
 export default defineTool({
-  description:
-    "Return Ashwin Rachha's positioning, target roles, education, and contact links.",
-  inputSchema: z.object({}),
-  execute() {
-    return {
-      name: profile.name,
-      headline: profile.headline,
-      targetRoles: profile.targetRoles,
-      industries: profile.industries,
-      locationFocus: profile.locationFocus,
-      workAuthorization: profile.workAuthorization,
-      education: profile.education,
-      contact: profile.contact,
-    };
-  },
+  description: "Return only approved public positioning, education, research, and contact facts from the canonical resume.",
+  inputSchema: z.strictObject({}),
+  execute: getPublicProfile,
 });

@@ -61,3 +61,14 @@
 .disclosure { border-top: 1px solid #36363d; margin-top: 55px; padding-top: 25px; color: #a1a1aa; font-size: 12px; line-height: 1.8; }
 .disclosure a { display: inline-block; margin-top: 10px; text-decoration: underline; text-underline-offset: 4px; }
 @media (max-width: 800px) { .layout { grid-template-columns: 1fr; gap: 45px; } .main { padding-block: 45px; } .hero { margin-bottom: 38px; } }
+
+.explorer { margin-block: 24px; padding: 20px; border: 1px solid #393940; border-radius: 12px; background: #19191e; }
+.explorer h3 { font-size: 16px; margin-bottom: 10px; }
+.capabilityChoices { display: flex; flex-wrap: wrap; gap: 8px; margin-block: 16px; }
+.capabilityChoices button { border: 1px solid #42424b; border-radius: 999px; padding: 8px 11px; min-height: 40px; color: #bdbdc8; background: #222229; font-size: 12px; }
+.capabilityChoices button[aria-pressed="true"] { background: #e2e2ef; color: #1b1b20; border-color: #e2e2ef; }
+.capabilityChoices button:focus-visible, .explorer select:focus-visible { outline: 2px solid #dedeea; outline-offset: 3px; }
+.explorer label { display: grid; gap: 8px; color: #bdbdc8; font-size: 12px; }
+.explorer select { max-width: 100%; padding: 12px; background: #202027; border: 1px solid #42424b; border-radius: 6px; color: #eeeef4; font: inherit; font-size: 16px; }
+.input .jevOption { display: flex; align-items: center; gap: 10px; font-size: 12px; line-height: 1.5; }
+.input .jevOption input { width: 18px; height: 18px; flex: 0 0 auto; margin: 0; }
