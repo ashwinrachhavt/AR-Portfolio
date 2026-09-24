@@ -16,9 +16,6 @@ export default function FitNavigator({ live = false, provider = "venice" }) {
   const [title, setTitle] = useState(examples[0].title);
   const [description, setDescription] = useState(examples[0].description);
   const [brief, setBrief] = useState(() => buildRoleBrief(keywordCapabilities(examples[0].description), "example"));
-  const [selectedIds, setSelectedIds] = useState(null);
-  const [priorityId, setPriorityId] = useState("");
-  const [useJev, setUseJev] = useState(false);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   const [stage, setStage] = useState("");
@@ -29,16 +26,10 @@ export default function FitNavigator({ live = false, provider = "venice" }) {
     version.current += 1; controller.current?.abort();
     const example = examples[index]; setTitle(example.title); setDescription(example.description);
     setBrief(buildRoleBrief(keywordCapabilities(example.description), "example")); setError(""); setPending(false); setStage("");
-    setSelectedIds(null); setPriorityId("");
     track("career_fit_example_loaded", { example: index });
   }
   async function submit(event) {
     event.preventDefault(); if (pending) return;
-    setSelectedIds(null); setPriorityId("");
-    if (!useJev || !live) {
-      setBrief(buildRoleBrief(keywordCapabilities(`${title}\n${description}`), "keyword")); setError("");
-      return;
-    }
     const current = ++version.current;
     const abort = new AbortController(); controller.current = abort;
     setPending(true); setError(""); setBrief(null); setStage("");
@@ -52,58 +43,45 @@ export default function FitNavigator({ live = false, provider = "venice" }) {
     } finally { if (current === version.current) setPending(false); }
   }
   const label = id => capabilities.find(item => item.id === id)?.label || id;
-  const activeIds = selectedIds ?? brief?.capabilities.map(item => item.id) ?? [];
-  const explored = brief && (selectedIds !== null || priorityId) ? buildRoleBrief(activeIds, "manual", priorityId) : brief;
-  function toggleCapability(id) {
-    setSelectedIds(activeIds.includes(id) ? activeIds.filter(item => item !== id) : [...activeIds, id]);
-    if (priorityId === id) setPriorityId("");
-  }
   return <>
     <div className={styles.layout}>
       <section className={styles.input} aria-labelledby="role-heading">
-        <h2 id="role-heading">What are you building?</h2><p>Start with an example, or bring your own role. Adjust the capabilities to explore the evidence.</p>
+        <h2 id="role-heading">What are you building?</h2><p>{live ? "Give Jev a role to interpret. See which parts connect to my work." : "Start with an example, or bring your own role."}</p>
         <div className={styles.examples}>{examples.map((item, index) => <button key={item.title} onClick={() => reset(index)}>{item.title}</button>)}</div>
         <form onSubmit={submit}>
           <label htmlFor="role-title">Role title <span>(optional)</span></label><input id="role-title" value={title} disabled={pending} maxLength={160} onChange={event => { setTitle(event.target.value); setBrief(null); setError(""); }} />
           <label htmlFor="role-description">Role description</label><textarea id="role-description" value={description} disabled={pending} minLength={100} maxLength={8000} required rows={9} aria-describedby="role-privacy" onChange={event => { setDescription(event.target.value); setBrief(null); setError(""); }} />
           <p className={styles.count}>{description.length.toLocaleString()} / 8,000 characters</p>
-          {live && <label className={styles.jevOption}><input type="checkbox" checked={useJev} disabled={pending} onChange={event => setUseJev(event.target.checked)} />Use free Jev interpretation when available</label>}
-          <p id="role-privacy" className={styles.note}>{live && useJev ? <>Use public, non-confidential text. Live interpretation sends your text to {provider === "venice" ? <a href="https://venice.ai/privacy-policy">Venice’s Jev API</a> : <a href="https://vercel.com/docs/ai-gateway/security-and-privacy">Jev through Vercel AI Gateway</a>} after free access checks pass; the provider’s data policies apply. If free access is unavailable, the result is labeled as a keyword preview.</> : "Free keyword mapping runs in your browser. Your role description stays on this device; no account or AI request is needed."}</p>
-          <button className={styles.primary} disabled={pending} type="submit">{pending ? "Working on your role…" : live && useJev ? "Explore this role with Jev" : "Map this role to my work"}<span aria-hidden="true">↗</span></button>
+          <p id="role-privacy" className={styles.note}>Use public, non-confidential text. The application does not save your description. {live ? <>Live interpretation sends your text to {provider === "venice" ? <a href="https://venice.ai/privacy-policy">Venice’s Jev API</a> : <a href="https://vercel.com/docs/ai-gateway/security-and-privacy">Jev through Vercel AI Gateway</a>}; the provider’s data policies apply. If free access is unavailable, the result is labeled as a keyword preview.</> : "Keyword mapping runs without sending your text to an AI provider."}</p>
+          <button className={styles.primary} disabled={pending} type="submit">{pending ? "Working on your role…" : live ? "Explore this role with Jev" : "Map this role to my work"}<span aria-hidden="true">↗</span></button>
           {pending && <button className={styles.cancel} type="button" onClick={() => { version.current += 1; controller.current?.abort(); setPending(false); setError("Cancelled. Your text is still here."); }}>Cancel</button>}
         </form>
         {error && <p className={styles.error} role="alert">{error}</p>}
       </section>
       <section className={styles.results} aria-labelledby="brief-heading">
-        <div className={styles.resultHeading}><h2 id="brief-heading">Your conversation starter.</h2><span role="status">{pending ? (stages.find(item => item.id === stage)?.label || "Connecting…") : explored?.mode === "manual" ? "Your selections · no new AI call" : brief?.mode === "jev" ? "Live Jev result" : brief?.mode === "example" ? "Illustrative example · no AI call" : brief ? "Keyword preview · Jev was not used" : "Ready when you are"}</span></div>
+        <div className={styles.resultHeading}><h2 id="brief-heading">Your conversation starter.</h2><span role="status">{pending ? (stages.find(item => item.id === stage)?.label || "Connecting…") : brief?.mode === "jev" ? "Live Jev result" : brief?.mode === "example" ? "Illustrative example · no AI call" : brief ? "Keyword preview · Jev was not used" : "Ready when you are"}</span></div>
         {pending && <div className={styles.progress}>
           {stage ? <ol>{stages.map((item, index) => <li key={item.id} data-state={index < stages.findIndex(item => item.id === stage) ? "done" : item.id === stage ? "active" : "waiting"}><span aria-hidden="true">{index < stages.findIndex(item => item.id === stage) ? "✓" : `0${index + 1}`}</span>{item.label}</li>)}</ol> : <p>Sending your role for analysis…</p>}
           <p className={styles.note}>Results appear when the analysis finishes. You can cancel at any time.</p>
         </div>}
         <div aria-live="polite" aria-busy={pending}>{brief && <>
-          <p className={styles.note}>{explored.mode === "manual" ? "Evidence follows your selected capabilities and priority. These adjustments run locally; they are not a new Jev interpretation." : brief.mode === "jev" ? "Jev interpreted your role in this request. Every career claim below comes from my approved public work." : "This preview uses keyword matching. It can miss negation and unstated requirements. No live Jev interpretation was performed."}</p>
+          <p className={styles.note}>{brief.mode === "jev" ? "Jev interpreted your role in this request. Every career claim below comes from my approved public work." : "This preview uses keyword matching. It can miss negation and unstated requirements. No live Jev interpretation was performed."}</p>
           {brief.mode === "jev" && brief.analysis && <div className={styles.receipt}>
             <p><span className={styles.liveDot} aria-hidden="true" />Jev via {brief.analysis.provider === "venice" ? "Venice" : "Vercel"}<span>{(brief.analysis.durationMs / 1000).toFixed(1)}s</span></p>
-            <details><summary>See the original Jev interpretation</summary>
+            <details><summary>See what Jev detected</summary>
               <p className={styles.note}>Each value is Jev’s estimate that the role requires this capability. It is not a score of my ability or suitability. Values of 65% or more select topics for the evidence below.</p>
               <ul className={styles.signals}>{brief.analysis.signals.map(item => <li key={item.id}><span>{item.label}</span><meter min="0" max="1" value={item.probability} aria-label={`${item.label}: estimated requirement likelihood`} /><span>{Math.round(item.probability * 100)}%</span></li>)}</ul>
             </details>
           </div>}
-          <div className={styles.explorer}>
-            <h3>What matters most?</h3><p className={styles.note}>Select capabilities to compare public evidence. Choose a priority to bring its strongest matches to the top.</p>
-            <div className={styles.capabilityChoices} role="group" aria-label="Capabilities to explore">{capabilities.map(item => <button type="button" key={item.id} aria-pressed={activeIds.includes(item.id)} onClick={() => toggleCapability(item.id)}>{item.label}</button>)}</div>
-            <label htmlFor="fit-priority">Prioritize<select id="fit-priority" value={priorityId} onChange={event => setPriorityId(event.target.value)}><option value="">Equal weight</option>{capabilities.filter(item => activeIds.includes(item.id)).map(item => <option key={item.id} value={item.id}>{item.label}</option>)}</select></label>
-            {explored.mode === "manual" && <button type="button" className={styles.cancel} onClick={() => { setSelectedIds(null); setPriorityId(""); }}>Reset to original interpretation</button>}
-            <p className={styles.note} role="status">{explored.evidence.length} public evidence matches shown for {activeIds.length} selected capabilities.</p>
-          </div>
-          {explored.evidence.length ? explored.evidence.map((item, index) => <article className={styles.evidence} key={item.id}>
+          <div className={styles.tags}>{brief.capabilities.map(item => <span key={item.id}>{item.label}</span>)}</div>
+          {brief.evidence.length ? brief.evidence.map((item, index) => <article className={styles.evidence} key={item.id}>
             <p className={styles.eyebrow}>0{index + 1} / {item.company}</p><h3>{item.title}</h3><p>{item.claim}</p>
             <p className={styles.overlap}>Related to {item.overlap.map(label).join(" · ")}</p>
             {item.limitation && <p className={styles.note}>{item.limitation}</p>}
             <a href={item.href} onClick={() => track("career_fit_source_opened", { evidence: item.id })}>Read the public work <span aria-hidden="true">↗</span></a>
           </article>) : <p className={styles.empty}>No clear overlap surfaced. This catalog is limited; it doesn’t establish what I can or cannot do. Browse my work or start a conversation.</p>}
-          {explored.gaps.length > 0 && <aside className={styles.gaps}><h3>Worth a conversation</h3><p>{explored.gaps.map(item => item.label).join(", ")}: no direct public evidence in this catalog. Interests and adjacent experience aren’t proof of these requirements.</p></aside>}
-          <div className={styles.prompts}><h3>Ask me about</h3><ul>{explored.prompts.map(prompt => <li key={prompt}>{prompt}</li>)}</ul></div>
+          {brief.gaps.length > 0 && <aside className={styles.gaps}><h3>Worth a conversation</h3><p>{brief.gaps.map(item => item.label).join(", ")}: no direct public evidence in this catalog. Interests and adjacent experience aren’t proof of these requirements.</p></aside>}
+          <div className={styles.prompts}><h3>Ask me about</h3><ul>{brief.prompts.map(prompt => <li key={prompt}>{prompt}</li>)}</ul></div>
           <a className={styles.primary} href="mailto:ashwin.rachha@gmail.com?subject=Let%E2%80%99s%20explore%20working%20together" onClick={() => track("career_fit_contact_cta_clicked")}>Start the conversation <span aria-hidden="true">↗</span></a>
         </>}</div>
       </section>

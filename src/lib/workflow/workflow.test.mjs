@@ -121,38 +121,150 @@ test("approval policy makes high-stakes and universal review scope explicit", ()
   );
 });
 
-test("default generation is deterministic and cannot call a paid provider even with legacy config", async () => {
-  const options = {
-    env: { WORKFLOW_LAB_PROVIDER: "openai", OPENAI_API_KEY: "unused", AI_GATEWAY_API_KEY: "unused" },
-    fetchFn: () => { throw new Error("No network is permitted"); },
-  };
-  const first = await generateWorkflowBrief(VALID_INPUT, options);
-  assert.deepEqual(await generateWorkflowBrief(VALID_INPUT, options), first);
-  assert.equal(workflowBriefSchema.safeParse(first).success, true);
-  assert.equal(first.jobToBeDone, VALID_INPUT.task);
-  assert.ok(first.steps.some(step => step.name === "Retrieve permitted evidence"));
-  assert.ok(first.steps.some(step => step.name === "Extract a reviewable record"));
+test("generation sends only submitted input as user content and validates the response", async () => {
+  let requestBody;
+  const brief = validBrief();
+  const generated = await generateWorkflowBrief(VALID_INPUT, {
+    apiKey: "test-key",
+    gatewayApiKey: "unused-gateway-key",
+    model: "test-model",
+    fetchFn: async (_url, init) => {
+      requestBody = JSON.parse(init.body);
+      return Response.json({ status: "completed", output_text: JSON.stringify(brief) });
+    },
+  });
+
+  assert.deepEqual(generated, brief);
+  assert.equal(requestBody.model, "test-model");
+  assert.equal(requestBody.store, false);
+  assert.deepEqual(JSON.parse(requestBody.input[0].content[0].text), {
+    submission: VALID_INPUT,
+    canonicalApprovalPolicy: "Uncertain results, failures, and policy exceptions require human review.",
+  });
+  assert.equal(requestBody.max_output_tokens > 0, true);
+  assert.equal(requestBody.text.format.type, "json_schema");
 });
 
-test("all risk and approval choices produce valid briefs with the required human boundary", async () => {
-  for (const stakes of ["low", "moderate", "high"]) for (const approval of ["always", "exceptions", "none"]) {
-    const input = { ...VALID_INPUT, stakes, approval };
-    const brief = await generateWorkflowBrief(input);
-    assert.equal(workflowBriefSchema.safeParse(brief).success, true);
-    assert.equal(brief.steps.some(step => step.kind === "human"), stakes === "high" || approval !== "none");
-    assert.ok(brief.recommendation.rationale.includes(approvalPolicy(input)));
-  }
+test("generation uses the explicitly selected gateway without calling the direct provider", async () => {
+  let gatewayRequest;
+  let directCalls = 0;
+  const brief = validBrief();
+  const generated = await generateWorkflowBrief(VALID_INPUT, {
+    apiKey: "direct-test-key",
+    gatewayApiKey: "gateway-test-key",
+    provider: "gateway",
+    model: "gpt-4.1-mini",
+    fetchFn: async () => {
+      directCalls += 1;
+      return new Response(null, { status: 500 });
+    },
+    gatewayGenerate: async (request) => {
+      gatewayRequest = request;
+      return brief;
+    },
+  });
+
+  assert.deepEqual(generated, brief);
+  assert.equal(directCalls, 0);
+  assert.equal(gatewayRequest.apiKey, "gateway-test-key");
+  assert.equal(gatewayRequest.model, "openai/gpt-4.1-mini");
+  assert.deepEqual(gatewayRequest.input, VALID_INPUT);
+  assert.equal(
+    gatewayRequest.canonicalApprovalPolicy,
+    "Uncertain results, failures, and policy exceptions require human review.",
+  );
 });
 
-test("local output stays valid at every maximum input length", async () => {
-  const brief = await generateWorkflowBrief({ ...VALID_INPUT, task: "t".repeat(1500), currentProcess: "p".repeat(1500), inputs: "i".repeat(1000), desiredOutput: "o".repeat(1000) });
-  assert.equal(workflowBriefSchema.safeParse(brief).success, true);
+test("generation does not fall back to the direct provider after a gateway failure", async () => {
+  let directCalls = 0;
+  await assert.rejects(
+    generateWorkflowBrief(VALID_INPUT, {
+      apiKey: "direct-test-key",
+      gatewayApiKey: "gateway-test-key",
+      provider: "gateway",
+      fetchFn: async () => {
+        directCalls += 1;
+        return Response.json({ status: "completed", output_text: JSON.stringify(validBrief()) });
+      },
+      gatewayGenerate: async () => { throw new Error("gateway failed"); },
+    }),
+    (error) => error instanceof WorkflowGenerationError && error.kind === "provider",
+  );
+  assert.equal(directCalls, 0);
 });
 
-test("generation respects caller cancellation before doing work", async () => {
+test("generation rejects a missing mandatory human step", async () => {
+  const highStakes = { ...VALID_INPUT, stakes: "high" };
+  const brief = validBrief({ steps: validBrief().steps.filter((step) => step.kind !== "human") });
+
+  await assert.rejects(
+    generateWorkflowBrief(highStakes, {
+      apiKey: "test-key",
+      fetchFn: async () => Response.json({ status: "completed", output_text: JSON.stringify(brief) }),
+    }),
+    (error) => error instanceof WorkflowGenerationError && error.kind === "malformed-output",
+  );
+});
+
+test("generation converts provider failures to a safe typed error without retrying", async () => {
+  let calls = 0;
+  await assert.rejects(
+    generateWorkflowBrief(VALID_INPUT, {
+      apiKey: "test-key",
+      fetchFn: async () => {
+        calls += 1;
+        return new Response("sensitive upstream detail", { status: 503 });
+      },
+    }),
+    (error) =>
+      error instanceof WorkflowGenerationError &&
+      error.kind === "provider" &&
+      !error.message.includes("sensitive upstream detail"),
+  );
+  assert.equal(calls, 1);
+});
+
+test("generation distinguishes its timeout from caller cancellation", async () => {
+  const waitForAbort = async (_url, init) =>
+    new Promise((_resolve, reject) => {
+      if (init.signal.aborted) {
+        reject(init.signal.reason);
+        return;
+      }
+      init.signal.addEventListener("abort", () => reject(init.signal.reason), { once: true });
+    });
+
+  await assert.rejects(
+    generateWorkflowBrief(VALID_INPUT, { apiKey: "test-key", fetchFn: waitForAbort, timeoutMs: 5 }),
+    (error) => error instanceof WorkflowGenerationError && error.kind === "timeout",
+  );
+
   const controller = new AbortController();
-  controller.abort();
-  await assert.rejects(generateWorkflowBrief(VALID_INPUT, { signal: controller.signal }), error => error instanceof WorkflowGenerationError && error.kind === "cancelled");
+  controller.abort(new DOMException("Cancelled", "AbortError"));
+  await assert.rejects(
+    generateWorkflowBrief(VALID_INPUT, {
+      apiKey: "test-key",
+      fetchFn: waitForAbort,
+      signal: controller.signal,
+    }),
+    (error) => error instanceof WorkflowGenerationError && error.kind === "cancelled",
+  );
+});
+
+test("generation keeps the timeout active while reading the provider response", async () => {
+  await assert.rejects(
+    generateWorkflowBrief(VALID_INPUT, {
+      apiKey: "test-key",
+      timeoutMs: 5,
+      fetchFn: async (_url, init) => ({
+        ok: true,
+        json: async () => new Promise((_resolve, reject) => {
+          init.signal.addEventListener("abort", () => reject(init.signal.reason), { once: true });
+        }),
+      }),
+    }),
+    (error) => error instanceof WorkflowGenerationError && error.kind === "timeout",
+  );
 });
 
 test("handler returns a validated successful brief with no-store headers", async () => {

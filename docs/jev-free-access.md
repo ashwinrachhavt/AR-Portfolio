@@ -1,26 +1,5 @@
 # Verified free Jev access
 
-## Free labs update — September 23, 2026
-
-Both labs now work without accounts or metered inference. Their default form submissions execute deterministic rules in the browser, so submitted descriptions stay on the device. No model is needed after the promotion expires. Hosting costs are separate from this inference contract.
-
-- **Career Fit Navigator (`/fit`)** maps keywords to approved résumé evidence. Visitors can select capabilities, prioritize one, and immediately re-rank the evidence. Manual selections are labeled separately from keyword and original Jev interpretations; gaps remain visible, and all career claims remain verbatim approved facts.
-- **Workflow Readiness Lab (`/tools/workflow-readiness`)** builds a validated brief from authored templates. Document processing, source lookup, classification, and external-action signals change the proposed steps. The result lets visitors adjust signals, stakes, and approval preferences locally. High stakes always retain human approval. Readiness labels describe supplied information and outstanding work; the lab does not verify systems or promise performance.
-- Optional Jev interpretation is an unchecked, explicit choice. Career Fit uses the existing `CAREER_FIT_LIVE_ENABLED=true`; Workflow requires `WORKFLOW_LAB_LIVE_ENABLED=true`. Both share the connection and free-access checks below. No production environment changes were made for this update.
-- Jev returns only fixed-question probabilities. Career Fit asks about twelve capabilities; Workflow asks about four workflow signals. A 65% threshold selects signals, while approved evidence and authored rules produce the displayed text. The UI and exports identify the method used. Local adjustments do not make another provider request.
-- Workflow no longer has an OpenAI or paid gateway generation path. Legacy `WORKFLOW_LAB_PROVIDER`, `WORKFLOW_LAB_MODEL`, and OpenAI keys cannot activate paid inference. `POST /api/workflow-readiness` accepts the original fields plus optional `interpretation: "rules" | "jev"` (defaults to rules) and returns `{ brief, method }`. Origin checks, bounded bodies, strict schemas, rate/concurrency limits, no-store responses, and cancellation remain.
-- Unavailable, expired, malformed, or timed-out optional workflow Jev requests return a useful rules brief with `method.fallback: true`. A visitor cancellation remains cancelled. Career Fit preserves its recoverable live-service errors and local example/keyword paths.
-
-The sections below record the earlier September 22 live verification; they do not establish a new live verification of the Workflow use case. New regression checks use synthetic provider fixtures. No paid inference was called to implement this update.
-
-### Implementation handoff
-
-Objective: keep both interactive labs useful with no paid inference. Changed areas: shared `src/lib/jev.ts`; Career Fit ranking, UI, styles, and tests; Workflow rules, generator, request schema/handler, UI, exports, and tests; this document. Validation: 74 targeted automated tests, `pnpm lint`, and `pnpm typecheck`; desktop/mobile browser checks at 390–1440px verified local submissions, evidence re-ranking, approval enforcement, signal changes, copying, no horizontal overflow, and zero API calls for those interactions. Both main content areas passed the WCAG 2A/AA browser audit after labeling the capability controls as a group.
-
-Outstanding: optional Workflow Jev uses synthetic test fixtures, not a new live provider verification. The existing promotion exception cannot guarantee provider billing behavior; default rules avoid that dependency. Next step: parent completes the shared production build after stopping its development server, then reviews the combined changes. No commits or production configuration changes were made here.
-
-## Earlier verification record
-
 Checked September 22, 2026. Vercel’s account verification is complete. Actual authenticated Jev requests now return valid decisions and a zero-cost billing receipt. Production selects Vercel; Venice is not a fallback.
 
 ## Free-access contract
@@ -40,7 +19,7 @@ The dedicated key variable isolates Jev from other features that consume `AI_GAT
 
 The server fetches the model catalog on every request. An exactly zero catalog price is accepted. The verified promotion exception accepts only the observed input rate and zero output, with no extra pricing dimensions. It requires the verification stamp, the September 22–25 window, and an authenticated credit response with balance exactly $5 and total used exactly $0. Any other credit state disables the exception, including usage by other apps on the account. Every successful Vercel inference must return a receipt with zero cost, gateway cost and surcharge cost before its result is displayed.
 
-**All Vercel Jev inference stops at September 25, 2026, 00:00 UTC.** After that the keyword explorer and rules-based workflow lab remain available. There is no automatic extension, credit purchase, top-up configuration, provider fallback, or paid-mode activation. This release does not promise permanent free inference. Auto-recharge is documented as off by default; its dashboard setting was not independently inspected. No billing settings or paid plans were changed.
+**All Vercel Jev inference stops at September 25, 2026, 00:00 UTC.** After that the existing keyword preview remains available. There is no automatic extension, credit purchase, top-up configuration, provider fallback, or paid-mode activation. This release does not promise permanent free inference. Auto-recharge is documented as off by default; its dashboard setting was not independently inspected. No billing settings or paid plans were changed.
 
 The receipt check occurs after inference and cannot undo a provider charge. The unchanged free balance is a buffer if promotional billing unexpectedly changes; subsequent checks block the exception when metered spend appears. The dated cutoff and request/size limits reduce exposure, but this is not a provider-enforced universal zero-spend guarantee.
 

@@ -12,10 +12,10 @@ export const approvalLabels = { always: "Approve every result", exceptions: "Rev
 
 const text = (value: string) => value.replace(/([\\`*_{}\[\]<>#!|])/g, "\\$1");
 
-export function briefToMarkdown(brief: WorkflowBrief, input: WorkflowInput, isExample = false, method = "Free rules-based proposal"): string {
+export function briefToMarkdown(brief: WorkflowBrief, input: WorkflowInput, isExample = false): string {
   return [
     `# ${text(brief.title)}`,
-    `${isExample ? "Example brief" : text(method)} · AI Workflow Readiness Lab`,
+    `${isExample ? "Example brief" : "AI-generated proposal"} · AI Workflow Readiness Lab`,
     "Based on the supplied description. Assumptions and suggested targets need human review.",
     "## Approval boundary", text(approvalPolicy(input)),
     "## Job to be done", text(brief.jobToBeDone),

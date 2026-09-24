@@ -21,18 +21,6 @@ export const workflowInputSchema = z.strictObject({
 
 export type WorkflowInput = z.infer<typeof workflowInputSchema>;
 
-export const workflowRequestSchema = workflowInputSchema.extend({ interpretation: z.enum(["rules", "jev"]).default("rules") });
-export const workflowMethodSchema = z.object({
-  mode: z.enum(["rules", "jev"]),
-  signalIds: z.array(z.enum(["retrieval", "documents", "classification", "actions"])),
-  fallback: z.boolean().optional(),
-  analysis: z.object({
-    provider: z.enum(["venice", "vercel"]), model: z.literal("Jev"), durationMs: z.number().nonnegative(), completedAt: z.string(),
-    signals: z.array(z.object({ id: z.string(), label: z.string(), probability: z.number().min(0).max(1) })),
-  }).optional(),
-});
-export type WorkflowMethod = z.infer<typeof workflowMethodSchema>;
-
 export function approvalPolicy(input: WorkflowInput): string {
   if (input.approval === "always") {
     return "Every final result and outgoing action requires explicit human approval.";

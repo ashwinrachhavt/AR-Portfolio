@@ -7,8 +7,6 @@ Read version-matched Next.js documentation in `node_modules/next/dist/docs/` bef
 Keep the resume and portfolio facts consistent with `src/content/resume.json`.
 The public agent must only use approved public career facts. Private recruiter correspondence and work-authorization notes are not public agent context.
 
-Public knowledge lives in `src/content/knowledge/curated.json` plus approved résumé and article sources. `pnpm knowledge:build` regenerates the validated catalog; do not hand-edit `catalog.json`. Import an explicitly reviewed companion export with `pnpm knowledge:import <path-to-public.json>`. Eve and public endpoints must reuse `src/lib/knowledge.mjs`, preserve citations, and never query a private Notion workspace at visitor request time. New interactive article components require reviewed source-linked content; never execute generated MDX. Keep the default website experience free of metered inference.
-
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know
