@@ -1,11 +1,12 @@
 // Synthetic fixtures for Decision Lab article
-// IMPORTANT: All data is fictional. No employer data, proprietary prompts, 
+// IMPORTANT: All data is fictional. No employer data, proprietary prompts,
 // customer records, or production screenshots.
 
 export type DecisionMode = "deterministic" | "recorded" | "live";
 
 export interface Scenario {
   id: string;
+  version: string;
   chapter: "lois" | "classify-ai";
   synthetic: true;
   state: Record<string, unknown>;
@@ -24,15 +25,43 @@ export interface DecisionTrace {
   fixtureVersion: string;
   modelVersion?: string;
   observedAt?: string;
-  questions: Record<string, { type: string; instructions: string }>;
+  questions: Record<string, { type: "choice" | "noul" | "score"; instructions: string }>;
   typedAnswers: Record<string, { choice?: string; noul?: number; score?: number }>;
   policyChecks: Array<{ check: string; passed: boolean; reason: string }>;
-  outcome: { action: string; reason: string };
+  outcome: { action: "classify_and_rename" | "route_for_review" | "request_clarification" | "exclude_expense_path" | "no_candidate" | "needs_more_evidence"; reason: string };
 }
+
+type StageId =
+  | "intake"
+  | "text_extraction"
+  | "catalog_lookup"
+  | "candidate_type"
+  | "evidence_sufficiency"
+  | "review_record_update"
+  | "lender_rename"
+  | "policy_checks"
+  | "transaction_normalization"
+  | "tenant_history_retrieval"
+  | "merchant_context"
+  | "candidate_account"
+  | "bookkeeper_lanes"
+  | "reconciliation"
+  | "ledger_sync";
+
+// Types for replay results
+export type Evidence = { text: string; source: string };
+export type Check = DecisionTrace["policyChecks"][number];
+export type ReplayResult = {
+  state: Record<string, unknown>;
+  evidence: Evidence[];
+  trace: DecisionTrace;
+  changedStages: StageId[];
+};
 
 // Chapter A: Lois - Document Classification
 export const loisScenario: Scenario = {
-  id: "lois-appraisal-001",
+  id: "lois-appraisal",
+  version: "1.0.0",
   chapter: "lois",
   synthetic: true,
   state: {
@@ -48,8 +77,13 @@ Appraiser: Jane Smith, State Certified
 SUMMARY OF SALIENT FEATURES
 The subject property is a single-family residence...`,
     pageCount: 8,
+    readablePages: 8,
+    missingPages: [],
     hasSignature: true,
     lenderRule: "fannie_mae_standard",
+    syntheticTenantId: "tenant-loan-labs-demo",
+    syntheticWriteAllowed: true,
+    syntheticAuthorizationCurrent: true,
   },
   candidates: [
     { id: "appraisal", label: "Appraisal Report", description: "Property valuation by licensed appraiser" },
@@ -66,7 +100,7 @@ The subject property is a single-family residence...`,
     {
       id: "unreadable-page",
       label: "Unreadable page 3",
-      changes: { pageCount: 8, readablePages: 7, missingPages: [3] },
+      changes: { readablePages: 7, missingPages: [3] },
     },
     {
       id: "contradicting-header",
@@ -86,39 +120,10 @@ The subject property is a single-family residence...`,
   },
 };
 
-// Deterministic Jev response for Lois scenario
-export const loisDeterministicTrace: DecisionTrace = {
-  mode: "deterministic",
-  fixtureVersion: "2026-09-25",
-  questions: {
-    document_type: {
-      type: "choice",
-      instructions: "What type of document is this based on the extracted text and metadata?",
-    },
-    evidence_sufficient: {
-      type: "noul",
-      instructions: "Is there sufficient evidence to confidently classify this document?",
-    },
-  },
-  typedAnswers: {
-    document_type: { choice: "appraisal" },
-    evidence_sufficient: { noul: 0.92 },
-  },
-  policyChecks: [
-    { check: "tenant_scope", passed: true, reason: "Document belongs to active loan file" },
-    { check: "permitted_tool", passed: true, reason: "Document classification tool is authorized" },
-    { check: "valid_evidence", passed: true, reason: "Extracted text contains appraisal markers" },
-    { check: "current_authorization", passed: true, reason: "User session is valid" },
-  ],
-  outcome: {
-    action: "classify_and_rename",
-    reason: "High confidence classification with policy approval",
-  },
-};
-
 // Chapter B: Classify AI - Transaction Categorization
 export const classifyAiScenario: Scenario = {
-  id: "classify-transaction-001",
+  id: "classify-transaction",
+  version: "1.0.0",
   chapter: "classify-ai",
   synthetic: true,
   state: {
@@ -137,6 +142,9 @@ export const classifyAiScenario: Scenario = {
       { merchant: "AMZN MKTP US*", category: "Software & Subscriptions", date: "2026-07-05" },
     ],
     businessContext: "Marketing agency focused on social media campaigns",
+    syntheticBookkeeperApproved: false,
+    syntheticReconciled: false,
+    transactionType: "expense",
   },
   candidates: [
     { id: "office-supplies", label: "Office Supplies" },
@@ -179,73 +187,3 @@ export const classifyAiScenario: Scenario = {
     requiredChecks: ["reconciliation", "bookkeeper_approval", "ledger_sync_gate"],
   },
 };
-
-// Deterministic Jev response for Classify AI scenario
-export const classifyAiDeterministicTrace: DecisionTrace = {
-  mode: "deterministic",
-  fixtureVersion: "2026-09-25",
-  questions: {
-    account_category: {
-      type: "choice",
-      instructions: "Which account category best matches this transaction based on merchant and history?",
-    },
-    confidence: {
-      type: "score",
-      instructions: "Rate confidence in this categorization from 0 (guessing) to 1 (certain)",
-    },
-    needs_review: {
-      type: "noul",
-      instructions: "Does this transaction need human bookkeeper review before posting?",
-    },
-  },
-  typedAnswers: {
-    account_category: { choice: "office-supplies" },
-    confidence: { score: 0.64 },
-    needs_review: { noul: 0.73 },
-  },
-  policyChecks: [
-    { check: "reconciliation", passed: false, reason: "Confidence below auto-post threshold (0.85)" },
-    { check: "bookkeeper_approval", passed: false, reason: "Flagged for review" },
-    { check: "ledger_sync_gate", passed: false, reason: "Blocked pending approval" },
-  ],
-  outcome: {
-    action: "route_for_review",
-    reason: "Moderate confidence with conflicting history - requires bookkeeper decision",
-  },
-};
-
-// Policy check functions (pure, deterministic)
-export function checkTenantScope(state: Record<string, unknown>): { passed: boolean; reason: string } {
-  // Deterministic check: does the document/transaction belong to an active tenant?
-  const hasValidTenant = Boolean(state.lenderRule || state.accountChart);
-  return {
-    passed: hasValidTenant,
-    reason: hasValidTenant ? "Belongs to active tenant" : "No tenant context",
-  };
-}
-
-export function checkPermittedTool(action: string): { passed: boolean; reason: string } {
-  const allowedActions = ["classify_and_rename", "route_for_review", "request_clarification"];
-  const permitted = allowedActions.includes(action);
-  return {
-    passed: permitted,
-    reason: permitted ? `Action '${action}' is authorized` : `Action '${action}' not permitted`,
-  };
-}
-
-export function checkValidEvidence(evidenceSpans?: Array<{ text: string; source: string }>): { passed: boolean; reason: string } {
-  const hasEvidence = Boolean(evidenceSpans && evidenceSpans.length > 0);
-  return {
-    passed: hasEvidence,
-    reason: hasEvidence ? "Evidence spans available" : "No evidence provided",
-  };
-}
-
-export function checkCurrentAuthorization(mock = true): { passed: boolean; reason: string } {
-  // In real system: verify JWT token, check permissions, validate session
-  // Here: deterministic mock for demonstration
-  return {
-    passed: mock,
-    reason: mock ? "Mock authorization valid" : "Authorization required",
-  };
-}

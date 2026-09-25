@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert";
-import { loisScenario, classifyAiScenario, replayScenario } from "./fixtures.ts";
+import { loisScenario, classifyAiScenario } from "./fixtures.ts";
+import { replayScenario } from "./replay.ts";
 
 test("lois replay: base appraisal returns classify_and_rename", () => {
   const result = replayScenario(loisScenario);
