@@ -1,15 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import styles from "./decision-lab.module.css";
 import {
   loisScenario,
-  loisDeterministicTrace,
   classifyAiScenario,
-  classifyAiDeterministicTrace,
   type Scenario,
   type DecisionTrace,
 } from "@/lib/decision-lab/fixtures";
+import { replayScenario, type ReplayResult } from "@/lib/decision-lab/replay";
 
 type Chapter = "intro" | "lois" | "classify-ai";
 type InteractionStep = "predict" | "evidence" | "decision" | "policy" | "review";
@@ -20,15 +19,21 @@ export default function DecisionLabArticle() {
   const [userPrediction, setUserPrediction] = useState<string | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
 
-  const currentScenario: Scenario | null = 
-    chapter === "lois" ? loisScenario : 
-    chapter === "classify-ai" ? classifyAiScenario : 
-    null;
+  const currentScenario: Scenario | null = useMemo(() =>
+    chapter === "lois" ? loisScenario :
+    chapter === "classify-ai" ? classifyAiScenario :
+    null, [chapter]);
 
-  const currentTrace: DecisionTrace | null = 
-    chapter === "lois" ? loisDeterministicTrace : 
-    chapter === "classify-ai" ? classifyAiDeterministicTrace : 
-    null;
+  const replayResult: ReplayResult | null = useMemo(() => {
+    if (!currentScenario) return null;
+    try {
+      return replayScenario(currentScenario, selectedVariant || undefined);
+    } catch {
+      return null;
+    }
+  }, [currentScenario, selectedVariant]);
+
+  const currentTrace: DecisionTrace | null = replayResult?.trace ?? null;
 
   const resetChapter = (newChapter: Chapter) => {
     setChapter(newChapter);
