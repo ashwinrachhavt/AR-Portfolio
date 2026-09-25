@@ -21,7 +21,7 @@ export function replayScenario(scenario: Scenario, variantId?: string): ReplayRe
   let evidence: Evidence[] = [];
   let choice: string | undefined;
   let reason: string;
-  let action = "route_for_review";
+  let action: DecisionTrace["outcome"]["action"] = "route_for_review";
 
   if (scenario.chapter === "lois") {
     const text = typeof state.extractedText === "string" ? state.extractedText : "";
