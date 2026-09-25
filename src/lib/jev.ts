@@ -4,7 +4,7 @@ import { capabilities } from "./career-fit.mjs";
 export const JEV_FREE_ACCESS_END = Date.parse("2026-09-25T00:00:00Z");
 const JEV_FREE_ACCESS_START = Date.parse("2026-09-22T00:00:00Z");
 export type JevStage = "checking" | "interpreting" | "matching";
-type Provider = "venice" | "vercel";
+type Provider = "venice" | "vercel" | "typesafe";
 
 function zeroPrice(value: unknown) {
   return (typeof value === "number" || (typeof value === "string" && value.trim() !== "")) && Number(value) === 0;
@@ -70,8 +70,12 @@ export async function interpretRole(text: string, options: {
     const catalog = await fetcher(connection.catalog, { headers, signal, cache: "no-store" });
     if (!catalog.ok) return null;
     const prices = await catalog.json();
-    if (!hasFreeJevPrice(prices, connection.provider)) {
-      if (connection.provider !== "vercel" || !hasVerifiedJevPromotion(prices, env, now())) return null;
+    const isFree = hasFreeJevPrice(prices, connection.provider);
+    // Venice: allow paid calls if explicitly enabled
+    if (!isFree && connection.provider === "venice" && env.VENICE_ALLOW_PAID !== "true") return null;
+    // Vercel: only allow if free or verified promotion
+    if (!isFree && connection.provider === "vercel") {
+      if (!hasVerifiedJevPromotion(prices, env, now())) return null;
       // Stop the promotion exception if any metered spend appears. The free
       // balance is a buffer against billing changes, not permission to spend it.
       const credits = await fetcher("https://ai-gateway.vercel.sh/v1/credits", { headers, signal, cache: "no-store" });
