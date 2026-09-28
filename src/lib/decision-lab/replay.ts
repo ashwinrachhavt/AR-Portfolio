@@ -21,8 +21,8 @@ export function replayScenario(scenario: Scenario, variantId?: string): ReplayRe
   let evidence: Evidence[] = [];
   let choice: string | undefined;
   let reason: string;
-  let action: DecisionTrace["outcome"]["action"] = "route_for_review";
-
+  let action: DecisionTrace["outcome"]["action"] = scenario.chapter === "lois" ? "classify_and_rename" : "route_for_review";
+  
   if (scenario.chapter === "lois") {
     const text = typeof state.extractedText === "string" ? state.extractedText : "";
     const heading = text.split(/\r?\n/, 1)[0]?.trim() ?? "";
@@ -48,6 +48,13 @@ export function replayScenario(scenario: Scenario, variantId?: string): ReplayRe
     reason = !choice ? "No supported document heading; request review"
       : !complete ? "Document may be incomplete; request clearer evidence"
         : `Candidate ${choice}; renaming requires separate verified scope and permission. Lender rule: ${String(state.lenderRule ?? "unspecified")}.`;
+    if (!choice) {
+        action = "route_for_review";
+    } else if (!complete) {
+        action = "needs_more_evidence";
+    } else {
+        action = "classify_and_rename";
+    }
   } else {
     const transfer = state.transactionType === "transfer";
     const chart = Array.isArray(state.accountChart) ? state.accountChart.filter((item): item is string => typeof item === "string") : [];
@@ -66,6 +73,8 @@ export function replayScenario(scenario: Scenario, variantId?: string): ReplayRe
       { check: "reconciliation", passed: state.syntheticReconciled === true, reason: "Demo flag is not actual reconciliation" },
     );
     if (transfer) action = "exclude_expense_path";
+    else if (choice) action = "classify_and_rename";
+    else action = "no_candidate";
     reason = transfer ? "Transfer requires a separate workflow; no ledger update"
       : choice ? `Candidate ${choice}; human review and reconciliation remain separate.`
         : "Ambiguous or incompatible history; route to bookkeeper review";

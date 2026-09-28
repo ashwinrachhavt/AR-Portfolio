@@ -1,0 +1,481 @@
+.main {
+  width: min(1080px, calc(100% - 48px));
+  margin-inline: auto;
+  padding-top: 48px;
+  padding-bottom: 100px;
+  color: #f5f5f7;
+}
+
+.readingColumn {
+  max-width: 860px;
+  margin-inline: auto;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #8e8e93;
+  margin-bottom: 32px;
+  text-decoration: none;
+  transition: color 0.18s;
+}
+
+.backLink:hover {
+  color: #ffffff;
+}
+
+.header {
+  margin-bottom: 44px;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  color: #8e8e93;
+  margin-bottom: 16px;
+}
+
+.categoryBadge {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  background: rgba(59, 130, 246, 0.12);
+  color: #60a5fa;
+  padding: 3px 10px;
+  border-radius: 6px;
+}
+
+.dot {
+  color: #3f3f46;
+}
+
+.title {
+  font-size: clamp(32px, 4.4vw, 50px);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+  color: #f4f4f6;
+  margin-bottom: 20px;
+}
+
+.subtitle {
+  font-size: 18px;
+  line-height: 1.65;
+  color: #a1a1aa;
+  margin-bottom: 28px;
+}
+
+.authorBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-block: 18px;
+  border-block: 1px solid #27272a;
+}
+
+.authorInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.authorName {
+  font-weight: 600;
+  font-size: 14.5px;
+  color: #f4f4f5;
+}
+
+.authorRole {
+  font-size: 12.5px;
+  color: #71717a;
+}
+
+.statsBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  background: #18181b;
+  border: 1px solid #2e2e34;
+  color: #d4d4d8;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+/* Simulator styles */
+.simulatorWrapper {
+  margin-block: 48px;
+  background: #121215;
+  border: 1px solid #27272e;
+  border-radius: 24px;
+  padding: 32px;
+}
+
+.simulatorIntro h2 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  color: #ffffff;
+}
+
+.simulatorIntro p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #9ca3af;
+  margin: 0 0 28px;
+}
+
+.simulatorCard {
+  background: #18181d;
+  border: 1px solid #2e2e38;
+  border-radius: 18px;
+  padding: 24px;
+}
+
+.simulatorHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #27272e;
+}
+
+.simBadge {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: #60a5fa;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.simTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f4f4f5;
+  margin: 0;
+}
+
+.statusIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #e4e4e7;
+  background: #22222a;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid #33333d;
+}
+
+.simDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.simulatorBody {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 28px;
+}
+
+.controlsCol {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.controlGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.controlLabelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.controlLabelRow label {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #d4d4d8;
+}
+
+.controlValue {
+  font-family: var(--font-mono, monospace);
+  font-size: 14px;
+  font-weight: 600;
+  color: #60a5fa;
+}
+
+.rangeInput {
+  width: 100%;
+  accent-color: #3b82f6;
+  cursor: pointer;
+}
+
+.sliderRange {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-family: var(--font-mono, monospace);
+  color: #71717a;
+}
+
+.subhead {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #d4d4d8;
+  margin-bottom: 4px;
+}
+
+.pillGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pillBtn {
+  background: #202026;
+  border: 1px solid #31313c;
+  color: #a1a1aa;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.pillBtn:hover {
+  border-color: #52525e;
+  color: #ffffff;
+}
+
+.pillBtnActive {
+  background: #3b82f6;
+  color: #ffffff;
+  border-color: #3b82f6;
+  font-weight: 600;
+}
+
+.resultsCol {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.resultBox {
+  background: #101014;
+  border: 1px solid #292934;
+  border-radius: 14px;
+  padding: 20px;
+  text-align: center;
+}
+
+.resultEyebrow {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: #71717a;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.limitValue {
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #22c55e;
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+
+.limitSub {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.metricsList {
+  background: #131317;
+  border: 1px solid #26262e;
+  border-radius: 12px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.metricRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12.5px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #1f1f26;
+}
+
+.metricRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.metricName {
+  color: #9ca3af;
+}
+
+.metricVal {
+  font-weight: 600;
+  font-family: var(--font-mono, monospace);
+  color: #f4f4f5;
+}
+
+.decisionBanner {
+  background: #1c1c22;
+  border: 1px solid #2d2d38;
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.decisionLabel {
+  font-family: var(--font-mono, monospace);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  color: #3b82f6;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.decisionText {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #d4d4d8;
+  margin: 0;
+}
+
+/* Prose styles */
+.prose {
+  font-size: 16.5px;
+  line-height: 1.8;
+  color: #d4d4d8;
+}
+
+.prose h2 {
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #f4f4f6;
+  margin: 44px 0 16px;
+}
+
+.prose h3 {
+  font-size: 19px;
+  font-weight: 600;
+  color: #f4f4f6;
+  margin: 28px 0 12px;
+}
+
+.prose p {
+  margin-bottom: 20px;
+}
+
+.prose strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.prose ul {
+  padding-left: 24px;
+  margin-bottom: 24px;
+}
+
+.prose li {
+  margin-bottom: 10px;
+}
+
+.architectureBox {
+  background: #0f0f12;
+  border: 1px solid #272730;
+  border-radius: 14px;
+  padding: 20px;
+  overflow-x: auto;
+  margin-block: 28px;
+}
+
+.architectureBox pre {
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  line-height: 1.6;
+  color: #60a5fa;
+  margin: 0;
+}
+
+.formulaCard {
+  background: #141418;
+  border: 1px solid #282832;
+  border-radius: 10px;
+  padding: 14px 20px;
+  margin-block: 18px;
+  font-family: var(--font-mono, monospace);
+  font-size: 13.5px;
+  color: #34d399;
+}
+
+.backlinksBox {
+  margin-top: 60px;
+  padding: 28px 32px;
+  background: #151518;
+  border: 1px solid #2b2b32;
+  border-radius: 18px;
+}
+
+.backlinksBox h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 14px;
+  color: #f4f4f5;
+}
+
+.backlinksBox ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.backlinksBox a {
+  color: #60a5fa;
+  font-size: 14px;
+  text-decoration: none;
+  transition: color 0.18s;
+}
+
+.backlinksBox a:hover {
+  color: #93c5fd;
+  text-decoration: underline;
+}
+
+@media (max-width: 800px) {
+  .simulatorBody {
+    grid-template-columns: 1fr;
+  }
+  .simulatorWrapper {
+    padding: 20px;
+  }
+}
