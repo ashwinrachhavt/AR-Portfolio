@@ -11,7 +11,7 @@
     "content:build": "node scripts/publish-writing.mjs build",
     "content:import": "node --env-file-if-exists=.env scripts/publish-writing.mjs import",
     "content:notion": "node --experimental-strip-types --env-file-if-exists=.env scripts/publish-writing.mjs notion",
-    "test": "node --experimental-strip-types --test src/lib/*.test.mjs src/lib/workflow/*.test.mjs",
+    "test": "node --experimental-strip-types --test src/lib/*.test.mjs src/lib/workflow/*.test.mjs src/lib/decision-lab/*.test.mjs",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
