@@ -1,8 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import Navbar from "@/app/components/Navbar";
-import Footer from "@/app/components/Footer";
 import LoisAgentSimulator from "./LoisAgentSimulator";
+import ArchitectureDiagram from "@/app/components/ArchitectureDiagram";
 import styles from "./lois.module.css";
 
 export const metadata: Metadata = {
@@ -20,10 +19,8 @@ export const metadata: Metadata = {
 
 export default function LoisDeepDivePage() {
   return (
-    <>
-      <Navbar activeSection="writing" />
-      <main className={styles.main}>
-        <div className={styles.readingColumn}>
+    <div className={styles.main}>
+      <div className={styles.readingColumn}>
           <Link href="/blog" className={styles.backLink}>
             ← All writing & deep dives
           </Link>
@@ -92,41 +89,14 @@ export default function LoisDeepDivePage() {
               To solve this, I re-architected Lois into a finite state machine using <strong>LangGraph</strong> deployed onto <strong>Amazon Bedrock AgentCore Runtime</strong>:
             </p>
 
-            <div className={styles.architectureBox}>
-              <pre>
-{`[Borrower Email / LoanOS Intake]
-              │
-              ▼
-    (LangGraph State Machine)
- ┌──────────────────────────────────────────────┐
- │ State 1: OCR & Multi-Page Embedding Extract   │
- └──────────────────────┬───────────────────────┘
-                        ▼
- ┌──────────────────────────────────────────────┐
- │ State 2: Document Type Classification        │
- │  ├── Confidence >= 0.90 ──► Proceed to State 3│
- │  └── Confidence < 0.90  ──► Route to Human    │
- └──────────────────────┬───────────────────────┘
-                        ▼
- ┌──────────────────────────────────────────────┐
- │ State 3: Lender Policy Validation Engine     │
- │  ├── Match Target Lender File Schema          │
- │  └── Extract Metadata (Borrower, Value, Date)│
- └──────────────────────┬───────────────────────┘
-                        ▼
- ┌──────────────────────────────────────────────┐
- │ State 4: Fail-Closed Composio Security Check │
- │  ├── Validate Tenant & Owner Scope            │
- │  ├── Verify Tool Allowlist (WRITE vs DELETE) │
- │  └── If Revoked / Ambiguous ──► FAIL CLOSED   │
- └──────────────────────┬───────────────────────┘
-                        ▼
- ┌──────────────────────────────────────────────┐
- │ State 5: Cloud Storage Renaming & Sync       │
- │  (Google Drive, Box, Salesforce, LoanOS)     │
- └──────────────────────────────────────────────┘`}
-              </pre>
-            </div>
+            <ArchitectureDiagram
+              svgSrc="/images/diagrams/lois-architecture-dark.svg"
+              pngSrc="/images/diagrams/lois-architecture-dark.png"
+              title="Lois Agentic Pipeline & Permission Architecture"
+              caption="End-to-end mortgage workflow: Borrower/Loan Officer intake via LoisOS Chat, Email, and Slack feeds into LoanOS Backend APIs with Postgres DB, connecting to cloud storages (Box, Salesforce, Google Drive). The execution flow delegates to MCP Tool Discovery with strict Auth & Traceability, running on AWS AgentCore Runtime with Amazon Bedrock Claude models and fine-tuned underwriting verification nodes."
+              excalidrawSrc="/lois.excalidraw"
+              aspectRatio="1465/1688"
+            />
 
             <h2>3. Fail-Closed Authorization: Why LLMs Must Never Have Ambient Delete</h2>
             <p>
@@ -180,8 +150,6 @@ export default function LoisDeepDivePage() {
             </div>
           </article>
         </div>
-      </main>
-      <Footer />
-    </>
+      </div>
   );
 }

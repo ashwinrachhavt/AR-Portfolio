@@ -22,7 +22,7 @@ export default function Navbar({ activeSection }) {
             Lab
           </Link>
           <Link href="/fit" aria-current={activeSection === "fit" ? "page" : undefined}>
-            Work with me
+            Career Fit
           </Link>
           <Link href="/#contact">
             Contact

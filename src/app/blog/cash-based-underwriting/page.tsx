@@ -1,8 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import Navbar from "@/app/components/Navbar";
-import Footer from "@/app/components/Footer";
 import UnderwritingSimulator from "./UnderwritingSimulator";
+import ArchitectureDiagram from "@/app/components/ArchitectureDiagram";
 import styles from "./underwriting.module.css";
 
 export const metadata: Metadata = {
@@ -20,10 +19,8 @@ export const metadata: Metadata = {
 
 export default function CashBasedUnderwritingPage() {
   return (
-    <>
-      <Navbar activeSection="writing" />
-      <main className={styles.main}>
-        <div className={styles.readingColumn}>
+    <div className={styles.main}>
+      <div className={styles.readingColumn}>
           {/* Back link */}
           <Link href="/blog" className={styles.backLink}>
             ← All writing & deep dives
@@ -91,32 +88,14 @@ export default function CashBasedUnderwritingPage() {
             <p>
               To establish an accurate solvency baseline, we engineered an asynchronous reconstruction engine:
             </p>
-            <div className={styles.architectureBox}>
-              <pre>
-{`[Bank Feed via Plaid / Teller]
-         │
-         ▼
-[Transaction Normalization & Deduplication]
-         │
-         ▼
-[Daily Balance Reconstruction Loop (90-Day Window)]
-    ├── Settle Pending vs Posted Transitions
-    ├── Filter Inter-Account Self-Transfers
-    └── Reconcile Against Stated Statement Balances
-         │
-         ▼
-[Statistical Feature Engineering]
-    ├── Average Daily Balance (ADB_90, ADB_30)
-    ├── Cash Variance & Z-Score Burn Volatility
-    └── Inflow Concentration & Revenue Stability
-         │
-         ▼
-[Underwriting Decision Engine]
-    ├── Credit Limit Sizing (15%–30% of ADB)
-    ├── Risk Tier Assignment (Prime / Standard / Guarded)
-    └── Early-Warning Overdraft Circuit Breakers`}
-              </pre>
-            </div>
+            <ArchitectureDiagram
+              svgSrc="/images/diagrams/cash-underwriting-architecture-dark.svg"
+              pngSrc="/images/diagrams/cash-underwriting-architecture-dark.png"
+              title="Cash-Based Algorithmic Underwriting & Credit Limit Pipeline"
+              caption="End-to-end credit risk architecture: Card applicant submits via apply.finally.com (POST /calculate-credit-limit); Apply Backend enqueues calculation tasks via Redis and Celery. The Algorithmic Underwriting engine processes 90-day balances, computes standard deviation and 7-day Z-scores to assign credit lines (10% to 25% of balance), coordinates with Risk/Underwriting review, and syncs approved credit limits to Cards Backend, Marqeta, and Visa."
+              excalidrawSrc="/classify_ai_cash_underwriting.excalidraw"
+              aspectRatio="16838/7295"
+            />
 
             <h3>Handling Inter-Account Transfers</h3>
             <p>
@@ -186,8 +165,6 @@ export default function CashBasedUnderwritingPage() {
             </div>
           </article>
         </div>
-      </main>
-      <Footer />
-    </>
+      </div>
   );
 }

@@ -1,8 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import Navbar from "@/app/components/Navbar";
-import Footer from "@/app/components/Footer";
 import ClassifyAiSimulator from "./ClassifyAiSimulator";
+import ArchitectureDiagram from "@/app/components/ArchitectureDiagram";
 import styles from "./classify.module.css";
 
 export const metadata: Metadata = {
@@ -20,10 +19,8 @@ export const metadata: Metadata = {
 
 export default function ClassifyAiDeepDivePage() {
   return (
-    <>
-      <Navbar activeSection="writing" />
-      <main className={styles.main}>
-        <div className={styles.readingColumn}>
+    <div className={styles.main}>
+      <div className={styles.readingColumn}>
           <Link href="/blog" className={styles.backLink}>
             ← All writing & deep dives
           </Link>
@@ -99,27 +96,14 @@ export default function ClassifyAiDeepDivePage() {
               <li><strong>Confidence Thresholding:</strong> Predictions above 92% confidence auto-post to QuickBooks; predictions below route to a human bookkeeper review queue.</li>
             </ol>
 
-            <div className={styles.architectureBox}>
-              <pre>
-{`[Plaid / Teller Bank Webhook Ingestion]
-                     │
-                     ▼
-[Token Normalizer (Strip noise, trailing IDs, store numbers)]
-                     │
-         ┌───────────┴───────────┐
-         ▼                       ▼
-[Pinecone Dense Embeddings] [Elasticsearch BM25 Sparse]
- (Semantic context & history)  (Exact merchant anchors)
-         └───────────┬───────────┘
-                     ▼
-[Tenant Chart of Accounts (COA) Re-ranker]
-                     │
-                     ▼
-         [Confidence Score Gatekeeper]
-         ├── Score >= 0.92 ──► Auto-Post to QuickBooks Ledger
-         └── Score <  0.92 ──► Human Bookkeeper Review Queue`}
-              </pre>
-            </div>
+            <ArchitectureDiagram
+              svgSrc="/images/diagrams/classify-ai-architecture-dark.svg"
+              pngSrc="/images/diagrams/classify-ai-architecture-dark.png"
+              title="Classify AI Hybrid Retrieval & Execution Architecture"
+              caption="End-to-end transaction categorization pipeline: Users interact with books.finally.com; Books Backend integrates Plaid Service, Heron Service, and custom Rules Engine. Asynchronous classification tasks dispatch via Redis and Celery into the AI Server. The hybrid engine queries Key-Value caches, Postgres DB, and Pinecone vector search alongside Elasticsearch BM25, outputting normalized JSON categorizations with confidence metrics."
+              excalidrawSrc="/classify_ai_cash_underwriting.excalidraw"
+              aspectRatio="14160/9434"
+            />
 
             <h2>3. Scaling to 50K+ Transactions Daily</h2>
             <p>
@@ -166,8 +150,6 @@ export default function ClassifyAiDeepDivePage() {
             </div>
           </article>
         </div>
-      </main>
-      <Footer />
-    </>
+      </div>
   );
 }
