@@ -5,10 +5,37 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { structuredProjects, type StructuredProject } from "@/data/projectsStructured";
+import { PROJECT_MEDIA, type ProjectMedium } from "./projectMedia";
 import WorkModal from "./WorkModal";
-import PortfolioIcon from "./PortfolioIcon";
-import AchievementsSection from "./AchievementsSection";
 import styles from "./ProjectsSection.module.css";
+
+function ProjectMedia({ media }: { media: ProjectMedium }) {
+  if (media.pending) {
+    return (
+      <div
+        className={styles.mediaPending}
+        role="img"
+        aria-label={`${media.alt} — final image pending`}
+        style={{ aspectRatio: media.aspectRatio }}
+      >
+        <span>Final image pending</span>
+        <span className={styles.mediaPendingNote}>Ashwin will upload this asset</span>
+      </div>
+    );
+  }
+  return (
+    <div className={styles.mediaFrame} style={{ aspectRatio: media.aspectRatio }}>
+      <Image
+        src={media.src}
+        alt={media.alt}
+        fill
+        sizes="(max-width: 768px) 100vw, 33vw"
+        className={styles.media}
+        style={{ objectFit: media.objectFit, objectPosition: media.objectPosition }}
+      />
+    </div>
+  );
+}
 
 export default function ProjectsSection() {
   const [selectedProject, setSelectedProject] = useState<StructuredProject | null>(null);
@@ -50,84 +77,85 @@ export default function ProjectsSection() {
 
       {/* Primary Projects Grid */}
       <div className={styles.projectsGrid}>
-        {filteredProjects.map((project, idx) => (
-          <motion.article
-            key={project.id}
-            className={styles.card}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-40px" }}
-            transition={{ duration: 0.45, delay: idx * 0.08 }}
-            whileHover={{ y: -6, transition: { duration: 0.2 } }}
-            onClick={() => setSelectedProject(project)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                setSelectedProject(project);
-              }
-            }}
-            aria-haspopup="dialog"
-          >
-            {/* Project Image banner */}
-            <div className={styles.imageWrapper}>
-              <Image
-                src={project.image}
-                alt={project.title}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className={styles.cardImage}
-              />
-              <div className={styles.imageOverlay} />
-              <div className={styles.cardTopBadge}>
-                <span className={styles.orderBadge}>0{project.order}</span>
-                <span className={styles.companyBadge}>{project.company}</span>
-              </div>
-            </div>
+        {filteredProjects.map((project, idx) => {
+          const media = PROJECT_MEDIA[project.id] || {
+            src: project.image,
+            alt: project.title,
+            objectFit: "cover" as const,
+            objectPosition: "center",
+            aspectRatio: "16 / 9",
+          };
 
-            {/* Card Content */}
-            <div className={styles.cardBody}>
-              <div className={styles.categoryLabel}>{project.category}</div>
-              <h3 className={styles.cardTitle}>{project.title}</h3>
-              <p className={styles.cardSubtitle}>{project.subtitle}</p>
-
-              {/* Key Metric Spotlight */}
-              {project.metrics[0] && (
-                <div className={styles.metricSpotlight}>
-                  <span className={styles.spotlightNumber}>{project.metrics[0].highlight}</span>
-                  <span className={styles.spotlightLabel}>{project.metrics[0].label}</span>
+          return (
+            <motion.article
+              key={project.id}
+              className={styles.card}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.45, delay: idx * 0.08 }}
+              whileHover={{ y: -6, transition: { duration: 0.2 } }}
+              onClick={() => setSelectedProject(project)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setSelectedProject(project);
+                }
+              }}
+              aria-haspopup="dialog"
+            >
+              {/* Project Image banner */}
+              <div className={styles.imageWrapper}>
+                <ProjectMedia media={media} />
+                <div className={styles.imageOverlay} />
+                <div className={styles.cardTopBadge}>
+                  <span className={styles.orderBadge}>0{project.order}</span>
+                  <span className={styles.companyBadge}>{project.company}</span>
                 </div>
-              )}
+              </div>
 
-              {/* Tech Stack Pills */}
-              <div className={styles.techList}>
-                {project.techStack.slice(0, 4).map((tech) => (
-                  <span key={tech} className={styles.techTag}>
-                    {tech}
-                  </span>
-                ))}
-                {project.techStack.length > 4 && (
-                  <span className={styles.techMore}>+{project.techStack.length - 4}</span>
+              {/* Card Content */}
+              <div className={styles.cardBody}>
+                <div className={styles.categoryLabel}>{project.category}</div>
+                <h3 className={styles.cardTitle}>{project.title}</h3>
+                <p className={styles.cardSubtitle}>{project.subtitle}</p>
+
+                {/* Key Metric Spotlight */}
+                {project.metrics[0] && (
+                  <div className={styles.metricSpotlight}>
+                    <span className={styles.spotlightNumber}>{project.metrics[0].highlight}</span>
+                    <span className={styles.spotlightLabel}>{project.metrics[0].label}</span>
+                  </div>
+                )}
+
+                {/* Tech Stack Pills */}
+                <div className={styles.techList}>
+                  {project.techStack.slice(0, 4).map((tech) => (
+                    <span key={tech} className={styles.techTag}>
+                      {tech}
+                    </span>
+                  ))}
+                  {project.techStack.length > 4 && (
+                    <span className={styles.techMore}>+{project.techStack.length - 4}</span>
+                  )}
+                </div>
+              </div>
+
+              {/* Card Action footer */}
+              <div className={styles.cardFooter}>
+                <span className={styles.openModalText}>
+                  Inspect modal & metrics
+                </span>
+                {project.deepDiveUrl && (
+                  <span className={styles.deepDiveAvailable}>Deep dive available</span>
                 )}
               </div>
-            </div>
-
-            {/* Card Action footer */}
-            <div className={styles.cardFooter}>
-              <span className={styles.openModalText}>
-                Inspect modal & metrics <span className={styles.arrowIcon}>↗</span>
-              </span>
-              {project.deepDiveUrl && (
-                <span className={styles.deepDiveAvailable}>Deep dive available</span>
-              )}
-            </div>
-          </motion.article>
-        ))}
+            </motion.article>
+          );
+        })}
       </div>
-
-      {/* Achievements metrics banner */}
-      <AchievementsSection />
 
       {/* Work Modal Dialog */}
       <WorkModal
