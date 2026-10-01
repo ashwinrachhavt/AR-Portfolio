@@ -61,7 +61,7 @@ server.listen(49201, async () => {
 
     const result = await page.evaluate(async (elements, appState, files) => {
       try {
-        // Dark version
+        // Dark version: passing #ffffff with theme="dark" causes Excalidraw to invert to #121212 dark canvas with white/light text
         const svgDark = await window.excalidrawUtils.exportToSvg({
           data: {
             elements,
@@ -69,7 +69,7 @@ server.listen(49201, async () => {
               ...(appState || {}),
               exportWithDarkMode: true,
               exportBackground: true,
-              viewBackgroundColor: "#121215"
+              viewBackgroundColor: "#ffffff"
             },
             files: files || null
           },
@@ -114,6 +114,48 @@ server.listen(49201, async () => {
     fs.writeFileSync(`public/images/diagrams/${outName}-dark.svg`, result.dark);
     fs.writeFileSync(`public/images/diagrams/${outName}.svg`, result.light);
     console.log(`Saved: public/images/diagrams/${outName}.svg and ${outName}-dark.svg (length: ${result.dark.length})`);
+
+    // Render high-resolution PNGs matching the new high-contrast SVGs
+    async function renderSvgToPng(svgStr, outPath, bgColor) {
+      const renderPage = await browser.newPage();
+      const match = svgStr.match(/viewBox="([^"]+)"/);
+      let width = 2400;
+      let height = 1400;
+      if (match) {
+        const parts = match[1].trim().split(/\s+/).map(Number);
+        if (parts.length === 4 && parts[2] > 0 && parts[3] > 0) {
+          const aspect = parts[3] / parts[2];
+          height = Math.round(width * aspect);
+        }
+      }
+      await renderPage.setViewport({ width, height, deviceScaleFactor: 1 });
+      await renderPage.setContent(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <style>
+              * { box-sizing: border-box; }
+              html, body { margin: 0; padding: 0; width: 100%; height: 100%; background: ${bgColor}; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+              svg { width: 100%; height: 100%; }
+            </style>
+          </head>
+          <body>
+            ${svgStr}
+          </body>
+        </html>
+      `);
+      await renderPage.screenshot({ path: outPath, type: 'png' });
+      await renderPage.close();
+    }
+
+    try {
+      await renderSvgToPng(result.dark, `public/images/diagrams/${outName}-dark.png`, '#121212');
+      await renderSvgToPng(result.dark, `public/images/diagrams/${outName}-dark-preview.png`, '#121212');
+      await renderSvgToPng(result.light, `public/images/diagrams/${outName}.png`, '#ffffff');
+      console.log(`Rendered PNGs for ${outName}`);
+    } catch (pngErr) {
+      console.warn(`PNG render warning for ${outName}:`, pngErr.message);
+    }
   }
 
   // 1. Lois
