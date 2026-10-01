@@ -4,8 +4,8 @@ import styles from "../home.module.css";
 
 const HERO_QUOTE = {
   // Owner-editable: swap in any favorite quote.
-  text: "Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.",
-  attribution: "Antoine de Saint-Exupéry",
+  text: "You can't connect the dots looking forward; you can only connect them looking backwards. So you have to trust that the dots will somehow connect in your future.",
+  attribution: "Steve Jobs",
 };
 
 const HERO_COPY = {
@@ -14,7 +14,6 @@ const HERO_COPY = {
   intro:
     "Imagine us working together — I've built and scaled two AI product teams at Finally and Loan Labs, and I care about the whole journey: the idea, the design, and why someone chooses it.",
   interests: ["AI", "startups", "fintech", "philosophy", "chess"],
-  caption: "Engineering, design, and a little productive obsession.",
 };
 
 export default function HeroSection() {
@@ -57,7 +56,6 @@ export default function HeroSection() {
         <figure className={styles.sideRail}>
           <blockquote>“{HERO_QUOTE.text}”</blockquote>
           <figcaption>— {HERO_QUOTE.attribution}</figcaption>
-          <p>{HERO_COPY.caption}</p>
         </figure>
       </div>
 

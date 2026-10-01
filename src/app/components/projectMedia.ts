@@ -9,26 +9,26 @@ export type ProjectMedium = {
 };
 
 export const PROJECT_MEDIA: Record<string, ProjectMedium> = {
-  // ---- Owner-pending slots (no stock / AI substitutes allowed) ----
+  // ---- Approved project images ----
   "cash-based-underwriting": {
-    pending: true,
-    src: "/projects/cash-based-underwriting.png",
+    pending: false,
+    src: "/images/cash_based_underwriting_architecture.png",
     alt: "Cash-based underwriting dashboard at Finally",
     objectFit: "cover",
     objectPosition: "center",
     aspectRatio: "16 / 9",
   },
   "lois-loan-labs": {
-    pending: true,
-    src: "/projects/lois.png",
+    pending: false,
+    src: "/images/lois-architecture.png",
     alt: "Lois agentic loan workflow at Loan Labs",
     objectFit: "cover",
-    objectPosition: "center 30%", // deliberate framing once uploaded
+    objectPosition: "center 30%",
     aspectRatio: "16 / 9",
   },
   "classify-ai": {
-    pending: true,
-    src: "/projects/classify-ai.png",
+    pending: false,
+    src: "/images/classify_ai_architecture.png",
     alt: "Classify AI transaction classification at Finally",
     objectFit: "cover",
     objectPosition: "center",

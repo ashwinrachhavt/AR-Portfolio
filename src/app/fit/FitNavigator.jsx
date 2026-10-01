@@ -9,12 +9,8 @@ import styles from "./fit.module.css";
 const stages = [
   { id: "checking", label: "Checking free Jev access" },
   { id: "interpreting", label: "Jev is reading the role requirements" },
-  { id: "matching", label: "Connecting Jev’s signals to my public work" },
+  { id: "matching", label: "Connecting Jev's signals to my public work" },
 ];
-
-const FIT_HOOK = live
-  ? "Paste a job description and watch Jev classify the role in real time."
-  : "Paste a job description for an instant fit read.";
 
 const ROLE_CHIPS = [
   "Founding AI Engineer",
@@ -26,6 +22,9 @@ const ROLE_CHIPS = [
 ];
 
 export default function FitNavigator({ live = false, provider = "venice" }) {
+  const FIT_HOOK = live
+    ? "Paste a job description and watch Jev classify the role in real time."
+    : "Paste a job description for an instant fit read.";
   const [title, setTitle] = useState(examples[0].title);
   const [description, setDescription] = useState(examples[0].description);
   const [brief, setBrief] = useState(() => buildRoleBrief(keywordCapabilities(examples[0].description), "example"));

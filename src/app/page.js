@@ -6,7 +6,9 @@ import ExperienceSection from "./components/ExperienceSection";
 import ProjectsSection from "./components/ProjectsSection";
 import EmailSection from "./components/EmailSection";
 import Footer from "./components/Footer";
+import NewsletterInvite from "./components/NewsletterInvite";
 import styles from "./home.module.css";
+import { newsletterSubscription } from "../lib/writing-sources.mjs";
 
 export default function Home() {
   return (
@@ -28,7 +30,10 @@ export default function Home() {
         {/* 4. How I Think & Build */}
         <CapabilityCards />
 
-        {/* 5. Contact ("Let's work together") */}
+        {/* 5. Newsletter Invite */}
+        <NewsletterInvite newsletter={newsletterSubscription()} />
+
+        {/* 6. Contact ("Let's work together") */}
         <EmailSection />
       </main>
       <Footer />

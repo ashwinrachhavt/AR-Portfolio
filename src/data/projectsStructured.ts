@@ -26,48 +26,8 @@ export interface StructuredProject {
 
 export const structuredProjects: StructuredProject[] = [
   {
-    id: "cash-based-underwriting",
-    order: 1,
-    title: "Cash-Based Underwriting Engine",
-    subtitle: "Real-time credit risk modeling using 90-day bank balance reconstruction and volatility scoring",
-    company: "Finally",
-    role: "AI Product Engineer / Tech Lead",
-    dates: "2024–2025",
-    category: "Fintech",
-    image: "/images/projectsAR/3AR.jpg",
-    summary:
-      "Engineered automated cash-based underwriting for Finally's corporate card product, replacing stale traditional credit reports with 90 days of continuous bank transaction data, daily-balance reconstruction, and cash-volatility scoring.",
-    impact:
-      "Underwrote and deployed $3M+ in corporate credit across 50+ high-growth companies within approximately three months, achieving zero credit defaults during the initial cohort rollout.",
-    metrics: [
-      { highlight: "$3M+", label: "CREDIT UNDERWRITTEN", details: "Deployed across 50+ businesses in ~3 months" },
-      { highlight: "90 Days", label: "HISTORICAL DEPTH", details: "Continuous daily-balance reconstruction" },
-      { highlight: "Weekly", label: "RECALCULATION", details: "Automated limit adjustments based on burn volatility" },
-      { highlight: "0%", label: "DEFAULT RATE", details: "Zero default during initial rollout period" },
-    ],
-    outcomes: [
-      "Engineered daily-balance reconstruction algorithm handling irregular bank syncs, pendings, and reversals",
-      "Built statistical Z-score cash volatility engine to forecast runway and safe debt-service limits",
-      "Created automated weekly recalculation pipelines that adjust credit limits with audit logging",
-      "Designed early-warning automated triggers for sudden balance drops (>40%) and overdraft alerts",
-      "Implemented a secure admin dashboard enabling credit underwriters to inspect decisions and apply manual overrides",
-    ],
-    keyFeatures: [
-      "90-day daily cash balance reconstruction & reconciliation",
-      "Z-score burn volatility & runway stress-testing engine",
-      "Weekly automated limit recalculation with cron and Celery queues",
-      "Comprehensive compliance audit logs and manual override controls",
-      "Direct integration with Plaid and Teller normalized bank feeds",
-    ],
-    businessValue:
-      "Unlocked corporate card financing for venture-backed and bootstrapped companies lacking multi-year tax returns, while keeping risk strictly bounded by real liquidity.",
-    techStack: ["Python", "Django", "PostgreSQL", "Redis", "Celery", "Plaid", "Teller", "NumPy", "Docker"],
-    deepDiveUrl: "/blog/cash-based-underwriting",
-    liveDemoUrl: "/blog/cash-based-underwriting#simulator",
-  },
-  {
     id: "lois-loan-labs",
-    order: 2,
+    order: 1,
     title: "Lois — Agentic Mortgage Workflows",
     subtitle: "LangGraph-powered agent system on Amazon Bedrock AgentCore for document processing and lender policy validation",
     company: "Loan Labs",
@@ -108,7 +68,7 @@ export const structuredProjects: StructuredProject[] = [
   },
   {
     id: "classify-ai",
-    order: 3,
+    order: 2,
     title: "Classify AI — 50K+ Daily Transaction Engine",
     subtitle: "Hybrid semantic retrieval and LLM-assisted categorization reducing manual bookkeeping by ~80%",
     company: "Finally",
@@ -144,6 +104,46 @@ export const structuredProjects: StructuredProject[] = [
     techStack: ["Python", "Django", "LangChain", "Pinecone", "Elasticsearch", "Redis", "Celery", "PostgreSQL", "W&B"],
     deepDiveUrl: "/blog/classify-ai",
     liveDemoUrl: "/blog/classify-ai#simulator",
+  },
+  {
+    id: "cash-based-underwriting",
+    order: 3,
+    title: "Cash-Based Underwriting Engine",
+    subtitle: "Real-time credit risk modeling using 90-day bank balance reconstruction and volatility scoring",
+    company: "Finally",
+    role: "AI Product Engineer / Tech Lead",
+    dates: "2024–2025",
+    category: "Fintech",
+    image: "/images/projectsAR/3AR.jpg",
+    summary:
+      "Engineered automated cash-based underwriting for Finally's corporate card product, replacing stale traditional credit reports with 90 days of continuous bank transaction data, daily-balance reconstruction, and cash-volatility scoring.",
+    impact:
+      "Underwrote and deployed $3M+ in corporate credit across 50+ high-growth companies within approximately three months, achieving zero credit defaults during the initial cohort rollout.",
+    metrics: [
+      { highlight: "$3M+", label: "CREDIT UNDERWRITTEN", details: "Deployed across 50+ businesses in ~3 months" },
+      { highlight: "90 Days", label: "HISTORICAL DEPTH", details: "Continuous daily-balance reconstruction" },
+      { highlight: "Weekly", label: "RECALCULATION", details: "Automated limit adjustments based on burn volatility" },
+      { highlight: "0%", label: "DEFAULT RATE", details: "Zero default during initial rollout period" },
+    ],
+    outcomes: [
+      "Engineered daily-balance reconstruction algorithm handling irregular bank syncs, pendings, and reversals",
+      "Built statistical Z-score cash volatility engine to forecast runway and safe debt-service limits",
+      "Created automated weekly recalculation pipelines that adjust credit limits with audit logging",
+      "Designed early-warning automated triggers for sudden balance drops (>40%) and overdraft alerts",
+      "Implemented a secure admin dashboard enabling credit underwriters to inspect decisions and apply manual overrides",
+    ],
+    keyFeatures: [
+      "90-day daily cash balance reconstruction & reconciliation",
+      "Z-score burn volatility & runway stress-testing engine",
+      "Weekly automated limit recalculation with cron and Celery queues",
+      "Comprehensive compliance audit logs and manual override controls",
+      "Direct integration with Plaid and Teller normalized bank feeds",
+    ],
+    businessValue:
+      "Unlocked corporate card financing for venture-backed and bootstrapped companies lacking multi-year tax returns, while keeping risk strictly bounded by real liquidity.",
+    techStack: ["Python", "Django", "PostgreSQL", "Redis", "Celery", "Plaid", "Teller", "NumPy", "Docker"],
+    deepDiveUrl: "/blog/cash-based-underwriting",
+    liveDemoUrl: "/blog/cash-based-underwriting#simulator",
   },
   {
     id: "gurukul-thesis",
