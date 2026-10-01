@@ -6,7 +6,7 @@ export default function HeroSection() {
   return (
     <section id="about" className={styles.hero} aria-labelledby="hero-title">
       <div className={styles.heroContent}>
-        <p className={styles.heroEyebrow}>Product engineer · Building with AI</p>
+        <p className={styles.heroEyebrow}>AI Product Engineer</p>
         <h1 id="hero-title">Ideas into products.<br /><span>Curiosity into work.</span></h1>
         <p>I’m Ashwin. I build AI products, from the systems underneath to the experience people use. I’m interested in the whole journey: the idea, the design, and what makes someone choose it.</p>
         <div className={styles.actions}>

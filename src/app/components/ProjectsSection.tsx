@@ -1,13 +1,9 @@
-"use client";
-
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { structuredProjects, type StructuredProject } from "@/data/projectsStructured";
 import WorkModal from "./WorkModal";
-import PortfolioIcon from "./PortfolioIcon";
-import AchievementsSection from "./AchievementsSection";
 import styles from "./ProjectsSection.module.css";
 
 export default function ProjectsSection() {
@@ -125,9 +121,6 @@ export default function ProjectsSection() {
           </motion.article>
         ))}
       </div>
-
-      {/* Achievements metrics banner */}
-      <AchievementsSection />
 
       {/* Work Modal Dialog */}
       <WorkModal

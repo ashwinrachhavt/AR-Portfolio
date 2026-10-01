@@ -68,25 +68,26 @@
   font-weight: 600;
 }
 
-.projectsGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 26px;
-  margin-bottom: 50px;
-}
+  .projectsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 26px;
+    margin-bottom: 0;
+  }
 
-.card {
-  background: #161619;
-  border: 1px solid #29292e;
-  border-radius: 20px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-  transition: border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
-  position: relative;
-  text-align: left;
-}
+  .card {
+    background: #161619;
+    border: 1px solid #29292e;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+    position: relative;
+    text-align: left;
+    height: 100%;
+  }
 
 .card:hover {
   border-color: #52525a;
@@ -94,18 +95,19 @@
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
 }
 
-.imageWrapper {
-  position: relative;
-  width: 100%;
-  height: 220px;
-  background: #1a1a1f;
-  overflow: hidden;
-}
+  .imageWrapper {
+    position: relative;
+    width: 100%;
+    height: 240px;
+    background: #1a1a1f;
+    overflow: hidden;
+  }
 
-.cardImage {
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
+  .cardImage {
+    object-fit: cover;
+    object-position: center top;
+    transition: transform 0.4s ease;
+  }
 
 .card:hover .cardImage {
   transform: scale(1.04);

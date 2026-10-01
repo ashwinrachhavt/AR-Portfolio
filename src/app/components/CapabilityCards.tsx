@@ -344,11 +344,11 @@ export default function CapabilityCards() {
               ))}
             </div>
 
-            <div className={styles.cardFooter}>
-              <span className={styles.setupPrompt}>
-                <span className={styles.dot}></span> Claude Code & Codex setup
-              </span>
-            </div>
+          <div className={styles.cardFooter}>
+            <span className={styles.setupPrompt}>
+              <span className={styles.dot}></span> Agentic architecture & implementation
+            </span>
+          </div>
           </motion.div>
         ))}
       </div>
