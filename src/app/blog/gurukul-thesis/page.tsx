@@ -1,7 +1,5 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import Navbar from "@/app/components/Navbar";
-import Footer from "@/app/components/Footer";
 import GurukulSimulator from "./GurukulSimulator";
 import styles from "./gurukul.module.css";
 
@@ -20,10 +18,8 @@ export const metadata: Metadata = {
 
 export default function GurukulThesisPage() {
   return (
-    <>
-      <Navbar activeSection="writing" />
-      <main className={styles.main}>
-        <div className={styles.readingColumn}>
+    <div className={styles.main}>
+      <div className={styles.readingColumn}>
           <Link href="/blog" className={styles.backLink}>
             ← All writing & deep dives
           </Link>
@@ -252,8 +248,6 @@ export default function GurukulThesisPage() {
             </div>
           </article>
         </div>
-      </main>
-      <Footer />
-    </>
+      </div>
   );
 }
