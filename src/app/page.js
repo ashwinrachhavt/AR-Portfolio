@@ -7,8 +7,6 @@ import ProjectsSection from "./components/ProjectsSection";
 import EmailSection from "./components/EmailSection";
 import Footer from "./components/Footer";
 import styles from "./home.module.css";
-import NewsletterInvite from "./components/NewsletterInvite";
-import { newsletterSubscription } from "../lib/writing-sources.mjs";
 
 export default function Home() {
   return (
@@ -18,19 +16,19 @@ export default function Home() {
       </a>
       <Navbar />
       <main id="main" className={styles.main}>
-        {/* Hero Section (Profile Intro) */}
+        {/* 1. Profile Intro (Hero) */}
         <HeroSection />
 
-        {/* Professional Experience */}
+        {/* 2. Professional Experience */}
         <ExperienceSection />
 
-        {/* Selected Work Grid with Detailed Modal & Ordered Deep Dives */}
+        {/* 3. Featured Projects */}
         <ProjectsSection />
 
-        {/* How I Think & Build */}
+        {/* 4. How I Think & Build */}
         <CapabilityCards />
 
-        <NewsletterInvite newsletter={newsletterSubscription()} />
+        {/* 5. Contact ("Let's work together") */}
         <EmailSection />
       </main>
       <Footer />

@@ -36,7 +36,7 @@ const CAPABILITIES: Capability[] = [
     title: "Engineering",
     tagline: "Production apps, resilient APIs, agentic orchestration, and CI/CD that ships.",
     skills: ["LangGraph", "Bedrock AgentCore", "Django", "FastAPI", "Rails", "Next.js", "Docker", "Kubernetes"],
-    setupHighlight: "Claude Code CLI + Codex for AST-level refactors, strict TDD verification, and fail-closed permission enforcement.",
+    setupHighlight: "Spec-first planning in Claude Code; every change ships behind tests and PR review.",
     claudeCodexSetup: {
       overview:
         "My Claude Code and Codex setup treats LLMs as deterministic compiler passes rather than conversational assistants. I configure custom system rules, tool allowlists, and execution boundaries so agentic codegen strictly obeys typing, test coverage, and security invariants.",
@@ -344,11 +344,11 @@ export default function CapabilityCards() {
               ))}
             </div>
 
-          <div className={styles.cardFooter}>
-            <span className={styles.setupPrompt}>
-              <span className={styles.dot}></span> Agentic architecture & implementation
-            </span>
-          </div>
+<div className={styles.cardFooter}>
+              <span className={styles.setupPrompt}>
+                <span className={styles.dot}></span> {cap.setupHighlight}
+              </span>
+            </div>
           </motion.div>
         ))}
       </div>

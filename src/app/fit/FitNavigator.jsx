@@ -12,6 +12,19 @@ const stages = [
   { id: "matching", label: "Connecting Jev’s signals to my public work" },
 ];
 
+const FIT_HOOK = live
+  ? "Paste a job description and watch Jev classify the role in real time."
+  : "Paste a job description for an instant fit read.";
+
+const ROLE_CHIPS = [
+  "Founding AI Engineer",
+  "AI Product Engineer",
+  "Backend Engineer",
+  "Software Engineer",
+  "Product Owner",
+  "Product Builder",
+];
+
 export default function FitNavigator({ live = false, provider = "venice" }) {
   const [title, setTitle] = useState(examples[0].title);
   const [description, setDescription] = useState(examples[0].description);
@@ -46,7 +59,25 @@ export default function FitNavigator({ live = false, provider = "venice" }) {
   return <>
     <div className={styles.layout}>
       <section className={styles.input} aria-labelledby="role-heading">
-        <h2 id="role-heading">What are you building?</h2><p>{live ? "Give Jev a role to interpret. See which parts connect to my work." : "Start with an example, or bring your own role."}</p>
+        <h2 id="role-heading">What are you building?</h2>
+        <p className={styles.hook}>{FIT_HOOK}</p>
+        <div className={styles.roleChips}>
+          {ROLE_CHIPS.map((chip) => (
+            <button
+              key={chip}
+              type="button"
+              className={styles.roleChip}
+              onClick={() => {
+                setTitle(chip);
+                setDescription("");
+                setBrief(null);
+                setError("");
+              }}
+            >
+              {chip}
+            </button>
+          ))}
+        </div>
         <div className={styles.examples}>{examples.map((item, index) => <button key={item.title} onClick={() => reset(index)}>{item.title}</button>)}</div>
         <form onSubmit={submit}>
           <label htmlFor="role-title">Role title <span>(optional)</span></label><input id="role-title" value={title} disabled={pending} maxLength={160} onChange={event => { setTitle(event.target.value); setBrief(null); setError(""); }} />
@@ -59,13 +90,17 @@ export default function FitNavigator({ live = false, provider = "venice" }) {
         {error && <p className={styles.error} role="alert">{error}</p>}
       </section>
       <section className={styles.results} aria-labelledby="brief-heading">
-        <div className={styles.resultHeading}><h2 id="brief-heading">Your conversation starter.</h2><span role="status">{pending ? (stages.find(item => item.id === stage)?.label || "Connecting…") : brief?.mode === "jev" ? "Live Jev result" : brief?.mode === "example" ? "Illustrative example · no AI call" : brief ? "Keyword preview · Jev was not used" : "Ready when you are"}</span></div>
+        <div className={styles.resultHeading}><h2 id="brief-heading">Results</h2><span role="status">{pending ? (stages.find(item => item.id === stage)?.label || "Connecting…") : brief?.mode === "jev" ? "Live Jev result" : brief?.mode === "example" ? "Illustrative example · no AI call" : brief ? "Keyword preview · Jev was not used" : "Ready when you are"}</span></div>
         {pending && <div className={styles.progress}>
           {stage ? <ol>{stages.map((item, index) => <li key={item.id} data-state={index < stages.findIndex(item => item.id === stage) ? "done" : item.id === stage ? "active" : "waiting"}><span aria-hidden="true">{index < stages.findIndex(item => item.id === stage) ? "✓" : `0${index + 1}`}</span>{item.label}</li>)}</ol> : <p>Sending your role for analysis…</p>}
           <p className={styles.note}>Results appear when the analysis finishes. You can cancel at any time.</p>
         </div>}
         <div aria-live="polite" aria-busy={pending}>{brief && <>
-          <p className={styles.note}>{brief.mode === "jev" ? "Jev interpreted your role in this request. Every career claim below comes from my approved public work." : "This preview uses keyword matching. It can miss negation and unstated requirements. No live Jev interpretation was performed."}</p>
+          <p className={styles.modeNotice}>
+  Preview mode — instant, local keyword analysis. It can miss negation and
+  unstated requirements. Live Jev interpretation returns when a verified
+  provider is connected.
+</p>
           {brief.mode === "jev" && brief.analysis && <div className={styles.receipt}>
             <p><span className={styles.liveDot} aria-hidden="true" />Jev via {brief.analysis.provider === "venice" ? "Venice" : "Vercel"}<span>{(brief.analysis.durationMs / 1000).toFixed(1)}s</span></p>
             <details><summary>See what Jev detected</summary>
@@ -86,6 +121,5 @@ export default function FitNavigator({ live = false, provider = "venice" }) {
         </>}</div>
       </section>
     </div>
-    <footer className={styles.disclosure}><p>An evidence explorer, not a hiring recommendation. Missing public evidence does not mean missing ability.</p><a href="/ashwin_rachha_resume.pdf" download>Prefer a résumé? Download it here ↗</a></footer>
   </>;
 }

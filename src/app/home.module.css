@@ -37,6 +37,17 @@
 .interests > p.interestNote { color: #9999a5; font-size: 12px; margin-top: 16px; }
 .heroContent h1 span { color: #8e8e93; }
 .heroContent > p { max-width: 570px; color: #b9b9bf; font-size: 18px; line-height: 1.75; margin-top: 32px; letter-spacing: -.2px; }
+.intro { max-width: 570px; color: #b9b9bf; font-size: 18px; line-height: 1.75; margin-top: 32px; letter-spacing: -.2px; }
+.interests { color: #a1a1aa; font-size: 13px; letter-spacing: .05em; margin-top: 16px; text-transform: uppercase; }
+.ctaRow { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 34px; }
+.cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px; font-weight: 500; min-height: 48px; padding: 13px 22px; border-radius: 999px; transition: background .18s, color .18s; text-decoration: none; }
+.ctaPrimary { background: #f5f5f7; color: #171719; }
+.ctaPrimary:hover { background: #d4d4d8; }
+.cta:not(.ctaPrimary) { color: #d4d4d8; border: 1px solid #303033; }
+.cta:not(.ctaPrimary):hover { color: #fff; border-color: #55555e; }
+.sideRail { margin-top: 20px; color: #86868b; font-size: 12px; line-height: 1.7; text-align: center; }
+.sideRail blockquote { font-style: italic; margin: 0 0 8px; }
+.sideRail figcaption { margin-bottom: 12px; }
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 28px; margin-top: 34px; }
 .primaryButton, .textButton { display: inline-flex; align-items: center; justify-content: center; gap: 12px; font-size: 14px; font-weight: 500; min-height: 48px; transition: background .18s, color .18s; }
 .primaryButton { background: #f5f5f7; color: #171719; border-radius: 999px; padding: 13px 22px; }
