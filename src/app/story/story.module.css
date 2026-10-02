@@ -536,6 +536,118 @@
   background: #222228;
 }
 
+
+/* Narrative navigation and proof points */
+.trajectory {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 26px;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #d4d4d8;
+}
+
+.trajectoryArrow { color: #71717a; }
+
+.chapterNav {
+  position: sticky;
+  top: 18px;
+  z-index: 5;
+  display: flex;
+  gap: 8px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto -1px;
+  padding: 7px;
+  background: rgba(12, 12, 14, 0.86);
+  border: 1px solid #24242a;
+  border-radius: 999px;
+  backdrop-filter: blur(14px);
+}
+
+.chapterNav a {
+  padding: 8px 12px;
+  color: #8e8e96;
+  border-radius: 999px;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.18s ease, background 0.18s ease;
+}
+
+.chapterNav a:hover,
+.chapterNav a:focus-visible {
+  color: #f4f4f6;
+  background: #1c1c20;
+  outline: none;
+}
+
+.chapterNav span { margin-left: 4px; font-family: inherit; }
+
+.timelineIntro {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  color: #71717a;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.timelineIntro i {
+  display: block;
+  flex: 1;
+  height: 1px;
+  background: #2b2b32;
+}
+
+.featuredWorkCard { grid-template-columns: minmax(0, 1fr) 240px auto; }
+
+.workKicker {
+  display: block;
+  margin-bottom: 7px;
+  color: #a1a1aa;
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.workTags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
+.workTags span { padding: 4px 8px; border: 1px solid #2b2b32; border-radius: 5px; color: #b4b4bc; font-size: 11px; }
+
+.workVisual {
+  position: relative;
+  min-height: 150px;
+  overflow: hidden;
+  border: 1px solid #2b2b32;
+  border-radius: 9px;
+  background: #0f0f12;
+}
+
+.workVisual img { object-fit: cover; opacity: 0.86; }
+
+.principlePrompt {
+  margin: -20px 0 20px;
+  color: #d4d4d8;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+@media (max-width: 860px) {
+  .chapterNav { position: relative; top: auto; width: 100%; justify-content: space-between; overflow-x: auto; margin-bottom: 0; }
+  .chapterNav a { white-space: nowrap; }
+  .featuredWorkCard { grid-template-columns: 1fr; }
+  .workVisual { min-height: 180px; }
+}
+
 /* Responsive */
 @media (max-width: 860px) {
   .cardsTrio {
