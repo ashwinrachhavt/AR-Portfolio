@@ -179,7 +179,7 @@ export default function GurukulSimulator() {
         <div className={styles.tutorColumn}>
           {activeInquiry.guardrailTriggered && (
             <div className={styles.guardrailAlert}>
-              <div className={styles.alertTitle}>🛡️ Socratic Guardrail Triggered</div>
+              <div className={styles.alertTitle}>Socratic Guardrail Triggered</div>
               <p className={styles.alertDesc}>{activeInquiry.guardrailAction}</p>
             </div>
           )}
@@ -213,7 +213,7 @@ export default function GurukulSimulator() {
             </div>
 
             <div className={styles.tutorSpeech}>
-              <div className={styles.tutorAvatar}>🎓 Gurukul Tutor</div>
+              <div className={styles.tutorAvatar}>Gurukul Tutor</div>
               <div className={styles.tutorMessage}>
                 <p>{currentHintText}</p>
               </div>

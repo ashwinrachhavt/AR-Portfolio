@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./ArchitectureDiagram.module.css";
 
@@ -27,13 +27,24 @@ export default function ArchitectureDiagram({
   const handleOpen = () => {
     setIsOpen(true);
     setZoomLevel(1);
-    document.body.style.overflow = "hidden";
   };
 
   const handleClose = () => {
     setIsOpen(false);
-    document.body.style.overflow = "";
   };
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") handleClose();
+    };
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isOpen]);
 
   const zoomIn = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -68,6 +79,18 @@ export default function ArchitectureDiagram({
               >
                 <span>.excalidraw</span>
                 <span aria-hidden="true">↓</span>
+              </a>
+            )}
+            {pngSrc && (
+              <a
+                href={pngSrc}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.actionBtn}
+                title="Open PNG diagram in a new tab"
+              >
+                <span>PNG</span>
+                <span aria-hidden="true">↗</span>
               </a>
             )}
             <a
@@ -105,7 +128,7 @@ export default function ArchitectureDiagram({
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={svgSrc}
+            src={pngSrc || svgSrc}
             alt={title}
             className={styles.diagramImg}
             loading="lazy"

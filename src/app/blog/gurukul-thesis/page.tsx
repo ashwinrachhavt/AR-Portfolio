@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import GurukulSimulator from "./GurukulSimulator";
+import ProductBrief from "../components/ProductBrief";
 import styles from "./gurukul.module.css";
 
 export const metadata: Metadata = {
@@ -53,6 +54,15 @@ export default function GurukulThesisPage() {
               </div>
             </div>
           </header>
+
+          <ProductBrief
+            eyebrow="Product brief · Gurukul"
+            title="An educational tutor designed not to give the answer"
+            spec="Help a programming student move through a difficult problem while preserving the reasoning they need to learn. The specification was a teaching constraint: diagnose the student’s state, retrieve grounded material, and offer the next useful hint without leaking a complete solution."
+            stack={["Web IDE", "AST diagnostics", "Retrieval-augmented guidance", "Socratic guardrails", "Course specifications"]}
+            architecture={["Read the student’s code and question", "Use AST diagnostics to identify the failure mode", "Retrieve grounded concepts and course material", "Return one of three progressively stronger hints"]}
+            outcome="Gurukul treats an LLM as a dialogue partner inside a pedagogical system. The model can phrase the hint, but the application owns the learning boundary and the decision about how much help to reveal."
+          />
 
           {/* Interactive Socratic Simulator */}
           <section id="simulator" className={styles.simulatorWrapper}>

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import styles from "./decision-lab.module.css";
+import ProductBrief from "../components/ProductBrief";
 import {
   loisScenario,
   classifyAiScenario,
@@ -109,6 +110,15 @@ export default function DecisionLabArticle() {
               </p>
             </div>
           </div>
+
+          <ProductBrief
+            eyebrow="Product brief · Decision Lab"
+            title="A decision layer that shows its work"
+            spec="The experiment asks what should happen when an AI system has to classify an ambiguous document or transaction. Jev proposes a typed judgment, while application code owns evidence, policy, human review, and every side effect."
+            stack={["Typed scenarios", "Replayable fixtures", "Evidence traces", "Policy gates", "Human review"]}
+            architecture={["Present a deliberately ambiguous input", "Let the reader make a prediction", "Reveal evidence and alternative variants", "Replay the decision trace before allowing review"]}
+            outcome="This is a public reconstruction, not a claim that Jev ran inside the original products. It is a compact way to make the boundary between model output and product authority inspectable."
+          />
 
           <div className={styles.thesis}>
             <p>
