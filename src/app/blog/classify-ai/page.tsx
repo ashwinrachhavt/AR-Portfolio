@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import ClassifyAiSimulator from "./ClassifyAiSimulator";
 import ArchitectureDiagram from "@/app/components/ArchitectureDiagram";
+import ProductBrief from "../components/ProductBrief";
 import styles from "./classify.module.css";
 
 export const metadata: Metadata = {
@@ -54,6 +55,15 @@ export default function ClassifyAiDeepDivePage() {
               </div>
             </div>
           </header>
+
+          <ProductBrief
+            eyebrow="Product brief · Classify AI"
+            title="A bookkeeping classifier built for the exceptions"
+            spec="Categorize tens of thousands of bank transactions a day without pretending that a merchant string has one universal meaning. The product had to respect each company’s chart of accounts, preserve exact ledger identifiers, and leave ambiguous work visible to a bookkeeper."
+            stack={["Pinecone", "Elasticsearch BM25", "Redis", "Celery", "Postgres", "Plaid / Heron", "Rules engine"]}
+            architecture={["Normalize the bank feed and merchant identity", "Retrieve semantic and exact lexical matches", "Apply tenant-specific account rules", "Return a category with confidence and review state"]}
+            outcome="The system combines dense retrieval for meaning with sparse retrieval for exact invoice numbers, SKUs, and accounting codes. That combination made automation useful without making false precision invisible."
+          />
 
           {/* Interactive Simulator */}
           <section id="simulator" className={styles.simulatorWrapper}>

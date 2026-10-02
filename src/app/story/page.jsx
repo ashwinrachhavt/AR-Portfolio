@@ -32,8 +32,15 @@ export default function StoryPage() {
                 <span className={styles.heroAccent}>first principles.</span>
               </h1>
               <p className={styles.heroBio}>
-                I&apos;m Ashwin Rachha, an applied AI engineer and product engineer. My work focuses on building resilient software for complex, ambiguous workflows—from LLM-enhanced education research at Virginia Tech to transaction classification at Finally and agentic mortgage infrastructure at Loan Labs.
+                I build AI systems for workflows where correctness matters. My path has moved from learning systems research at Virginia Tech to production bookkeeping at Finally and agentic mortgage infrastructure at Loan Labs.
               </p>
+              <div className={styles.trajectory} aria-label="Career trajectory">
+                <span>Research</span>
+                <span className={styles.trajectoryArrow}>→</span>
+                <span>Product engineering</span>
+                <span className={styles.trajectoryArrow}>→</span>
+                <span>Agentic infrastructure</span>
+              </div>
             </div>
 
             <div className={styles.portraitWrapper}>
@@ -51,8 +58,15 @@ export default function StoryPage() {
           </div>
         </section>
 
+        <nav className={styles.chapterNav} aria-label="Story chapters">
+          <a href="#how-i-build">01 <span>How I Build</span></a>
+          <a href="#foundations">02 <span>Foundations</span></a>
+          <a href="#track-record">03 <span>Track Record</span></a>
+          <a href="#philosophy">04 <span>Philosophy</span></a>
+        </nav>
+
         {/* CHAPTER 01: CORE COMPETENCIES */}
-        <section className={styles.chapterSection}>
+        <section id="how-i-build" className={styles.chapterSection}>
           <div className={styles.chapterHeader}>
             <span className={styles.chapterLabel}>Chapter 01 · How I Build</span>
             <h2 className={styles.chapterTitle}>Full-stack engineering with domain rigor.</h2>
@@ -112,7 +126,7 @@ export default function StoryPage() {
         </section>
 
         {/* CHAPTER 02: ACADEMIC FOUNDATION */}
-        <section className={styles.chapterSection}>
+        <section id="foundations" className={styles.chapterSection}>
           <div className={styles.foundationGrid}>
             <div className={styles.foundationImageCol}>
               <div className={styles.foundationFrame}>
@@ -176,27 +190,39 @@ export default function StoryPage() {
         </section>
 
         {/* CHAPTER 03: PROFESSIONAL EXPERIENCE */}
-        <section className={styles.chapterSection}>
+        <section id="track-record" className={styles.chapterSection}>
           <div className={styles.chapterHeaderCenter}>
             <span className={styles.chapterLabel}>Chapter 03 · Production Track Record</span>
             <h2 className={styles.chapterTitle}>Shipping software that runs on real ledgers.</h2>
           </div>
 
+          <div className={styles.timelineIntro}>
+            <span>2016</span><i />
+            <span>2021</span><i />
+            <span>2024</span><i />
+            <span>2026</span>
+          </div>
+
           <div className={styles.workCardsStack}>
             {/* Loan Labs */}
-            <div className={styles.workCard}>
+            <article className={`${styles.workCard} ${styles.featuredWorkCard}`}>
               <div className={styles.workCardLeft}>
+                <span className={styles.workKicker}>Current focus</span>
                 <h3 className={styles.workCompany}>Loan Labs</h3>
                 <span className={styles.workRole}>Applied AI Engineer · 2026–Present · Mortgage Infrastructure</span>
                 <p className={styles.workDesc}>
                   Re-architected Lois from one-off Ruby LLM calls into a LangGraph agentic state machine on Amazon Bedrock AgentCore for document classification, lender policy validation, and fail-closed Composio authorization.
                 </p>
+                <div className={styles.workTags}><span>LangGraph</span><span>AgentCore</span><span>Mortgage infrastructure</span></div>
+              </div>
+              <div className={styles.workVisual}>
+                <Image src="/images/diagrams/lois-architecture-dark-preview.png" alt="Lois agent architecture diagram" fill sizes="(max-width: 860px) 100vw, 320px" />
               </div>
               <div className={styles.workCardRight}>
                 <span className={styles.workMetricVal}>-85%</span>
                 <span className={styles.workMetricLabel}>Intake Delays</span>
               </div>
-            </div>
+            </article>
 
             {/* Finally Classify AI */}
             <div className={styles.workCard}>
@@ -252,7 +278,7 @@ export default function StoryPage() {
         </section>
 
         {/* CHAPTER 04: ENGINEERING PRINCIPLES */}
-        <section className={styles.chapterSection}>
+        <section id="philosophy" className={styles.chapterSection}>
           <div className={styles.chapterHeader}>
             <span className={styles.chapterLabel}>Chapter 04 · Engineering Philosophy</span>
             <h2 className={styles.chapterTitle}>How I think about building software.</h2>
@@ -260,6 +286,8 @@ export default function StoryPage() {
               Software that touches financial ledgers, legal documents, or automated decisions cannot rely on prompt optimism. These core tenets define how I approach architecture and production reliability.
             </p>
           </div>
+
+          <div className={styles.principlePrompt}>When I design an AI system, I ask:</div>
 
           <div className={styles.interestsGrid}>
             <div className={styles.interestCard}>

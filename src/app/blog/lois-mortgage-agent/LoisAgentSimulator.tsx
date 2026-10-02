@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./lois.module.css";
 
 interface DocSample {
@@ -92,17 +92,25 @@ export default function LoisAgentSimulator() {
   const [lenderProfile, setLenderProfile] = useState<"fannieMae" | "chase" | "quicken">("fannieMae");
   const [isExecuting, setIsExecuting] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<number>(4);
+  const timerIds = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => () => {
+    timerIds.current.forEach(clearTimeout);
+  }, []);
 
   function runAgent() {
+    timerIds.current.forEach(clearTimeout);
+    timerIds.current = [];
     setIsExecuting(true);
     setActiveStep(1);
 
-    setTimeout(() => setActiveStep(2), 600);
-    setTimeout(() => setActiveStep(3), 1200);
-    setTimeout(() => {
+    timerIds.current.push(setTimeout(() => setActiveStep(2), 600));
+    timerIds.current.push(setTimeout(() => setActiveStep(3), 1200));
+    timerIds.current.push(setTimeout(() => {
       setActiveStep(4);
       setIsExecuting(false);
-    }, 1800);
+      timerIds.current = [];
+    }, 1800));
   }
 
   const currentRenaming = selectedDoc.lenderRenaming[lenderProfile];
@@ -164,7 +172,7 @@ export default function LoisAgentSimulator() {
             onClick={runAgent}
             disabled={isExecuting}
           >
-            {isExecuting ? "Executing LangGraph State Machine..." : "Re-run Agent Trace ⚡"}
+            {isExecuting ? "Executing LangGraph State Machine..." : "Run the agent trace"}
           </button>
         </div>
       </div>

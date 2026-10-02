@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import UnderwritingSimulator from "./UnderwritingSimulator";
 import ArchitectureDiagram from "@/app/components/ArchitectureDiagram";
+import ProductBrief from "../components/ProductBrief";
 import styles from "./underwriting.module.css";
 
 export const metadata: Metadata = {
@@ -56,6 +57,15 @@ export default function CashBasedUnderwritingPage() {
               </div>
             </div>
           </header>
+
+          <ProductBrief
+            eyebrow="Product brief · Cash-based underwriting"
+            title="Credit limits from cash reality, not a stale score"
+            spec="Reconstruct a company’s last 90 days of cash movement, separate operating activity from inter-account transfers, and size a credit line that can change as the company changes. The specification included a human review path and circuit breakers, not just a score."
+            stack={["Plaid", "Teller", "Redis", "Celery", "Postgres", "Marqeta", "Visa"]}
+            architecture={["Ingest and normalize transactions across linked accounts", "Reconstruct daily balances and detect transfer pairs", "Measure burn, volatility, and reserve-floor risk", "Sync a limit, or pause and route the account to review"]}
+            outcome="The underwriting engine deployed more than $3M across 50+ companies during the initial rollout, with weekly recalculation and a visible path to stop automated limit increases when liquidity deteriorated."
+          />
 
           {/* Interactive Simulator Section */}
           <section id="simulator" className={styles.simulatorWrapper}>

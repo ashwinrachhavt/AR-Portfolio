@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import LoisAgentSimulator from "./LoisAgentSimulator";
 import ArchitectureDiagram from "@/app/components/ArchitectureDiagram";
+import ProductBrief from "../components/ProductBrief";
 import styles from "./lois.module.css";
 
 export const metadata: Metadata = {
@@ -54,6 +55,15 @@ export default function LoisDeepDivePage() {
               </div>
             </div>
           </header>
+
+          <ProductBrief
+            eyebrow="Product brief · Lois"
+            title="A mortgage document workflow that can explain every side effect"
+            spec="Classify incoming loan documents, extract the facts that matter, apply lender-specific rules, and route uncertainty to a person. The important constraint was not simply accuracy. It was making sure an agent could never turn a low-confidence guess into an irreversible write."
+            stack={["LangGraph", "Amazon Bedrock AgentCore", "Claude", "Composio", "Postgres", "Box / Salesforce / Google Drive"]}
+            architecture={["Intake through chat, email, and Slack", "Classify and extract document evidence", "Run lender policy and confidence checks", "Authorize a narrowly scoped tool call or stop for review"]}
+            outcome="The result is a stateful workflow with an explicit boundary between model judgment and application authority. A document can be classified without giving the model ambient access to the borrower’s files."
+          />
 
           {/* Interactive Agent Simulator */}
           <section id="simulator" className={styles.simulatorWrapper}>
