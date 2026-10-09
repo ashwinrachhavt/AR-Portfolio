@@ -246,10 +246,10 @@ const CAPABILITIES: Capability[] = [
     },
     backlinks: [
       {
-        label: "Cash-Based Underwriting Deep Dive & Simulator",
+        label: "Cash-Based Underwriting Deep Dive",
         url: "/blog/cash-based-underwriting",
         type: "blog",
-        context: "Interactive credit engine simulation: 90-day balance reconstruction",
+        context: "90-day balance reconstruction and weekly credit-limit review",
       },
       {
         label: "Finally Fintech Infrastructure Role",
@@ -302,14 +302,11 @@ export default function CapabilityCards() {
       </div>
 
       <div className={styles.cardsGrid}>
-        {CAPABILITIES.map((cap, index) => (
+        {CAPABILITIES.map((cap) => (
           <motion.div
             key={cap.id}
             className={styles.card}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.45, delay: index * 0.1 }}
+            initial={false}
             whileHover={{ y: -6, transition: { duration: 0.2 } }}
             onClick={() => setSelectedCapability(cap)}
             role="button"

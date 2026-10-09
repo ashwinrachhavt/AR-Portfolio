@@ -18,7 +18,6 @@ export interface CuratedArticle {
   sourceName: string;
   external?: boolean;
   isThesis?: boolean;
-  interactive?: boolean;
 }
 
 export const curatedArticles: CuratedArticle[] = [
@@ -31,8 +30,7 @@ export const curatedArticles: CuratedArticle[] = [
       "Why traditional credit scores fail fast-growing businesses, and how we modeled daily cash volatility with Z-scores to deploy millions with zero initial defaults.",
     categories: ["Work / Projects", "Tutorials / Blogs", "Fintech" as any, "AI", "Startups"],
     tags: ["Fintech", "Risk Modeling", "Underwriting", "Python"],
-    sourceName: "Interactive Technical Deep Dive",
-    interactive: true,
+    sourceName: "Technical Deep Dive",
   },
   {
     id: "lois-mortgage-agent",
@@ -43,8 +41,7 @@ export const curatedArticles: CuratedArticle[] = [
       "From fragile Ruby prompts to a typed LangGraph state machine with fail-closed Composio authorization for loan document classification and policy validation.",
     categories: ["Work / Projects", "AI", "Startups", "Tutorials / Blogs"],
     tags: ["LangGraph", "Bedrock AgentCore", "Agentic Systems", "Mortgage Tech"],
-    sourceName: "Interactive Technical Deep Dive",
-    interactive: true,
+    sourceName: "Technical Deep Dive",
   },
   {
     id: "classify-ai",
@@ -55,8 +52,7 @@ export const curatedArticles: CuratedArticle[] = [
       "How we combined dense vector embeddings (Pinecone) with sparse lexical search (Elasticsearch) to reduce manual bookkeeping categorization by ~80%.",
     categories: ["Work / Projects", "AI", "Tutorials / Blogs"],
     tags: ["Pinecone", "Elasticsearch", "Hybrid RAG", "Django"],
-    sourceName: "Interactive Technical Deep Dive",
-    interactive: true,
+    sourceName: "Technical Deep Dive",
   },
   {
     id: "gurukul-thesis",
@@ -69,7 +65,6 @@ export const curatedArticles: CuratedArticle[] = [
     tags: ["Master's Thesis", "Socratic AI", "CS Education", "Virginia Tech"],
     sourceName: "Master's Thesis Deep Dive",
     isThesis: true,
-    interactive: true,
   },
   {
     id: "3b92e262-08a5-8186-942c-ff5559fe4f68",

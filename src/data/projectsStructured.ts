@@ -21,7 +21,6 @@ export interface StructuredProject {
   techStack: string[];
   deepDiveUrl?: string;
   githubUrl?: string;
-  liveDemoUrl?: string;
 }
 
 export const structuredProjects: StructuredProject[] = [
@@ -63,7 +62,6 @@ export const structuredProjects: StructuredProject[] = [
     techStack: ["LangGraph", "Amazon Bedrock", "AgentCore Runtime", "Python", "Ruby on Rails", "Composio", "AWS", "Docker"],
     deepDiveUrl: "/blog/lois-mortgage-agent",
     githubUrl: "https://github.com/AshwinRachha",
-    liveDemoUrl: "/blog/lois-mortgage-agent#simulator",
   },
   {
     id: "classify-ai",
@@ -102,7 +100,6 @@ export const structuredProjects: StructuredProject[] = [
       "Enabled Finally to scale bookkeeping customers 10x without linearly scaling bookkeeping headcount, directly boosting gross margins.",
     techStack: ["Python", "Django", "LangChain", "Pinecone", "Elasticsearch", "Redis", "Celery", "PostgreSQL", "W&B"],
     deepDiveUrl: "/blog/classify-ai",
-    liveDemoUrl: "/blog/classify-ai#simulator",
   },
   {
     id: "cash-based-underwriting",
@@ -142,7 +139,6 @@ export const structuredProjects: StructuredProject[] = [
       "Unlocked corporate card financing for venture-backed and bootstrapped companies lacking multi-year tax returns, while keeping risk strictly bounded by real liquidity.",
     techStack: ["Python", "Django", "PostgreSQL", "Redis", "Celery", "Plaid", "Teller", "NumPy", "Docker"],
     deepDiveUrl: "/blog/cash-based-underwriting",
-    liveDemoUrl: "/blog/cash-based-underwriting#simulator",
   },
   {
     id: "gurukul-thesis",
@@ -182,7 +178,6 @@ export const structuredProjects: StructuredProject[] = [
     techStack: ["Python", "FastAPI", "Transformers", "LangChain", "React", "Docker", "PyTorch", "AST Engine"],
     deepDiveUrl: "/blog/gurukul-thesis",
     githubUrl: "https://github.com/ashwinrachha786/Gurukul_v2",
-    liveDemoUrl: "/blog/gurukul-thesis#simulator",
   },
   {
     id: "finally-banking-infra",

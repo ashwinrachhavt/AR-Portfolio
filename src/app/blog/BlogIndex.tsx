@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
-import { formatBlogDate } from "../../lib/blog-model.mjs";
+import { filterBlogPosts, formatBlogDate } from "../../lib/blog-model.mjs";
 import { curatedArticles, CuratedArticle } from "@/data/writingCatalog";
 import styles from "./blog.module.css";
 
@@ -43,11 +43,15 @@ export default function BlogIndex({ posts = [] }: { posts?: any[] }) {
   });
   const [sort, setSort] = useState<SortMode>("newest");
 
-  // Per-viewer convenience only; the page renders correctly without it.
-  // Lazy initializer keeps localStorage out of render-effect cascades.
   const changeView = (next: ViewMode) => {
     setView(next);
     try { window.localStorage.setItem("writing-view", next); } catch { /* Optional preference only. */ }
+  };
+
+  const resetFilters = () => {
+    setActiveCategory("All");
+    setActiveTag(null);
+    setQuery("");
   };
 
   // Merge curated articles with any Notion remote posts not already in curated list
@@ -81,19 +85,12 @@ export default function BlogIndex({ posts = [] }: { posts?: any[] }) {
     return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
   }, [allArticles]);
 
-  // Filter, then sort
+  // Filter, then sort. filterBlogPosts (blog-model.mjs) handles query+tag matching.
   const visible = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    const filtered = allArticles.filter((art) => {
+    const filtered = filterBlogPosts(allArticles, query, activeTag ?? "").filter((art) => {
       const categoryMatch =
         activeCategory === "All" || art.categories.includes(activeCategory as any);
-      const tagMatch = !activeTag || art.tags.includes(activeTag);
-      const queryMatch =
-        !q ||
-        art.title.toLowerCase().includes(q) ||
-        art.description.toLowerCase().includes(q) ||
-        art.tags.some((t) => t.toLowerCase().includes(q));
-      return categoryMatch && tagMatch && queryMatch;
+      return categoryMatch;
     });
 
     return filtered.sort((a, b) => {
@@ -207,14 +204,7 @@ export default function BlogIndex({ posts = [] }: { posts?: any[] }) {
             {activeTag ? ` tagged "${activeTag}"` : ""}
             {query.trim() ? ` matching "${query.trim()}"` : ""}
           </span>
-          <button
-            type="button"
-            onClick={() => {
-              setActiveCategory("All");
-              setActiveTag(null);
-              setQuery("");
-            }}
-          >
+          <button type="button" onClick={resetFilters}>
             Reset filters
           </button>
         </div>
@@ -229,7 +219,6 @@ export default function BlogIndex({ posts = [] }: { posts?: any[] }) {
                   <time className={styles.date} dateTime={post.date}>
                     {formatBlogDate(post.date)}
                   </time>
-                  {post.interactive && <span className={styles.interactiveBadge}>Interactive</span>}
                   {post.isThesis && <span className={styles.thesisSmallBadge}>Master&apos;s Thesis</span>}
                 </div>
                 <h3>{post.title}</h3>
@@ -271,7 +260,6 @@ export default function BlogIndex({ posts = [] }: { posts?: any[] }) {
                       {post.sourceName}
                       {isExt ? " ↗" : ""}
                     </span>
-                    {post.interactive && <span className={styles.interactiveBadge}>Interactive</span>}
                     {post.isThesis && <span className={styles.thesisSmallBadge}>Master&apos;s Thesis</span>}
                   </div>
                   <h3>{post.title}</h3>
@@ -304,15 +292,7 @@ export default function BlogIndex({ posts = [] }: { posts?: any[] }) {
         <div className={styles.empty}>
           <h3>No articles found in &ldquo;{activeCategory}&rdquo;</h3>
           <p>Try searching for a different keyword or reset the filters.</p>
-          <button
-            type="button"
-            className={styles.resetBtn}
-            onClick={() => {
-              setActiveCategory("All");
-              setActiveTag(null);
-              setQuery("");
-            }}
-          >
+          <button type="button" className={styles.resetBtn} onClick={resetFilters}>
             Show all articles
           </button>
         </div>

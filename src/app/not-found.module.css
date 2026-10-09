@@ -15,7 +15,7 @@
 }
 
 .main p {
-  color: rgb(156 163 175);
+  color: #a1a1aa;
   max-width: 42ch;
   margin: 0;
 }
@@ -40,19 +40,20 @@
 }
 
 .ctaAction {
-  background: rgb(59 130 246);
-  color: #fff;
+  background: #f5f5f7;
+  color: #171719;
 }
 
 .ctaAction:hover {
-  background: rgb(37 99 235);
+  background: #d4d4d8;
 }
 
 .ctaGhost {
-  border: 1px solid rgb(55 65 81);
-  color: inherit;
+  border: 1px solid #303033;
+  color: #d4d4d8;
 }
 
 .ctaGhost:hover {
-  border-color: rgb(107 114 128);
+  color: #fff;
+  border-color: #55555e;
 }
