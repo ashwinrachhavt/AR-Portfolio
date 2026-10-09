@@ -125,8 +125,10 @@
 .contact h2 span { color: #86868b; }
 .contact > p:not(.sectionLabel) { max-width: 450px; margin: 24px auto 28px; color: #a1a1a6; font-size: 15px; line-height: 1.8; }
 .contactLinks { display: flex; justify-content: center; flex-wrap: wrap; gap: 24px; font-size: 12px; color: #a1a1a6; margin-top: 34px; }
+.contactLinks a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; }
 .contactLinks a:hover { color: #f5f5f7; text-decoration: underline; text-underline-offset: 5px; }
 .footer { display: flex; justify-content: space-between; gap: 24px; align-items: center; border-top: 1px solid #303033; padding: 28px 0; color: #86868b; font-size: 11px; }
+.footer a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; }
 .footer > span { color: #c7c7cc; }
 .footer a:hover { color: #f5f5f7; }
 
