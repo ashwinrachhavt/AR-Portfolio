@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { structuredProjects, type StructuredProject } from "@/data/projectsStructured";
 import { PROJECT_MEDIA, type ProjectMedium } from "./projectMedia";
 import WorkModal from "./WorkModal";
@@ -40,6 +40,7 @@ function ProjectMedia({ media }: { media: ProjectMedium }) {
 export default function ProjectsSection() {
   const [selectedProject, setSelectedProject] = useState<StructuredProject | null>(null);
   const [filterCategory, setFilterCategory] = useState<string>("All");
+  const reduceMotion = useReducedMotion();
 
   const categories = ["All", "Fintech", "Agentic AI", "EdTech / Research", "ML Systems"];
 
@@ -90,11 +91,8 @@ export default function ProjectsSection() {
             <motion.article
               key={project.id}
               className={styles.card}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.45, delay: idx * 0.08 }}
-              whileHover={{ y: -6, transition: { duration: 0.2 } }}
+              initial={false}
+              whileHover={reduceMotion ? undefined : { y: -6, transition: { duration: 0.2 } }}
               onClick={() => setSelectedProject(project)}
               role="button"
               tabIndex={0}

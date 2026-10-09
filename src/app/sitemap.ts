@@ -48,12 +48,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
     },
     {
-      url: `${baseUrl}/blog/from-documents-to-decisions`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/blog/3b92e262-08a5-8186-942c-ff5559fe4f68`,
       lastModified,
       changeFrequency: "monthly",

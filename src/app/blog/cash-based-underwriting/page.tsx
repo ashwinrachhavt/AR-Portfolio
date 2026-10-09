@@ -1,8 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import UnderwritingSimulator from "./UnderwritingSimulator";
 import ArchitectureDiagram from "@/app/components/ArchitectureDiagram";
-import ProductBrief from "../components/ProductBrief";
 import styles from "./underwriting.module.css";
 
 export const metadata: Metadata = {
@@ -12,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Cash-Based Underwriting: Reconstructing 90-Day Bank Data to Deploy $3M+ in Credit",
     description:
-      "A deep dive into fintech credit risk modeling with an interactive credit limit simulator.",
+      "A deep dive into fintech credit risk modeling built on daily balance reconstruction.",
     type: "article",
     publishedTime: "2026-09-24T00:00:00Z",
   },
@@ -22,19 +20,17 @@ export default function CashBasedUnderwritingPage() {
   return (
     <div className={styles.main}>
       <div className={styles.readingColumn}>
-          {/* Back link */}
           <Link href="/blog" className={styles.backLink}>
             ← All writing & deep dives
           </Link>
 
-          {/* Article Header */}
           <header className={styles.header}>
             <div className={styles.metaRow}>
               <span className={styles.categoryBadge}>Fintech & Risk Modeling</span>
               <span className={styles.dot}>·</span>
               <time dateTime="2026-09-24">September 24, 2026</time>
               <span className={styles.dot}>·</span>
-              <span>12 min read</span>
+              <span>9 min read</span>
             </div>
 
             <h1 className={styles.title}>
@@ -42,7 +38,8 @@ export default function CashBasedUnderwritingPage() {
             </h1>
 
             <p className={styles.subtitle}>
-              Why traditional credit bureaus fail modern businesses, how we modeled daily cash volatility with Z-scores, and the engineering behind deploying millions in corporate credit with zero defaults during initial rollout.
+              Why traditional credit bureaus fail young companies, how we modeled daily cash
+              volatility, and the engineering behind underwriting millions in corporate credit.
             </p>
 
             <div className={styles.authorBar}>
@@ -50,53 +47,37 @@ export default function CashBasedUnderwritingPage() {
                 <span className={styles.authorName}>Ashwin Rachha</span>
                 <span className={styles.authorRole}>AI Product Engineer / Tech Lead · Finally</span>
               </div>
-              <div className={styles.statsBadges}>
-                <span className={styles.badge}>$3M+ Credit Deployed</span>
-                <span className={styles.badge}>50+ Companies</span>
-                <span className={styles.badge}>0% Default Rate</span>
-              </div>
             </div>
           </header>
 
-          <ProductBrief
-            eyebrow="Product brief · Cash-based underwriting"
-            title="Credit limits from cash reality, not a stale score"
-            spec="Reconstruct a company’s last 90 days of cash movement, separate operating activity from inter-account transfers, and size a credit line that can change as the company changes. The specification included a human review path and circuit breakers, not just a score."
-            stack={["Plaid", "Teller", "Redis", "Celery", "Postgres", "Marqeta", "Visa"]}
-            architecture={["Ingest and normalize transactions across linked accounts", "Reconstruct daily balances and detect transfer pairs", "Measure burn, volatility, and reserve-floor risk", "Sync a limit, or pause and route the account to review"]}
-            outcome="The underwriting engine deployed more than $3M across 50+ companies during the initial rollout, with weekly recalculation and a visible path to stop automated limit increases when liquidity deteriorated."
-          />
-
-          {/* Interactive Simulator Section */}
-          <section id="simulator" className={styles.simulatorWrapper}>
-            <div className={styles.simulatorIntro}>
-              <h2>Interactive Credit Risk Simulator</h2>
-              <p>
-                Adjust liquidity parameters below to test the underwriting algorithm. Watch how average daily balance, burn rate, and cash variance determine credit limits, risk tiering, and manual override flags in real time.
-              </p>
-            </div>
-            <UnderwritingSimulator />
-          </section>
-
-          {/* Technical Prose */}
           <article className={styles.prose}>
-            <h2>1. The Problem: The Inadequacy of Stale Bureau Scores</h2>
+            <h2>1. The problem with stale scores</h2>
             <p>
-              When a business applies for a corporate credit card or working-capital line, traditional lenders request multi-year audited financial statements, tax returns, and FICO/Dun & Bradstreet scores. For a fast-growing tech startup or an asset-light e-commerce operator, this data is obsolete before the ink dries.
+              When a business applies for a corporate card or a working-capital line, most lenders
+              ask for tax returns, audited statements, and a FICO or Dun &amp; Bradstreet score. For
+              a young company this data is useless. It describes who the company was, not who it is.
             </p>
             <p>
-              A startup might hold $400,000 in cash reserves from a recent equity round, generate $60,000 in monthly recurring revenue, and possess strong unit economics—yet be flatly denied a corporate card because their corporate entity is under 18 months old. Conversely, a legacy business might show profitable historical tax returns from the prior calendar year while silently burning down its remaining liquidity in the present quarter.
+              I saw this at Finally. A startup could hold $400,000 from a recent round, book $60,000
+              a month in recurring revenue, and still get denied because the corporate entity was 17
+              months old. Meanwhile a legacy business could show a profitable tax return from last
+              year while burning down its cash this quarter.
             </p>
             <p>
-              At Finally, we set out to build an underwriting engine that evaluated <strong>real-time cash velocity</strong>. Instead of static credit reports, we integrated directly with company bank accounts via Plaid and Teller to compute risk on raw ledger reality.
+              So we ignored the bureau score. We underwrote on the ledger itself: bank accounts
+              connected through Plaid and Teller, risk computed on raw cash movement. The number
+              that mattered was the one that settled yesterday.
             </p>
 
-            <h2>2. The Architecture of 90-Day Daily Balance Reconstruction</h2>
+            <h2>2. Reconstructing 90 days</h2>
             <p>
-              Bank APIs like Plaid and Teller do not simply give you an immutable history of end-of-day balances. Transactions are posted, pending, reversed, or adjusted across time zones and weekend clearinghouse pauses.
+              Bank APIs do not hand you a clean history. Transactions post, pend, reverse, and
+              adjust across time zones. End-of-day balances arrive with holes. Before any risk
+              math, we had to rebuild the account&rsquo;s true state, one day at a time.
             </p>
             <p>
-              To establish an accurate solvency baseline, we engineered an asynchronous reconstruction engine:
+              We built an asynchronous reconstruction engine. It ingests every transaction, sorts
+              out what actually cleared, and produces a daily balance series you can trust.
             </p>
             <ArchitectureDiagram
               svgSrc="/images/diagrams/cash-underwriting-architecture-dark.svg"
@@ -107,24 +88,28 @@ export default function CashBasedUnderwritingPage() {
               aspectRatio="16838/7295"
             />
 
-            <h3>Handling Inter-Account Transfers</h3>
+            <h3>Transfers are not revenue</h3>
             <p>
-              One critical failure mode in automated underwriting is the &ldquo;round-trip transfer illusion.&rdquo; A business might move $50,000 back and forth between a checking account and a sweep money-market account four times in a month, inflating nominal monthly deposits to $200,000.
+              The first failure mode we caught was the round-trip. A business moves $50,000 from
+              checking to a sweep account and back, four times in a month. Naive accounting calls
+              that $200,000 in deposits. It is one pile of money that took four trips.
             </p>
             <p>
-              Our normalization pipeline identifies paired transactions across linked accounts by matching exact timestamps (within a 48-hour clearing window), identical amounts, and mirrored directional signs. These transfers are strictly tagged and excluded from operating revenue calculations.
+              The pipeline matches paired transactions across linked accounts: same amount, mirrored
+              direction, timestamps inside the 48-hour clearing window. Matched pairs get tagged as
+              transfers and excluded from operating revenue. Getting this wrong corrupts everything
+              downstream, so getting it right mattered more than any model tweak.
             </p>
 
-            <h2>3. Volatility Modeling: Beyond the Average</h2>
+            <h2>3. Volatility is the risk</h2>
             <p>
-              An average daily balance (ADB) of $100,000 can mean two completely different things:
+              An average daily balance of $100,000 can describe two very different companies. One
+              sits between $90,000 and $110,000 all month. The other starts at $250,000 on the
+              first, burns to $1,500 on day 28, and gets a capital injection on day 30. The average
+              does not know the difference. The volatility does.
             </p>
-            <ul>
-              <li><strong>Scenario A:</strong> The account stays steadily between $90,000 and $110,000 every single day of the month.</li>
-              <li><strong>Scenario B:</strong> The account begins at $250,000 on day 1, burns down to $1,500 on day 28, and receives a sudden capital injection on day 30.</li>
-            </ul>
             <p>
-              While both accounts have similar mathematical means, Scenario B represents severe liquidity risk. To capture this, we introduced a <strong>Cash Volatility Factor</strong> based on standard deviation and minimum balance floors:
+              We measured it with standard deviation against a reserve floor:
             </p>
             <div className={styles.formulaCard}>
               <code>
@@ -132,38 +117,45 @@ export default function CashBasedUnderwritingPage() {
               </code>
             </div>
             <p>
-              If the volatility exceeds statistical confidence intervals, the sizing multiplier drops dynamically from 30% of ADB down to 10%, or triggers an automated human underwriter review.
+              When volatility ran outside the confidence bounds, the sizing multiplier dropped from
+              30% of the average daily balance to 10%, or the account went to a human underwriter.
+              The formula was allowed to say no. That was the point of it.
             </p>
 
-            <h2>4. Weekly Recalculations and Circuit Breakers</h2>
+            <h2>4. Lines that moved weekly</h2>
             <p>
-              Traditional credit lines are approved once and reviewed annually. In our system, credit lines were alive. Every Sunday night, an asynchronous Celery task re-queried bank syncs for all active borrowers, reconstructed the trailing 90-day window, and recomputed limits.
+              A credit line approved once and reviewed annually is a photograph. We wanted a
+              video. Every Sunday night a Celery task re-synced every active borrower, rebuilt the
+              trailing 90-day window, and recomputed the limit.
             </p>
             <p>
-              If a customer&rsquo;s revenue doubled, their limit automatically expanded. If their burn accelerated and cash reserves depleted by more than 40% in a 14-day window, the system enacted an automated circuit breaker: notifying the customer, pausing automated limit increases, and alerting our risk team.
+              Revenue doubled? The limit grew with it. Burn accelerated and reserves fell more than
+              40% in two weeks? A circuit breaker fired: the customer got notified, automated
+              increases paused, and the risk team got an alert. Nobody had to remember to check.
+              The system checked.
             </p>
 
-            <h2>5. Production Results & Business Impact</h2>
+            <h2>5. What it came to</h2>
             <p>
-              Over the course of approximately three months, the underwriting engine underwrote over <strong>$3,000,000 in credit across 50+ companies</strong>. Throughout this period, the portfolio maintained a <strong>0% default rate</strong>, proving that real-time transactional underwriting dramatically outperforms legacy bureau scoring in agility and risk mitigation.
+              In roughly three months the engine underwrote over $3,000,000 in credit across more
+              than 50 companies, with a 0% default rate through the initial rollout. Small sample,
+              short window; I would not confuse it with proof that the model beats every bureau.
+              But it showed that a company&rsquo;s cash history, read carefully, says more about
+              whether it will repay than its age or its paperwork. The data was there all along.
+              Most of the work was refusing to look away from it.
             </p>
 
             <div className={styles.backlinksBox}>
-              <h3>Explore Related Systems & Code</h3>
+              <h3>Related</h3>
               <ul>
                 <li>
                   <Link href="/work/finally">
-                    Finally Company Case Study & Role Summary →
+                    Finally case study →
                   </Link>
                 </li>
                 <li>
                   <Link href="/blog/classify-ai">
-                    Classify AI: Real-Time Transaction Categorization Engine →
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/blog/from-documents-to-decisions">
-                    Decision Lab: Interactive Experiments in Automated Judgment →
+                    Classify AI: transaction categorization at 50K daily →
                   </Link>
                 </li>
                 <li>

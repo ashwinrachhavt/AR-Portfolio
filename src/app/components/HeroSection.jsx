@@ -2,17 +2,11 @@ import Image from "next/image";
 import PortfolioIcon from "./PortfolioIcon";
 import styles from "../home.module.css";
 
-const HERO_QUOTE = {
-  // Owner-editable: swap in any favorite quote.
-  text: "You can't connect the dots looking forward; you can only connect them looking backwards. So you have to trust that the dots will somehow connect in your future.",
-  attribution: "Steve Jobs",
-};
-
 const HERO_COPY = {
   eyebrow: "AI Product Engineer",
   headline: "Ideas into products. Curiosity into work.",
   intro:
-    "Imagine us working together — I've built and scaled two AI product teams at Finally and Loan Labs, and I care about the whole journey: the idea, the design, and why someone chooses it.",
+    "I've built and scaled two AI product teams at Finally and Loan Labs, and I care about the whole journey: the idea, the design, and why someone chooses it.",
   interests: ["AI", "startups", "fintech", "philosophy", "chess"],
 };
 
@@ -26,7 +20,6 @@ export default function HeroSection() {
         <p className={styles.interests}>{HERO_COPY.interests.join(" · ")}</p>
 
         <div className={styles.ctaRow}>
-          {/* 1. Download Résumé — FIRST + primary */}
           <a
             className={`${styles.cta} ${styles.ctaPrimary}`}
             href="/ashwin_rachha_resume_ai_pdf (1).pdf"
@@ -53,10 +46,6 @@ export default function HeroSection() {
           preload
           sizes="(max-width: 700px) 160px, 280px"
         />
-        <figure className={styles.sideRail}>
-          <blockquote>“{HERO_QUOTE.text}”</blockquote>
-          <figcaption>— {HERO_QUOTE.attribution}</figcaption>
-        </figure>
       </div>
 
       <div className={styles.heroFootnote}>

@@ -1,8 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import ClassifyAiSimulator from "./ClassifyAiSimulator";
 import ArchitectureDiagram from "@/app/components/ArchitectureDiagram";
-import ProductBrief from "../components/ProductBrief";
 import styles from "./classify.module.css";
 
 export const metadata: Metadata = {
@@ -32,7 +30,7 @@ export default function ClassifyAiDeepDivePage() {
               <span className={styles.dot}>·</span>
               <time dateTime="2026-09-24">September 24, 2026</time>
               <span className={styles.dot}>·</span>
-              <span>13 min read</span>
+              <span>10 min read</span>
             </div>
 
             <h1 className={styles.title}>
@@ -40,7 +38,8 @@ export default function ClassifyAiDeepDivePage() {
             </h1>
 
             <p className={styles.subtitle}>
-              How we combined dense vector embeddings (Pinecone) with sparse lexical search (Elasticsearch) and custom charts of accounts to reduce manual bookkeeping by ~80% and shrink first-month close cycles from 4+ months to 2 weeks.
+              How we combined dense vector retrieval with sparse lexical search and per-company
+              charts of accounts to cut manual bookkeeping by roughly 80%.
             </p>
 
             <div className={styles.authorBar}>
@@ -48,63 +47,53 @@ export default function ClassifyAiDeepDivePage() {
                 <span className={styles.authorName}>Ashwin Rachha</span>
                 <span className={styles.authorRole}>AI Product Engineer / Tech Lead · Finally</span>
               </div>
-              <div className={styles.statsBadges}>
-                <span className={styles.badge}>50K+ Txns / Day</span>
-                <span className={styles.badge}>~80% Manual Reduction</span>
-                <span className={styles.badge}>4mo → 2wk Close</span>
-              </div>
             </div>
           </header>
 
-          <ProductBrief
-            eyebrow="Product brief · Classify AI"
-            title="A bookkeeping classifier built for the exceptions"
-            spec="Categorize tens of thousands of bank transactions a day without pretending that a merchant string has one universal meaning. The product had to respect each company’s chart of accounts, preserve exact ledger identifiers, and leave ambiguous work visible to a bookkeeper."
-            stack={["Pinecone", "Elasticsearch BM25", "Redis", "Celery", "Postgres", "Plaid / Heron", "Rules engine"]}
-            architecture={["Normalize the bank feed and merchant identity", "Retrieve semantic and exact lexical matches", "Apply tenant-specific account rules", "Return a category with confidence and review state"]}
-            outcome="The system combines dense retrieval for meaning with sparse retrieval for exact invoice numbers, SKUs, and accounting codes. That combination made automation useful without making false precision invisible."
-          />
-
-          {/* Interactive Simulator */}
-          <section id="simulator" className={styles.simulatorWrapper}>
-            <div className={styles.simulatorIntro}>
-              <h2>Interactive Transaction Classification Sandbox</h2>
-              <p>
-                Test raw, messy bank descriptions against our hybrid classification pipeline. Inspect merchant token extraction, vector similarity scoring, chart of accounts resolution, and the automated confidence gatekeeper.
-              </p>
-            </div>
-            <ClassifyAiSimulator />
-          </section>
-
-          {/* Technical Prose */}
           <article className={styles.prose}>
-            <h2>1. The Problem: The High-Entropy Reality of Bank Feeds</h2>
+            <h2>1. What bank feeds actually look like</h2>
             <p>
-              In business bookkeeping, raw transaction descriptions provided by banking networks are notoriously cryptic. A payment to Amazon Web Services might arrive as <code>AMZN MKTP US*2X7BK9 WA</code>, a ride on Lyft as <code>LYFT *RIDE 09-14 SAN FRANCISCO</code>, or a local catering expense as <code>SQ *THE DAILY GRIND 94103</code>.
+              A payment to Amazon Web Services arrives as <code>AMZN MKTP US*2X7BK9 WA</code>. A
+              Lyft ride is <code>LYFT *RIDE 09-14 SAN FRANCISCO</code>. A catering invoice is
+              <code>SQ *THE DAILY GRIND 94103</code>. This is what banks send. Nobody cleans it up
+              before it lands in a ledger.
             </p>
             <p>
-              For a human bookkeeper managing hundreds of client companies, categorizing thousands of transactions each month into specific General Ledger (GL) accounts is grinding, error-prone toil. Furthermore:
+              A bookkeeper managing hundreds of client companies sorts thousands of these a month
+              into specific general ledger accounts. It is grinding work, and the hard part is not
+              volume. It is that the same string means different things to different companies.
+              For a software startup, AWS belongs in cost of goods sold. For a law firm, it is
+              internal office software.
             </p>
-            <ul>
-              <li><strong>Context is Tenant-Specific:</strong> For a software startup, AWS is categorized under <em>5010 - Cost of Goods Sold (Hosting)</em>. For a law firm, an AWS charge might belong in <em>6040 - Internal Office Software</em>.</li>
-              <li><strong>Zero Tolerance for False Precision:</strong> Reclassifying a balance sheet transfer as an operating expense corrupts tax filings and monthly P&amp;L reports.</li>
-              <li><strong>Backlog Onboarding Delays:</strong> When a new customer joined Finally with two years of un-reconciled bank records, manual review took over 4 months to complete the first-month close.</li>
-            </ul>
+            <p>
+              And the stakes are asymmetric. Classify a balance-sheet transfer as an operating
+              expense and the tax filing is wrong. Messy input, tenant-specific truth, no room for
+              confident errors.
+            </p>
 
-            <h2>2. The Solution: Hybrid Dense + Sparse Retrieval Architecture</h2>
+            <h2>2. Retrieval, not generation</h2>
             <p>
-              Relying purely on LLM prompt generation for 50,000 transactions daily is financially and latently prohibitive ($$$ in API tokens and seconds of latency per line item).
+              The obvious approach is prompting an LLM per transaction. At 50,000 transactions a
+              day that fails twice: it costs real money, and it adds seconds of latency to every
+              line item. But more fundamentally, generation is the wrong shape. The answer already
+              exists in the company&rsquo;s own history. The job is finding it.
             </p>
             <p>
-              As Finally&rsquo;s first AI Product Engineer, I designed a hybrid retrieval architecture combining:
+              So Classify AI was built as retrieval with rules on top:
             </p>
             <ol>
-              <li><strong>Deterministic Merchant Tokenization:</strong> Regex cleaning, store-number stripping, and merchant normalization.</li>
-              <li><strong>Dense Semantic Vector Search (Pinecone):</strong> Embedding merchant descriptions and historical user corrections to capture semantic intent.</li>
-              <li><strong>Sparse Keyword Constraints (Elasticsearch BM25):</strong> Strict lexical filtering ensuring specific vendor keywords match historical ledger anchors.</li>
-              <li><strong>Tenant Chart of Accounts (COA) Context:</strong> Re-ranking candidates strictly within the client&rsquo;s approved accounting taxonomy.</li>
-              <li><strong>Confidence Thresholding:</strong> Predictions above 92% confidence auto-post to QuickBooks; predictions below route to a human bookkeeper review queue.</li>
+              <li><strong>Merchant tokenization.</strong> Regex cleaning, store-number stripping, normalization. Deterministic, cheap, boring.</li>
+              <li><strong>Dense vector search (Pinecone).</strong> Embeddings of merchant descriptions and the company&rsquo;s own past corrections, capturing intent.</li>
+              <li><strong>Sparse lexical search (Elasticsearch BM25).</strong> Exact matches on invoice numbers, SKUs, accounting codes. The string is the anchor.</li>
+              <li><strong>Chart of accounts re-ranking.</strong> Candidates filtered strictly within each client&rsquo;s approved taxonomy.</li>
+              <li><strong>Confidence gating.</strong> Predictions above 92% post to QuickBooks. The rest goes to a bookkeeper.</li>
             </ol>
+            <p>
+              The two retrievers earn their keep separately. Dense search finds meaning; BM25 finds
+              the literal string. A vendor with an invoice number in the description should match
+              on that number, not on what the description roughly means. Companies that mix both
+              got fewer wrong answers than either alone.
+            </p>
 
             <ArchitectureDiagram
               svgSrc="/images/diagrams/classify-ai-architecture-dark.svg"
@@ -115,40 +104,45 @@ export default function ClassifyAiDeepDivePage() {
               aspectRatio="14160/9434"
             />
 
-            <h2>3. Scaling to 50K+ Transactions Daily</h2>
+            <h2>3. Living inside the exceptions</h2>
             <p>
-              To process massive asynchronous transaction surges during bank settlement windows, we built a distributed pipeline using <strong>Django, Celery, and Redis</strong>.
+              The pipeline was built for the tail. Recurring vendors like Slack and GitHub resolve
+              in under 15 milliseconds from cache, and that compute headroom is what buys time for
+              the ambiguous ones. Batch ingestion is idempotent, verified against ledger hash
+              digests, because a duplicate posting in a ledger is not a bug you patch, it is trust
+              you lose.
             </p>
             <p>
-              Transactions were ingested in idempotent batches, verified against existing ledger hash digests to prevent duplicate postings, and processed through vectorized embedding caches. Common recurring vendors (Slack, Google Workspace, GitHub) resolved in under 15 milliseconds via cache hits, leaving compute capacity for ambiguous tail-end vendors.
+              The 92% threshold is where the product thinking lived. Every point of confidence is a
+              trade between the bookkeeper&rsquo;s time and the ledger&rsquo;s integrity. We chose
+              to leave the uncertain work visible rather than automate a guess. The number of
+              transactions routed to review was a feature you could watch, not an error we hid.
             </p>
 
-            <h2>4. Business Impact & Close-Time Reduction</h2>
+            <h2>4. What changed</h2>
             <p>
-              Deploying Classify AI fundamentally shifted Finally&rsquo;s unit economics:
+              Manual categorization dropped by roughly 80%. A first-month close that took more than
+              four months of manual review took about two weeks. Bookkeepers stopped tagging
+              transactions and started working on accruals and tax strategy, which is what they
+              were actually for.
             </p>
-            <ul>
-              <li><strong>~80% Reduction in Manual Categorization:</strong> Routine recurring transactions were handled with zero human intervention.</li>
-              <li><strong>First-Month Close from 4+ Months to ~2 Weeks:</strong> New client onboarding accelerated dramatically.</li>
-              <li><strong>Direct QuickBooks Integration:</strong> Synchronized clean reconciliation data, enabling bookkeepers to focus on complex accruals and tax strategy rather than manual tagging.</li>
-            </ul>
+            <p>
+              The lesson I carry from this one: the model was never the product. The chart of
+              accounts, the confidence gate, the review queue. That was the product. The embedding
+              just made it fast.
+            </p>
 
             <div className={styles.backlinksBox}>
-              <h3>Explore Related Architecture & Systems</h3>
+              <h3>Related</h3>
               <ul>
                 <li>
                   <Link href="/work/finally">
-                    Finally Role & Technical Leadership Summary →
+                    Finally case study →
                   </Link>
                 </li>
                 <li>
                   <Link href="/blog/cash-based-underwriting">
-                    Cash-Based Underwriting: 90-Day Balance Reconstruction →
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/blog/from-documents-to-decisions">
-                    Decision Lab: Two Interactive Investigations in Automated Judgment →
+                    Cash-based underwriting: 90-day balance reconstruction →
                   </Link>
                 </li>
                 <li>

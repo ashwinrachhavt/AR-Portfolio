@@ -45,9 +45,6 @@
 .ctaPrimary:hover { background: #d4d4d8; }
 .cta:not(.ctaPrimary) { color: #d4d4d8; border: 1px solid #303033; }
 .cta:not(.ctaPrimary):hover { color: #fff; border-color: #55555e; }
-.sideRail { margin-top: 20px; color: #86868b; font-size: 12px; line-height: 1.7; text-align: center; }
-.sideRail blockquote { font-style: italic; margin: 0 0 8px; }
-.sideRail figcaption { margin-bottom: 12px; }
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 28px; margin-top: 34px; }
 .primaryButton, .textButton { display: inline-flex; align-items: center; justify-content: center; gap: 12px; font-size: 14px; font-weight: 500; min-height: 48px; transition: background .18s, color .18s; }
 .primaryButton { background: #f5f5f7; color: #171719; border-radius: 999px; padding: 13px 22px; }
@@ -126,8 +123,10 @@
 .contact h2 span { color: #86868b; }
 .contact > p:not(.sectionLabel) { max-width: 450px; margin: 24px auto 28px; color: #a1a1a6; font-size: 15px; line-height: 1.8; }
 .contactLinks { display: flex; justify-content: center; flex-wrap: wrap; gap: 24px; font-size: 12px; color: #a1a1a6; margin-top: 34px; }
+.contactLinks a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; }
 .contactLinks a:hover { color: #f5f5f7; text-decoration: underline; text-underline-offset: 5px; }
 .footer { display: flex; justify-content: space-between; gap: 24px; align-items: center; border-top: 1px solid #303033; padding: 28px 0; color: #86868b; font-size: 11px; }
+.footer a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; }
 .footer > span { color: #c7c7cc; }
 .footer a:hover { color: #f5f5f7; }
 

@@ -2,7 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { Client, isFullPage } from "@notionhq/client";
-import { BlogPostNotFoundError, getBlogDatabaseId, loadBlogArticle, queryBlogPosts } from "./notion-blog";
+import { BlogPostNotFoundError, getBlogDatabaseId, loadBlogArticle, notionConfigured, queryBlogPosts } from "./notion-blog";
 import { summarizeBlogPost } from "./blog-model.mjs";
 import { localArticle, mergeOriginals } from "./local-writing.mjs";
 
@@ -30,6 +30,11 @@ export const getBlogIndex = cache(async () => {
 export const getBlogArticle = cache(async (pageId: string) => {
   const reviewed = localArticle(pageId);
   if (reviewed) return reviewed;
+  // Unknown slugs are 404s, not config errors: skip the Notion lookup when
+  // no database is configured so unmatched routes reach not-found normally.
+  if (!notionConfigured()) {
+    throw new BlogPostNotFoundError();
+  }
   const article = await cachedArticle(getBlogDatabaseId(), pageId);
   if (!article) throw new BlogPostNotFoundError();
   return article;

@@ -21,7 +21,6 @@ export interface StructuredProject {
   techStack: string[];
   deepDiveUrl?: string;
   githubUrl?: string;
-  liveDemoUrl?: string;
 }
 
 export const structuredProjects: StructuredProject[] = [
@@ -41,7 +40,6 @@ export const structuredProjects: StructuredProject[] = [
       "Automated mortgage file indexing and validation across pilot workflows, cutting file intake processing time from hours to under two minutes while maintaining strict tenant-scoped fail-closed security.",
     metrics: [
       { highlight: "-85%", label: "DOCUMENT CYCLE TIME", details: "Intake and classification under 2 minutes" },
-      { highlight: "100%", label: "FAIL-CLOSED SECURITY", details: "No ambient delete actions; tenant-scoped execution" },
       { highlight: "7+", label: "CLOUD WORKFLOWS", details: "Google Drive, Box, Salesforce, HubSpot, OneDrive" },
       { highlight: "FSM", label: "DETERMINISTIC AGENT", details: "LangGraph state machine on Bedrock AgentCore" },
     ],
@@ -64,7 +62,6 @@ export const structuredProjects: StructuredProject[] = [
     techStack: ["LangGraph", "Amazon Bedrock", "AgentCore Runtime", "Python", "Ruby on Rails", "Composio", "AWS", "Docker"],
     deepDiveUrl: "/blog/lois-mortgage-agent",
     githubUrl: "https://github.com/AshwinRachha",
-    liveDemoUrl: "/blog/lois-mortgage-agent#simulator",
   },
   {
     id: "classify-ai",
@@ -103,7 +100,6 @@ export const structuredProjects: StructuredProject[] = [
       "Enabled Finally to scale bookkeeping customers 10x without linearly scaling bookkeeping headcount, directly boosting gross margins.",
     techStack: ["Python", "Django", "LangChain", "Pinecone", "Elasticsearch", "Redis", "Celery", "PostgreSQL", "W&B"],
     deepDiveUrl: "/blog/classify-ai",
-    liveDemoUrl: "/blog/classify-ai#simulator",
   },
   {
     id: "cash-based-underwriting",
@@ -143,7 +139,6 @@ export const structuredProjects: StructuredProject[] = [
       "Unlocked corporate card financing for venture-backed and bootstrapped companies lacking multi-year tax returns, while keeping risk strictly bounded by real liquidity.",
     techStack: ["Python", "Django", "PostgreSQL", "Redis", "Celery", "Plaid", "Teller", "NumPy", "Docker"],
     deepDiveUrl: "/blog/cash-based-underwriting",
-    liveDemoUrl: "/blog/cash-based-underwriting#simulator",
   },
   {
     id: "gurukul-thesis",
@@ -183,7 +178,6 @@ export const structuredProjects: StructuredProject[] = [
     techStack: ["Python", "FastAPI", "Transformers", "LangChain", "React", "Docker", "PyTorch", "AST Engine"],
     deepDiveUrl: "/blog/gurukul-thesis",
     githubUrl: "https://github.com/ashwinrachha786/Gurukul_v2",
-    liveDemoUrl: "/blog/gurukul-thesis#simulator",
   },
   {
     id: "finally-banking-infra",
@@ -200,7 +194,7 @@ export const structuredProjects: StructuredProject[] = [
     impact:
       "Connected and continuously synchronized thousands of business checking and credit accounts, providing the rock-solid foundation for both Classify AI and Cash-Based Underwriting.",
     metrics: [
-      { highlight: "99.9%", label: "SYNC RELIABILITY", details: "Resilient idempotency and webhook replay" },
+      { highlight: "50+", label: "BUSINESSES CONNECTED", details: "Checking and credit accounts", },
       { highlight: "2 Providers", label: "PLAID & TELLER", details: "Unified normalized financial schema" },
       { highlight: "AES-256", label: "TOKEN ENCRYPTION", details: "Zero-knowledge token security architecture" },
     ],
@@ -235,7 +229,6 @@ export const structuredProjects: StructuredProject[] = [
     impact:
       "Delivered low-latency image captioning and tactile object detection pipelines, enhancing assistive technology accessibility for visually impaired individuals.",
     metrics: [
-      { highlight: "100%", label: "ACCESSIBLE PIPELINES", details: "Built for screen readers & tactile displays" },
       { highlight: "<150ms", label: "PROCESSING LATENCY", details: "Real-time edge & cloud inference" },
     ],
     outcomes: [

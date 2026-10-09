@@ -148,15 +148,6 @@ export default function WorkModal({ project, onClose }: WorkModalProps) {
                   Read Full Technical Deep Dive →
                 </Link>
               )}
-              {project.liveDemoUrl && (
-                <Link
-                  href={project.liveDemoUrl}
-                  className={styles.secondaryBtn}
-                  onClick={onClose}
-                >
-                  Interactive Demo ↗
-                </Link>
-              )}
               {project.githubUrl && (
                 <a
                   href={project.githubUrl}

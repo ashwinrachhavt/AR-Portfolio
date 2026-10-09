@@ -6,11 +6,11 @@ import Footer from "@/app/components/Footer";
 import styles from "./story.module.css";
 
 export const metadata = {
-  title: "The Story — Ashwin Rachha",
+  title: "The Story | Ashwin Rachha",
   description:
-    "The trajectory of an applied AI engineer: from graduate systems research at Virginia Tech (4.0 GPA, 130+ citations) to transaction classification at Finally and agentic mortgage systems at Loan Labs.",
+    "The trajectory of an applied AI engineer: from graduate systems research at Virginia Tech to transaction classification at Finally and agentic mortgage systems at Loan Labs.",
   openGraph: {
-    title: "The Story — Ashwin Rachha",
+    title: "The Story | Ashwin Rachha",
     description: "The trajectory of an applied AI engineer: research, production systems, and engineering principles.",
     url: "https://ashwinrachha.com/story",
   },
@@ -21,18 +21,17 @@ export default function StoryPage() {
     <>
       <Navbar activeSection="story" />
       <main className={styles.main}>
-        {/* Hero Section */}
+        {/* Hero */}
         <section className={styles.heroSection}>
-          <div className={styles.storyEyebrow}>Background & Trajectory</div>
-
           <div className={styles.heroRow}>
             <div className={styles.heroText}>
               <h1 className={styles.heroTitle}>
-                Building systems from<br />
-                <span className={styles.heroAccent}>first principles.</span>
+                Building AI for where<br />
+                <span className={styles.heroAccent}>correctness matters.</span>
               </h1>
               <p className={styles.heroBio}>
-                I build AI systems for workflows where correctness matters. My path has moved from learning systems research at Virginia Tech to production bookkeeping at Finally and agentic mortgage infrastructure at Loan Labs.
+                Mortgage documents at Loan Labs. Bookkeeping ledgers at Finally. Learning systems
+                research at Virginia Tech. The work is different each time; the standard is not.
               </p>
               <div className={styles.trajectory} aria-label="Career trajectory">
                 <span>Research</span>
@@ -65,22 +64,21 @@ export default function StoryPage() {
           <a href="#philosophy">04 <span>Philosophy</span></a>
         </nav>
 
-        {/* CHAPTER 01: CORE COMPETENCIES */}
+        {/* HOW I BUILD */}
         <section id="how-i-build" className={styles.chapterSection}>
           <div className={styles.chapterHeader}>
-            <span className={styles.chapterLabel}>Chapter 01 · How I Build</span>
             <h2 className={styles.chapterTitle}>Full-stack engineering with domain rigor.</h2>
             <p className={styles.chapterLead}>
-              Reliable AI products require strong systems engineering beneath them: deterministic request boundaries, type safety, fail-closed permissions, and interfaces that respect user agency.
+              Reliable AI products need strong systems beneath them. Deterministic request
+              boundaries, type safety, fail-closed permissions. Interfaces that leave the user in
+              charge.
             </p>
           </div>
 
           <div className={styles.cardsTrio}>
-            {/* Engineering Card */}
             <div className={styles.trioCard}>
-              <span className={styles.trioNumber}>01</span>
               <h3 className={styles.trioTitle}>Systems Engineering</h3>
-              <p className={styles.trioTagline}>Production services, resilient APIs, and deterministic orchestration.</p>
+              <p className={styles.trioTagline}>Production services, typed APIs, deterministic orchestration.</p>
               <div className={styles.trioPills}>
                 <span>LangGraph</span>
                 <span>Bedrock AgentCore</span>
@@ -93,11 +91,9 @@ export default function StoryPage() {
               </div>
             </div>
 
-            {/* Product Card */}
             <div className={styles.trioCard}>
-              <span className={styles.trioNumber}>02</span>
-              <h3 className={styles.trioTitle}>Product & Delivery</h3>
-              <p className={styles.trioTagline}>Technical specifications, user research, and evaluation harnesses.</p>
+              <h3 className={styles.trioTitle}>Product &amp; Delivery</h3>
+              <p className={styles.trioTagline}>Specifications, user research, evaluation harnesses.</p>
               <div className={styles.trioPills}>
                 <span>Spec Decomposition</span>
                 <span>User Research</span>
@@ -108,11 +104,9 @@ export default function StoryPage() {
               </div>
             </div>
 
-            {/* AI & Systems Card */}
             <div className={styles.trioCard}>
-              <span className={styles.trioNumber}>03</span>
-              <h3 className={styles.trioTitle}>Applied AI & Retrieval</h3>
-              <p className={styles.trioTagline}>Dense vector embeddings, lexical search, and high-throughput pipelines.</p>
+              <h3 className={styles.trioTitle}>Applied AI &amp; Retrieval</h3>
+              <p className={styles.trioTagline}>Dense embeddings, lexical search, high-throughput pipelines.</p>
               <div className={styles.trioPills}>
                 <span>Pinecone</span>
                 <span>Elasticsearch BM25</span>
@@ -125,7 +119,7 @@ export default function StoryPage() {
           </div>
         </section>
 
-        {/* CHAPTER 02: ACADEMIC FOUNDATION */}
+        {/* FOUNDATIONS */}
         <section id="foundations" className={styles.chapterSection}>
           <div className={styles.foundationGrid}>
             <div className={styles.foundationImageCol}>
@@ -141,10 +135,11 @@ export default function StoryPage() {
             </div>
 
             <div className={styles.foundationTextCol}>
-              <span className={styles.chapterLabel}>Chapter 02 · Academic Foundations</span>
               <h2 className={styles.chapterTitle}>Graduate research & systems fundamentals.</h2>
               <p className={styles.foundationLead}>
-                My engineering background combines academic research in machine learning with distributed systems foundations. At Virginia Tech, my thesis investigated how LLMs can guide students through complex problem-solving without leaking direct answers.
+                Before production ledgers there was research. At Virginia Tech my thesis asked how
+                an LLM can walk a student through a hard programming problem without ever handing
+                over the answer. Guardrails were the interesting part.
               </p>
 
               <div className={styles.degreeList}>
@@ -171,7 +166,6 @@ export default function StoryPage() {
                 </div>
               </div>
 
-              {/* Master's Thesis Spotlight */}
               <div className={styles.thesisHighlightBox}>
                 <div className={styles.thesisHeader}>
                   <span className={styles.thesisBadge}>Master&apos;s Thesis Research</span>
@@ -179,20 +173,21 @@ export default function StoryPage() {
                 </div>
                 <h4 className={styles.thesisTitle}>Gurukul: LLM-Enhanced Computer Science Education</h4>
                 <p className={styles.thesisDesc}>
-                  Designed an adaptive learning platform using retrieval-augmented generation (RAG) and Socratic guardrails to guide programming students through debugging. Published in IEEE FIE 2024 and IEEE SouthEastCon 2023.
+                  An adaptive learning platform built on retrieval-augmented generation and
+                  Socratic guardrails, so a student gets the next hint instead of the final answer.
+                  Published at IEEE FIE 2024 and IEEE SoutheastCon 2023.
                 </p>
                 <Link href="/blog/gurukul-thesis" className={styles.thesisLink}>
-                  Read the research paper & explore the simulator →
+                  Read the research write-up →
                 </Link>
               </div>
             </div>
           </div>
         </section>
 
-        {/* CHAPTER 03: PROFESSIONAL EXPERIENCE */}
+        {/* TRACK RECORD */}
         <section id="track-record" className={styles.chapterSection}>
           <div className={styles.chapterHeaderCenter}>
-            <span className={styles.chapterLabel}>Chapter 03 · Production Track Record</span>
             <h2 className={styles.chapterTitle}>Shipping software that runs on real ledgers.</h2>
           </div>
 
@@ -204,14 +199,17 @@ export default function StoryPage() {
           </div>
 
           <div className={styles.workCardsStack}>
-            {/* Loan Labs */}
             <article className={`${styles.workCard} ${styles.featuredWorkCard}`}>
               <div className={styles.workCardLeft}>
                 <span className={styles.workKicker}>Current focus</span>
                 <h3 className={styles.workCompany}>Loan Labs</h3>
                 <span className={styles.workRole}>Applied AI Engineer · 2026–Present · Mortgage Infrastructure</span>
                 <p className={styles.workDesc}>
-                  Re-architected Lois from one-off Ruby LLM calls into a LangGraph agentic state machine on Amazon Bedrock AgentCore for document classification, lender policy validation, and fail-closed Composio authorization.
+                  Mortgage packets run past 400 pages, and borrowers name them
+                  IMG_4901.pdf. I re-architected Lois from one-off Ruby LLM calls into a
+                  LangGraph state machine on Bedrock AgentCore: document classification, lender
+                  policy validation, and fail-closed authorization where the agent can never turn
+                  a low-confidence guess into an irreversible write.
                 </p>
                 <div className={styles.workTags}><span>LangGraph</span><span>AgentCore</span><span>Mortgage infrastructure</span></div>
               </div>
@@ -220,32 +218,36 @@ export default function StoryPage() {
               </div>
               <div className={styles.workCardRight}>
                 <span className={styles.workMetricVal}>-85%</span>
-                <span className={styles.workMetricLabel}>Intake Delays</span>
+                <span className={styles.workMetricLabel}>Document Cycle Time</span>
               </div>
             </article>
 
-            {/* Finally Classify AI */}
             <div className={styles.workCard}>
               <div className={styles.workCardLeft}>
                 <h3 className={styles.workCompany}>Finally</h3>
                 <span className={styles.workRole}>AI Product Engineer / Tech Lead · 2024–2026 · AI Bookkeeping</span>
                 <p className={styles.workDesc}>
-                  First AI Product Engineer at Finally; led a 3-engineer team from prototype to production on Classify AI, processing 50K+ transactions daily using hybrid retrieval (Pinecone + Elasticsearch BM25) and custom charts of accounts.
+                  First AI Product Engineer there. Led a three-engineer team from prototype to
+                  production on Classify AI, a hybrid retrieval engine (dense vectors for meaning,
+                  BM25 for the literal string) sorting 50,000+ bank transactions a day into
+                  per-company charts of accounts.
                 </p>
               </div>
               <div className={styles.workCardRight}>
                 <span className={styles.workMetricVal}>-80%</span>
-                <span className={styles.workMetricLabel}>Manual Toil</span>
+                <span className={styles.workMetricLabel}>Manual Categorization</span>
               </div>
             </div>
 
-            {/* Finally Cash-Based Underwriting */}
             <div className={styles.workCard}>
               <div className={styles.workCardLeft}>
                 <h3 className={styles.workCompany}>Cash-Based Underwriting</h3>
                 <span className={styles.workRole}>Finally Corporate Card · 2024–2025</span>
                 <p className={styles.workDesc}>
-                  Built real-time credit risk engine reconstructing 90-day daily bank balances with Z-score cash volatility analysis and weekly limit recalculations. Deployed $3M+ in credit for 50+ companies with zero defaults during rollout.
+                  Bureau scores describe who a company was. We underwrote on who it is:
+                  reconstructing 90 days of daily balances, measuring cash volatility, and
+                  recalculating limits weekly with circuit breakers. $3M+ in credit across 50+
+                  companies, zero defaults through the rollout.
                 </p>
               </div>
               <div className={styles.workCardRight}>
@@ -254,13 +256,13 @@ export default function StoryPage() {
               </div>
             </div>
 
-            {/* Outreach */}
             <div className={styles.workCard}>
               <div className={styles.workCardLeft}>
                 <h3 className={styles.workCompany}>Outreach</h3>
                 <span className={styles.workRole}>Machine Learning Platform Engineer Intern · 2022 · Seattle, WA</span>
                 <p className={styles.workDesc}>
-                  Engineered reusable NLP inference and deployment infrastructure with PySpark, MLflow, ONNX runtimes, and NVIDIA Triton Inference Server deployed on Google Kubernetes Engine.
+                  Built reusable NLP inference and deployment infrastructure with PySpark, MLflow,
+                  ONNX, and NVIDIA Triton on Google Kubernetes Engine.
                 </p>
               </div>
               <div className={styles.workCardRight}>
@@ -277,61 +279,63 @@ export default function StoryPage() {
           </div>
         </section>
 
-        {/* CHAPTER 04: ENGINEERING PRINCIPLES */}
+        {/* PHILOSOPHY */}
         <section id="philosophy" className={styles.chapterSection}>
           <div className={styles.chapterHeader}>
-            <span className={styles.chapterLabel}>Chapter 04 · Engineering Philosophy</span>
             <h2 className={styles.chapterTitle}>How I think about building software.</h2>
             <p className={styles.chapterLead}>
-              Software that touches financial ledgers, legal documents, or automated decisions cannot rely on prompt optimism. These core tenets define how I approach architecture and production reliability.
+              Software that touches financial ledgers or legal documents cannot run on prompt
+              optimism. Four tenets I keep coming back to.
             </p>
           </div>
 
-          <div className={styles.principlePrompt}>When I design an AI system, I ask:</div>
-
           <div className={styles.interestsGrid}>
             <div className={styles.interestCard}>
-              <span className={styles.interestBadge}>Principle 01</span>
-              <h4 className={styles.interestTitle}>Deterministic State Over Prompt Hope</h4>
+              <h4 className={styles.interestTitle}>Deterministic state over prompt hope</h4>
               <p className={styles.interestText}>
-                Agents need explicit state machines, type-checked transitions, and deterministic fallback paths. Prompts configure behavior; state graphs ensure correctness and prevent infinite loops.
+                Agents need explicit state machines and typed transitions. A prompt configures
+                behavior; a state graph guarantees you can name the step where things failed.
               </p>
             </div>
 
             <div className={styles.interestCard}>
-              <span className={styles.interestBadge}>Principle 02</span>
-              <h4 className={styles.interestTitle}>Fail-Closed Authorization by Default</h4>
+              <h4 className={styles.interestTitle}>Fail closed, by default</h4>
               <p className={styles.interestText}>
-                No LLM or agent tool should possess ambient API access. Every read, write, and sync must be scoped to verified tenant boundaries with execution-time permission checks that reject unknown actions.
+                No agent should hold ambient API access. Reads, writes, and syncs stay scoped to
+                verified tenants, and unknown actions get rejected at the gateway rather than
+                apologized for in a prompt.
               </p>
             </div>
 
             <div className={styles.interestCard}>
-              <span className={styles.interestBadge}>Principle 03</span>
-              <h4 className={styles.interestTitle}>Hybrid Dense & Sparse Retrieval</h4>
+              <h4 className={styles.interestTitle}>Hybrid dense and sparse retrieval</h4>
               <p className={styles.interestText}>
-                Pure vector search struggles with exact invoice numbers, SKUs, and accounting codes. Combining dense semantic embeddings with sparse BM25 lexical constraints ensures both semantic coverage and exact accuracy.
+                Vector search alone cannot match an invoice number. Meaning and literal strings
+                need different retrievers, and the companies that get both right ship fewer wrong
+                answers.
               </p>
             </div>
 
             <div className={styles.interestCard}>
-              <span className={styles.interestBadge}>Principle 04</span>
-              <h4 className={styles.interestTitle}>End-to-End Product Ownership</h4>
+              <h4 className={styles.interestTitle}>Own the whole loop</h4>
               <p className={styles.interestText}>
-                The best systems are designed by engineers who understand the entire loop—from user interviews and technical specifications to database schemas, background workers, and intuitive user interfaces.
+                The best systems come from engineers who have sat in the user interview, written
+                the schema, and watched the background worker fail at 3am. The interface is not
+                beneath the architecture. It is part of it.
               </p>
             </div>
           </div>
         </section>
 
-        {/* CLOSING SECTION */}
+        {/* CLOSING */}
         <section className={styles.closingSection}>
-          <span className={styles.chapterLabel}>Let&apos;s Connect</span>
           <h2 className={styles.closingTitle}>
             Interested in building together?
           </h2>
           <p className={styles.closingLead}>
-            Whether you&apos;re exploring agentic architectures, evaluating financial data systems, or looking for an engineer to lead an AI initiative, I&apos;m always glad to talk craft and architecture.
+            Whether you&apos;re exploring agentic architectures, evaluating financial data
+            systems, or looking for an engineer to lead an AI initiative, I&apos;m always glad to
+            talk craft and architecture.
           </p>
           <div className={styles.closingButtons}>
             <Link href="/fit" className={styles.primaryCta}>

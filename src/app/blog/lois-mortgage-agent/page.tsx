@@ -1,8 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import LoisAgentSimulator from "./LoisAgentSimulator";
 import ArchitectureDiagram from "@/app/components/ArchitectureDiagram";
-import ProductBrief from "../components/ProductBrief";
 import styles from "./lois.module.css";
 
 export const metadata: Metadata = {
@@ -32,15 +30,16 @@ export default function LoisDeepDivePage() {
               <span className={styles.dot}>·</span>
               <time dateTime="2026-09-24">September 24, 2026</time>
               <span className={styles.dot}>·</span>
-              <span>11 min read</span>
+              <span>8 min read</span>
             </div>
 
             <h1 className={styles.title}>
-              Lois: Building Resilient Mortgage Document Agents on Amazon Bedrock AgentCore
+              Lois: Building Mortgage Document Agents on Amazon Bedrock AgentCore
             </h1>
 
             <p className={styles.subtitle}>
-              From fragile prompt scripts to a typed LangGraph state machine with fail-closed Composio security, lender policy validation, and automated LoanOS workflows.
+              From fragile prompt scripts to a typed LangGraph state machine with fail-closed
+              authorization and lender policy validation.
             </p>
 
             <div className={styles.authorBar}>
@@ -48,57 +47,39 @@ export default function LoisDeepDivePage() {
                 <span className={styles.authorName}>Ashwin Rachha</span>
                 <span className={styles.authorRole}>Applied AI Engineer · Loan Labs</span>
               </div>
-              <div className={styles.statsBadges}>
-                <span className={styles.badge}>LangGraph on Bedrock</span>
-                <span className={styles.badge}>Fail-Closed Composio Auth</span>
-                <span className={styles.badge}>-85% Intake Delays</span>
-              </div>
             </div>
           </header>
 
-          <ProductBrief
-            eyebrow="Product brief · Lois"
-            title="A mortgage document workflow that can explain every side effect"
-            spec="Classify incoming loan documents, extract the facts that matter, apply lender-specific rules, and route uncertainty to a person. The important constraint was not simply accuracy. It was making sure an agent could never turn a low-confidence guess into an irreversible write."
-            stack={["LangGraph", "Amazon Bedrock AgentCore", "Claude", "Composio", "Postgres", "Box / Salesforce / Google Drive"]}
-            architecture={["Intake through chat, email, and Slack", "Classify and extract document evidence", "Run lender policy and confidence checks", "Authorize a narrowly scoped tool call or stop for review"]}
-            outcome="The result is a stateful workflow with an explicit boundary between model judgment and application authority. A document can be classified without giving the model ambient access to the borrower’s files."
-          />
-
-          {/* Interactive Agent Simulator */}
-          <section id="simulator" className={styles.simulatorWrapper}>
-            <div className={styles.simulatorIntro}>
-              <h2>Interactive LangGraph Agent Trace</h2>
-              <p>
-                Select a sample mortgage document and a lender policy profile to trace the agentic state machine step by step—from OCR classification and lender-specific renaming to permission-checked tool execution.
-              </p>
-            </div>
-            <LoisAgentSimulator />
-          </section>
-
-          {/* Technical Prose */}
           <article className={styles.prose}>
-            <h2>1. The Problem: The Chaos of the Mortgage File</h2>
+            <h2>1. The file is the problem</h2>
             <p>
-              In business-purpose and residential mortgage lending, a single loan application packet can exceed 400 pages of unstructured, multi-source PDFs: appraisals, tax returns, W-2s, title commitments, purchase contracts, and bank statements.
+              A single loan packet can run past 400 pages of PDFs: appraisals, tax returns, W-2s,
+              title commitments, purchase contracts, bank statements. Borrowers upload scans named
+              <code>IMG_4901_final.pdf</code>. Loan officers spend their hours opening documents,
+              renaming files to lender conventions, and checking policies by hand. Is this appraisal
+              under 120 days old? Are all the required pages here?
             </p>
             <p>
-              Borrowers upload scanned images with nonsensical filenames like <code>IMG_4901_final.pdf</code> or <code>scan004.pdf</code>. Loan officers waste hours opening documents, verifying completeness, manually renaming files according to secondary market lender conventions (e.g., Fannie Mae vs. Chase Wholesale), and validating basic underwriting policies (e.g., &ldquo;Is this appraisal less than 120 days old? Are all required pages present?&rdquo;).
-            </p>
-            <p>
-              Early attempts to automate this used one-off Ruby LLM calls. However, as prompt length grew and tool calls proliferated, the system suffered from three compounding failures:
+              The first automation attempt was one-off Ruby LLM calls. It worked, in the way a
+              prototype works. Then three failures started compounding:
             </p>
             <ul>
-              <li><strong>Unbounded Hallucination:</strong> Models misclassified ambiguous pages or &ldquo;guessed&rdquo; missing dates.</li>
-              <li><strong>Permission Overreach:</strong> Ambient API tokens gave scripts unrestricted delete and overwrite privileges across shared Google Drive and Box folders.</li>
-              <li><strong>Non-Deterministic Failures:</strong> Network timeouts or partial tool responses left files in unrecoverable, half-processed states.</li>
+              <li><strong>Guessed answers.</strong> Models misclassified ambiguous pages and invented missing dates.</li>
+              <li><strong>Permission overreach.</strong> Scripts ran with ambient API tokens, unrestricted delete and overwrite across shared Drive and Box folders.</li>
+              <li><strong>Half-done states.</strong> A network timeout mid-tool-call left files unrecoverable.</li>
             </ul>
-
-            <h2>2. The Architecture: LangGraph on Bedrock AgentCore</h2>
             <p>
-              To solve this, I re-architected Lois into a finite state machine using <strong>LangGraph</strong> deployed onto <strong>Amazon Bedrock AgentCore Runtime</strong>:
+              Each failure alone is an annoyance. Together they tell you something: an agent inside
+              a mortgage workflow is not a chat problem. It is a permissions problem.
             </p>
 
+            <h2>2. A state machine, not a prompt</h2>
+            <p>
+              I re-architected Lois as a finite state machine in LangGraph, deployed on Amazon
+              Bedrock AgentCore. Classification, extraction, policy validation, renaming: each a
+              node with typed inputs, so a failure fails at a step you can name instead of
+              somewhere inside a prompt you cannot.
+            </p>
             <ArchitectureDiagram
               svgSrc="/images/diagrams/lois-architecture-dark.svg"
               pngSrc="/images/diagrams/lois-architecture-dark.png"
@@ -108,47 +89,54 @@ export default function LoisDeepDivePage() {
               aspectRatio="1465/1688"
             />
 
-            <h2>3. Fail-Closed Authorization: Why LLMs Must Never Have Ambient Delete</h2>
+            <h2>3. Fail closed, always</h2>
             <p>
-              One of the core engineering tenets I established at Loan Labs was <strong>fail-closed authorization</strong>. An autonomous agent should never operate with ambient broad API privileges.
+              The tenet I care most about from this project: an autonomous agent should never hold
+              ambient broad API privileges. Not because the model is untrustworthy, but because a
+              system you cannot bound is a system you cannot operate.
             </p>
             <p>
-              Using Composio integrations with Google Drive, Box, Salesforce, and SharePoint, we enforced strict isolation:
+              We enforced it through Composio integrations with Google Drive, Box, Salesforce, and
+              SharePoint:
             </p>
             <ul>
-              <li><strong>Tenant Scoping:</strong> Every tool execution payload contains an immutable tenant and borrower ID. The agent cannot traverse outside its assigned folder hierarchy.</li>
-              <li><strong>Permission Partitioning:</strong> The agent has explicit <code>read</code>, <code>write_new</code>, and <code>append_metadata</code> permissions. All <code>delete</code> and <code>purge</code> actions are hard-blocked at the gateway layer.</li>
-              <li><strong>Execution-Time Checks:</strong> If a loan officer revokes document processing while a 5-step agent graph is executing, step 3 immediately fails closed rather than executing downstream side effects.</li>
+              <li><strong>Tenant scoping.</strong> Every tool payload carries an immutable tenant and borrower ID. The agent cannot traverse outside its own folder hierarchy.</li>
+              <li><strong>Partitioned permissions.</strong> Explicit read, write_new, append_metadata. Delete and purge are hard-blocked at the gateway, not politely discouraged in a prompt.</li>
+              <li><strong>Execution-time checks.</strong> Revoke access while a five-step graph is running and step three fails closed. No downstream side effects.</li>
             </ul>
+            <p>
+              The distinction that matters here is between what a model can say and what
+              application code will do. The model proposes a classification. Code owns authority.
+              A guess can never become an irreversible write, because the boundary between the two
+              is enforced in the gateway, not requested in the prompt.
+            </p>
 
-            <h2>4. Lender-Specific Renaming & Normalization</h2>
+            <h2>4. Naming is compliance</h2>
             <p>
-              Every wholesale lender enforces different naming conventions. For example:
+              Every wholesale lender enforces different file conventions. One wants
+              <code>[Year]_[BorrowerLastName]_[DocType]_[LoanNumber].pdf</code>. Another wants
+              <code>[LoanNumber] - [DocCategory] - [FormID] - Final.pdf</code>. Get it wrong and
+              the loan package bounces.
             </p>
-            <ul>
-              <li><strong>Lender A:</strong> <code>[Year]_[BorrowerLastName]_[DocType]_[LoanNumber].pdf</code></li>
-              <li><strong>Lender B:</strong> <code>[LoanNumber] - [DocCategory] - [FormID] - Final.pdf</code></li>
-            </ul>
             <p>
-              Lois maintains a deterministic rule engine that maps classified documents into target secondary market templates, ensuring zero compliance rejections during loan origination.
+              Lois keeps a deterministic rule engine mapping classified documents onto each
+              lender&rsquo;s template. Zero compliance rejections during origination, not because
+              the model names files cleverly, but because naming was never left to the model. The
+              rules do the renaming. The model does the classifying. Neither does the other&rsquo;s
+              job.
             </p>
 
             <div className={styles.backlinksBox}>
-              <h3>Explore Related Architecture & Code</h3>
+              <h3>Related</h3>
               <ul>
                 <li>
                   <Link href="/work/loan-labs">
-                    Loan Labs Role & Experience Profile →
+                    Loan Labs role profile →
                   </Link>
                 </li>
                 <li>
                   <Link href="/blog/3b92e262-08a5-8186-942c-ff5559fe4f68">
-                    Essay: MCP, Sessions, and Where State Belongs →
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/blog/from-documents-to-decisions">
-                    Decision Lab: Documents to Decisions Interactive Lab →
+                    Essay: MCP, sessions, and where state belongs →
                   </Link>
                 </li>
                 <li>

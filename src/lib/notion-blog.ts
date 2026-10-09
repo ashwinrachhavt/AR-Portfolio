@@ -17,6 +17,12 @@ export class BlogPostNotFoundError extends Error {
   }
 }
 
+// Shared config gate: callers decide whether "not configured" is a config
+// error (index/API routes) or a 404 (unknown article slugs).
+export function notionConfigured(): boolean {
+  return Boolean(process.env.NOTION_API_KEY?.trim() && process.env.NOTION_DATABASE_ID?.trim());
+}
+
 export function getBlogDatabaseId(): string {
   const databaseId = process.env.NOTION_DATABASE_ID?.trim();
   if (!databaseId) {

@@ -37,7 +37,7 @@
 .primaryButton { background: var(--green); display: inline-flex; gap: 24px; align-items: center; justify-content: center; padding: 15px 22px; font-size: 13px; font-weight: 500; border: 1px solid var(--green); transition: background .15s; }
 .portfolio a.primaryButton { color: #fff !important; }
 .primaryButton:hover { background: #163c28; }
-.textLink { display: inline-flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 500; }
+.textLink { display: inline-flex; align-items: center; gap: 12px; font-size: 13px; font-weight: 500; min-height: 44px; }
 .heroNote { margin-top: 13px; padding: 25px 29px 24px; background: #e8ece2; align-self: start; transform: rotate(1deg); }
 .noteTop { display: flex; justify-content: space-between; padding-bottom: 21px; border-bottom: 1px solid #c5cebf; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; }
 .approach { padding: 0; margin: 25px 0; list-style: none; }
@@ -109,6 +109,7 @@
 .resumeChoices a { display: flex; gap: 10px; align-items: center; }
 .resumeChoices a:hover { text-decoration: underline; }
 .footer { display: flex; justify-content: space-between; gap: 20px; padding: 24px 0 35px; font-size: 10px; border-top: 1px solid var(--line); color: var(--muted); }
+.footer a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; }
 @media (min-width: 1500px) { .hero { gap: 95px; } }
 @media (max-width: 1000px) {
   .hero { gap: 35px; grid-template-columns: 1.4fr 1fr; padding-top: 65px; }
