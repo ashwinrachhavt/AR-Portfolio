@@ -94,18 +94,6 @@ export const curatedArticles: CuratedArticle[] = [
     sourceName: "Systems Analysis",
   },
   {
-    id: "from-documents-to-decisions",
-    title: "From Documents to Decisions: Exploring Automated Judgment",
-    href: "/blog/from-documents-to-decisions",
-    date: "2026-09-25",
-    description:
-      "Two interactive investigations into a mortgage file and a bank transaction, with Jev as an experimental decision layer.",
-    categories: ["Work / Projects", "Philosophy", "Ideas / Insights", "AI"],
-    tags: ["Decision Systems", "Fintech", "Interactive Lab"],
-    sourceName: "Decision Lab Experiment",
-    interactive: true,
-  },
-  {
     id: "ieee-xai-education",
     title: "Explainable AI in Education: Current Trends, Challenges, and Opportunities",
     href: "https://ieeexplore.ieee.org/document/10129712",

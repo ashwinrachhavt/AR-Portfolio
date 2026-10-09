@@ -418,15 +418,6 @@
   padding: 24px;
 }
 
-.interestBadge {
-  font-family: var(--font-mono, monospace);
-  font-size: 10.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #71717a;
-  display: block;
-  margin-bottom: 8px;
-}
 
 .interestTitle {
   font-size: 17px;

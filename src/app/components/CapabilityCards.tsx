@@ -138,12 +138,6 @@ const CAPABILITIES: Capability[] = [
         context: "How we reduced manual bookkeeping categorization by ~80%",
       },
       {
-        label: "Decision Lab: Documents to Decisions",
-        url: "/blog/from-documents-to-decisions",
-        type: "blog",
-        context: "Interactive lab exploring automated judgment in mortgage and banking files",
-      },
-      {
         label: "Career Fit Navigator",
         url: "/fit",
         type: "project",

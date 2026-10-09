@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import GurukulSimulator from "./GurukulSimulator";
 import ProductBrief from "../components/ProductBrief";
 import styles from "./gurukul.module.css";
 
@@ -39,7 +38,7 @@ export default function GurukulThesisPage() {
             </h1>
 
             <p className={styles.subtitle}>
-              How we built an adaptive learning platform using RAG and Socratic guardrails to guide student programming without leaking direct solutions—research cited 130+ times and published in IEEE FIE & SoutheastCon.
+              How we built an adaptive learning platform using RAG and Socratic guardrails to guide student programming without leaking direct solutions. Research cited 130+ times and published in IEEE FIE & SoutheastCon.
             </p>
 
             <div className={styles.authorBar}>
@@ -63,17 +62,6 @@ export default function GurukulThesisPage() {
             architecture={["Read the student’s code and question", "Use AST diagnostics to identify the failure mode", "Retrieve grounded concepts and course material", "Return one of three progressively stronger hints"]}
             outcome="Gurukul treats an LLM as a dialogue partner inside a pedagogical system. The model can phrase the hint, but the application owns the learning boundary and the decision about how much help to reveal."
           />
-
-          {/* Interactive Socratic Simulator */}
-          <section id="simulator" className={styles.simulatorWrapper}>
-            <div className={styles.simulatorIntro}>
-              <h2>Interactive Socratic Guardrail Simulator</h2>
-              <p>
-                Experience Gurukul&apos;s pedagogical guardrails in action. Try asking the tutor for direct code answers or debugging advice, and observe how the system blocks solution leakage and scaffolds conceptual hints.
-              </p>
-            </div>
-            <GurukulSimulator />
-          </section>
 
           {/* Academic Publications Overview */}
           <section className={styles.scholarBox}>
@@ -165,20 +153,29 @@ export default function GurukulThesisPage() {
 
           {/* Technical Prose */}
           <article className={styles.prose}>
-            <h2>1. The Core Pedagogical Challenge</h2>
+            <h2>1. The problem with answers</h2>
             <p>
-              When ChatGPT and commercial LLMs arrived, computer science education encountered a profound crisis: generative models can easily synthesize fully functional solutions for typical introductory and intermediate programming assignments (LeetCode easy/medium, binary trees, dynamic programming).
+              When ChatGPT arrived, computer science education met a problem it had not planned
+              for: the homework stopped being hard. Generative models produce working solutions for
+              typical introductory assignments on demand. Binary trees, dynamic programming, the
+              usual suspects.
             </p>
             <p>
-              If a student relies on generative AI to emit complete code whenever they encounter a bug, the crucial cognitive struggle of software engineering—reading compiler traces, formulating mental models of memory execution, and iterative debugging—is completely bypassed. The student produces working homework but internalizes zero algorithmic reasoning.
+              The working solution is not the danger. The danger is what gets skipped. Reading
+              compiler traces, building a mental model of memory, debugging the same bug four
+              times: that struggle is the education. A student who outsources it submits working
+              homework and learns nothing. The grade survives. The engineer does not exist yet.
             </p>
             <p>
-              Conversely, banning AI in education is futile and counterproductive. Software engineers in industry write code alongside AI daily. The goal of my thesis research at Virginia Tech was to engineer an environment that transforms AI from an <strong>&ldquo;answers-on-demand crutch&rdquo;</strong> into a <strong>rigorous Socratic dialogue partner</strong>.
+              Banning AI was the popular response and it was always going to fail. Engineers write
+              code alongside AI every day now. The question my thesis asked was narrower: can you
+              build an environment where the model helps the student think instead of thinking for
+              them?
             </p>
 
-            <h2>2. The Gurukul Architecture: RAG + AST + Socratic Guardrails</h2>
+            <h2>2. What we built</h2>
             <p>
-              Gurukul combines three foundational systems:
+              Gurukul is three systems in sequence:
             </p>
             <div className={styles.architectureBox}>
               <pre>
@@ -204,55 +201,71 @@ export default function GurukulThesisPage() {
   (Asks leading questions, highlights invariants, avoids code leakage)`}
               </pre>
             </div>
-
-            <h2>3. The 3-Tier Progressive Hint Ladder</h2>
             <p>
-              Instead of binary answers, Gurukul introduces a dynamic scaffolding ladder aligned with Bloom&apos;s Taxonomy:
+              The AST parser reads the student&rsquo;s code the way a compiler would: it finds the
+              syntax break, the infinite loop, the pattern that does not match the course spec.
+              The retrieval layer grounds hints in verified textbook material and, importantly,
+              excludes raw code completions from the prompt context entirely. The guardrail engine
+              sits between the student and the model, and it decides what the model is allowed to
+              say.
+            </p>
+
+            <h2>3. The hint ladder</h2>
+            <p>
+              Instead of an answer, Gurukul returns one of three hints, matched to where the
+              student actually is:
             </p>
             <ul>
               <li>
-                <strong>Level 1 — Socratic Conceptual Clue:</strong> Identifies the conceptual principle without discussing syntax (e.g., &ldquo;Consider what happens to your left pointer when the midpoint element is smaller than the target.&rdquo;).
+                <strong>Level 1, a conceptual clue.</strong> The principle without the syntax.
+                &ldquo;Consider what happens to your left pointer when the midpoint element is
+                smaller than the target.&rdquo;
               </li>
               <li>
-                <strong>Level 2 — Algorithmic Direction:</strong> Breaks down the state transition logic in natural language (e.g., &ldquo;Notice that in an already sorted array, elements to the left of <code>mid</code> cannot contain the target if <code>arr[mid] &gt; target</code>.&rdquo;).
+                <strong>Level 2, algorithmic direction.</strong> The state transition in plain
+                language. &ldquo;In a sorted array, elements left of <code>mid</code> cannot
+                contain the target when <code>arr[mid] &gt; target</code>.&rdquo;
               </li>
               <li>
-                <strong>Level 3 — Fill-in-the-Blank Pseudocode:</strong> Provides structural scaffolding with deliberate ellipses, forcing the student to write the actual condition logic themselves.
+                <strong>Level 3, fill-in-the-blank pseudocode.</strong> Structure with the
+                conditions blanked out. The student still writes the logic themselves.
               </li>
             </ul>
-
-            <h2>4. Empirical User Studies and Findings</h2>
             <p>
-              In our user studies conducted with computer science students learning data structures at Virginia Tech:
+              Ask for the code directly and the guardrail declines and steps back down the ladder.
+              The model can phrase whatever it wants; the application owns what gets revealed.
             </p>
-            <ul>
-              <li>Students using Gurukul demonstrated significantly higher conceptual retention on delayed post-tests compared to students with open access to unconstrained ChatGPT.</li>
-              <li>Students reported lower frustration because the tutor met them at their specific point of misconception rather than generating overwhelming boilerplate code.</li>
-              <li>The work demonstrated that deterministic guardrails in educational AI are both technically feasible and pedagogically vital.</li>
-            </ul>
+
+            <h2>4. What the studies showed</h2>
+            <p>
+              In user studies with Virginia Tech students learning data structures: students using
+              Gurukul showed higher conceptual retention on delayed post-tests than students with
+              open access to unconstrained ChatGPT. They also reported less frustration, because a
+              hint aimed at your actual misconception beats a wall of generated boilerplate.
+            </p>
+            <p>
+              The finding I would stand behind is the narrower one. Deterministic guardrails on a
+              generative model are feasible, and they change the learning outcome. Not by making
+              the model smarter. By deciding, in advance and in code, what the model is for.
+            </p>
 
             <div className={styles.backlinksBox}>
-              <h3>Explore Related Research & Code</h3>
+              <h3>Related</h3>
               <ul>
                 <li>
                   <a href="https://vtechworks.lib.vt.edu/items/3d08a8cd-effe-4e41-9830-0204637e53da" target="_blank" rel="noopener noreferrer">
-                    Download Full Master&apos;s Thesis PDF (Virginia Tech Works) ↗
+                    Full thesis PDF (Virginia Tech) ↗
                   </a>
                 </li>
                 <li>
                   <a href="https://github.com/ashwinrachha786/Gurukul_v2" target="_blank" rel="noopener noreferrer">
-                    Gurukul_v2 Repository on GitHub ↗
+                    Gurukul_v2 on GitHub ↗
                   </a>
                 </li>
                 <li>
                   <a href="https://scholar.google.com/citations?user=opsMRzEAAAAJ" target="_blank" rel="noopener noreferrer">
-                    Ashwin Rachha Google Scholar Citations ↗
+                    Google Scholar ↗
                   </a>
-                </li>
-                <li>
-                  <Link href="/blog/3bb2e262-08a5-80aa-b865-e905d51fa752">
-                    Essay: Inside Buzz — How One Signed Message Becomes Work ↗
-                  </Link>
                 </li>
               </ul>
             </div>

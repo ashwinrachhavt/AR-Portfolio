@@ -30,6 +30,11 @@ export const getBlogIndex = cache(async () => {
 export const getBlogArticle = cache(async (pageId: string) => {
   const reviewed = localArticle(pageId);
   if (reviewed) return reviewed;
+  // Unknown slugs are 404s, not config errors: skip the Notion lookup when
+  // no database is configured so unmatched routes reach not-found normally.
+  if (!process.env.NOTION_API_KEY?.trim() || !process.env.NOTION_DATABASE_ID?.trim()) {
+    throw new BlogPostNotFoundError();
+  }
   const article = await cachedArticle(getBlogDatabaseId(), pageId);
   if (!article) throw new BlogPostNotFoundError();
   return article;
