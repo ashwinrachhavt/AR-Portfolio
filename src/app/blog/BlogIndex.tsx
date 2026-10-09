@@ -20,9 +20,35 @@ const TAXONOMY_SECTIONS = [
 
 type TaxonomyCategory = (typeof TAXONOMY_SECTIONS)[number];
 
+type ViewMode = "list" | "grid";
+type SortMode = "newest" | "oldest" | "title";
+
+const SORT_OPTIONS: { value: SortMode; label: string }[] = [
+  { value: "newest", label: "Newest first" },
+  { value: "oldest", label: "Oldest first" },
+  { value: "title", label: "Title A-Z" },
+];
+
 export default function BlogIndex({ posts = [] }: { posts?: any[] }) {
   const [activeCategory, setActiveCategory] = useState<TaxonomyCategory>("All");
+  const [activeTag, setActiveTag] = useState<string | null>(null);
   const [query, setQuery] = useState("");
+  const [view, setView] = useState<ViewMode>(() => {
+    // Lazy initializer: per-viewer convenience, renders fine without it.
+    try {
+      const saved = window.localStorage.getItem("writing-view");
+      if (saved === "list" || saved === "grid") return saved;
+    } catch { /* Optional preference only. */ }
+    return "list";
+  });
+  const [sort, setSort] = useState<SortMode>("newest");
+
+  // Per-viewer convenience only; the page renders correctly without it.
+  // Lazy initializer keeps localStorage out of render-effect cascades.
+  const changeView = (next: ViewMode) => {
+    setView(next);
+    try { window.localStorage.setItem("writing-view", next); } catch { /* Optional preference only. */ }
+  };
 
   // Merge curated articles with any Notion remote posts not already in curated list
   const allArticles: CuratedArticle[] = useMemo(() => {
@@ -45,67 +71,42 @@ export default function BlogIndex({ posts = [] }: { posts?: any[] }) {
       }
     });
 
-    return list.sort((a, b) => b.date.localeCompare(a.date));
+    return list;
   }, [posts]);
 
-  // Filter based on active taxonomy category & search query
+  // Tag cloud, most-used first
+  const tagCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    allArticles.forEach((a) => a.tags.forEach((t) => counts.set(t, (counts.get(t) || 0) + 1)));
+    return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  }, [allArticles]);
+
+  // Filter, then sort
   const visible = useMemo(() => {
-    return allArticles.filter((art) => {
-      // Category match
+    const q = query.trim().toLowerCase();
+    const filtered = allArticles.filter((art) => {
       const categoryMatch =
         activeCategory === "All" || art.categories.includes(activeCategory as any);
-
-      // Query match
-      const q = query.trim().toLowerCase();
+      const tagMatch = !activeTag || art.tags.includes(activeTag);
       const queryMatch =
         !q ||
         art.title.toLowerCase().includes(q) ||
         art.description.toLowerCase().includes(q) ||
         art.tags.some((t) => t.toLowerCase().includes(q));
-
-      return categoryMatch && queryMatch;
+      return categoryMatch && tagMatch && queryMatch;
     });
-  }, [allArticles, activeCategory, query]);
+
+    return filtered.sort((a, b) => {
+      if (sort === "oldest") return a.date.localeCompare(b.date);
+      if (sort === "title") return a.title.localeCompare(b.title);
+      return b.date.localeCompare(a.date);
+    });
+  }, [allArticles, activeCategory, activeTag, query, sort]);
+
+  const filtersActive = activeCategory !== "All" || activeTag !== null || query.trim() !== "";
 
   return (
     <section aria-label="Writing archive" className={styles.archive}>
-      {/* Master's Thesis Spotlight Banner */}
-      <div className={styles.thesisSpotlight}>
-        <div className={styles.thesisLeft}>
-          <div className={styles.thesisTopRow}>
-            <span className={styles.thesisBadge}>MASTER&apos;S THESIS SPOTLIGHT · VIRGINIA TECH</span>
-            <span className={styles.scholarCitations}>130+ Citations · 4.0 GPA</span>
-          </div>
-          <h2 className={styles.thesisMainTitle}>
-            Gurukul: LLM-Enhanced CS Education & Adaptive Socratic Guardrails
-          </h2>
-          <p className={styles.thesisSummary}>
-            My Master&apos;s Thesis at Virginia Tech investigated transforming generative AI from an answers-on-demand cheat engine into a rigorous Socratic tutor. Published in IEEE FIE 2024 and IEEE SoutheastCon 2023.
-          </p>
-          <div className={styles.thesisActions}>
-            <Link href="/blog/gurukul-thesis" className={styles.thesisPrimaryBtn}>
-              Read Thesis Deep Dive & Interactive Simulator →
-            </Link>
-            <a
-              href="https://vtechworks.lib.vt.edu/items/3d08a8cd-effe-4e41-9830-0204637e53da"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.thesisSecondaryBtn}
-            >
-              VTechWorks PDF ↗
-            </a>
-            <a
-              href="https://scholar.google.com/citations?user=opsMRzEAAAAJ"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.thesisSecondaryBtn}
-            >
-              Google Scholar Profile ↗
-            </a>
-          </div>
-        </div>
-      </div>
-
       {/* Taxonomy Categories Tabs */}
       <div className={styles.categoryNav} role="tablist" aria-label="Writing sections">
         {TAXONOMY_SECTIONS.map((sec) => (
@@ -122,10 +123,25 @@ export default function BlogIndex({ posts = [] }: { posts?: any[] }) {
         ))}
       </div>
 
-      {/* Search & Counter Toolbar */}
+      {/* Tag filter row */}
+      <div className={styles.tagRow} role="group" aria-label="Filter by tag">
+        {tagCounts.map(([tag, count]) => (
+          <button
+            key={tag}
+            type="button"
+            aria-pressed={activeTag === tag}
+            className={`${styles.tagPill} ${activeTag === tag ? styles.tagPillActive : ""}`}
+            onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+          >
+            {tag} <span className={styles.tagCount}>{count}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Toolbar: counter, search, sort, view toggle */}
       <div className={styles.toolbar}>
         <h2>
-          {activeCategory} <span>{String(visible.length).padStart(2, "0")}</span>
+          {activeCategory} <span>{visible.length}</span>
         </h2>
         <div className={styles.controls}>
           <div className={styles.search}>
@@ -142,76 +158,162 @@ export default function BlogIndex({ posts = [] }: { posts?: any[] }) {
               onChange={(e) => setQuery(e.target.value)}
             />
           </div>
-          {query && (
-            <button type="button" className={styles.clearBtn} onClick={() => setQuery("")}>
-              Clear
+          <label className={styles.srOnly} htmlFor="writing-sort">Sort writing</label>
+          <select
+            id="writing-sort"
+            value={sort}
+            onChange={(e) => setSort(e.target.value as SortMode)}
+          >
+            {SORT_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+          <div className={styles.viewToggle} role="group" aria-label="Layout">
+            <button
+              type="button"
+              aria-pressed={view === "list"}
+              aria-label="List view"
+              title="List view"
+              className={`${styles.viewBtn} ${view === "list" ? styles.viewBtnActive : ""}`}
+              onClick={() => changeView("list")}
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
             </button>
-          )}
+            <button
+              type="button"
+              aria-pressed={view === "grid"}
+              aria-label="Grid view"
+              title="Grid view"
+              className={`${styles.viewBtn} ${view === "grid" ? styles.viewBtnActive : ""}`}
+              onClick={() => changeView("grid")}
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <rect x="4" y="4" width="7" height="7" rx="1.5" />
+                <rect x="13" y="4" width="7" height="7" rx="1.5" />
+                <rect x="4" y="13" width="7" height="7" rx="1.5" />
+                <rect x="13" y="13" width="7" height="7" rx="1.5" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Post List */}
-      <div className={styles.postList}>
-        {visible.map((post) => {
-          const isExt = post.external;
-          return (
-            <article key={post.id} className={styles.articleCard}>
-              {isExt ? (
-                <a href={post.href} target="_blank" rel="noopener noreferrer" className={styles.postLink}>
+      {filtersActive && (
+        <div className={styles.filterStatus}>
+          <span>
+            {visible.length} {visible.length === 1 ? "match" : "matches"}
+            {activeTag ? ` tagged "${activeTag}"` : ""}
+            {query.trim() ? ` matching "${query.trim()}"` : ""}
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveCategory("All");
+              setActiveTag(null);
+              setQuery("");
+            }}
+          >
+            Reset filters
+          </button>
+        </div>
+      )}
+
+      {view === "grid" ? (
+        <div className={styles.gridList}>
+          {visible.map((post) => {
+            const body = (
+              <>
+                <div className={styles.badgeRow}>
                   <time className={styles.date} dateTime={post.date}>
                     {formatBlogDate(post.date)}
                   </time>
-                  <div className={styles.postCopy}>
-                    <div className={styles.badgeRow}>
-                      <span className={styles.sourceLabel}>{post.sourceName} ↗</span>
-                      {post.interactive && <span className={styles.interactiveBadge}>Interactive</span>}
-                    </div>
-                    <h3>{post.title}</h3>
-                    {post.description && <p className={styles.description}>{post.description}</p>}
-                    {post.tags.length > 0 && <p className={styles.topics}>{post.tags.slice(0, 4).join(" · ")}</p>}
+                  {post.interactive && <span className={styles.interactiveBadge}>Interactive</span>}
+                  {post.isThesis && <span className={styles.thesisSmallBadge}>Master&apos;s Thesis</span>}
+                </div>
+                <h3>{post.title}</h3>
+                {post.description && <p className={styles.description}>{post.description}</p>}
+                {post.tags.length > 0 && <p className={styles.topics}>{post.tags.slice(0, 3).join(" · ")}</p>}
+                <span className={styles.gridSource}>
+                  {post.sourceName}
+                  {post.external ? " ↗" : ""}
+                </span>
+              </>
+            );
+            return (
+              <article key={post.id} className={styles.gridCard}>
+                {post.external ? (
+                  <a href={post.href} target="_blank" rel="noopener noreferrer" className={styles.gridLink}>
+                    {body}
+                  </a>
+                ) : (
+                  <Link href={post.href} className={styles.gridLink}>
+                    {body}
+                  </Link>
+                )}
+              </article>
+            );
+          })}
+        </div>
+      ) : (
+        <div className={styles.postList}>
+          {visible.map((post) => {
+            const isExt = post.external;
+            const body = (
+              <>
+                <time className={styles.date} dateTime={post.date}>
+                  {formatBlogDate(post.date)}
+                </time>
+                <div className={styles.postCopy}>
+                  <div className={styles.badgeRow}>
+                    <span className={styles.sourceLabel}>
+                      {post.sourceName}
+                      {isExt ? " ↗" : ""}
+                    </span>
+                    {post.interactive && <span className={styles.interactiveBadge}>Interactive</span>}
+                    {post.isThesis && <span className={styles.thesisSmallBadge}>Master&apos;s Thesis</span>}
                   </div>
-                  <svg className={styles.arrow} aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M7 17 17 7m0 0H7m10 0v10" />
-                  </svg>
-                </a>
-              ) : (
-                <Link href={post.href} className={styles.postLink}>
-                  <time className={styles.date} dateTime={post.date}>
-                    {formatBlogDate(post.date)}
-                  </time>
-                  <div className={styles.postCopy}>
-                    <div className={styles.badgeRow}>
-                      <span className={styles.sourceLabel}>{post.sourceName}</span>
-                      {post.interactive && <span className={styles.interactiveBadge}>Interactive</span>}
-                      {post.isThesis && <span className={styles.thesisSmallBadge}>Master&apos;s Thesis</span>}
-                    </div>
-                    <h3>{post.title}</h3>
-                    {post.description && <p className={styles.description}>{post.description}</p>}
-                    {post.tags.length > 0 && <p className={styles.topics}>{post.tags.slice(0, 4).join(" · ")}</p>}
-                  </div>
-                  <svg className={styles.arrow} aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M5 12h14m-6-6 6 6-6 6" />
-                  </svg>
-                </Link>
-              )}
-            </article>
-          );
-        })}
-      </div>
+                  <h3>{post.title}</h3>
+                  {post.description && <p className={styles.description}>{post.description}</p>}
+                  {post.tags.length > 0 && <p className={styles.topics}>{post.tags.slice(0, 4).join(" · ")}</p>}
+                </div>
+                <svg className={styles.arrow} aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  {isExt ? <path d="M7 17 17 7m0 0H7m10 0v10" /> : <path d="M5 12h14m-6-6 6 6-6 6" />}
+                </svg>
+              </>
+            );
+            return (
+              <article key={post.id} className={styles.articleCard}>
+                {isExt ? (
+                  <a href={post.href} target="_blank" rel="noopener noreferrer" className={styles.postLink}>
+                    {body}
+                  </a>
+                ) : (
+                  <Link href={post.href} className={styles.postLink}>
+                    {body}
+                  </Link>
+                )}
+              </article>
+            );
+          })}
+        </div>
+      )}
 
       {visible.length === 0 && (
         <div className={styles.empty}>
           <h3>No articles found in &ldquo;{activeCategory}&rdquo;</h3>
-          <p>Try searching for a different keyword or reset to &ldquo;All&rdquo;.</p>
+          <p>Try searching for a different keyword or reset the filters.</p>
           <button
             type="button"
             className={styles.resetBtn}
             onClick={() => {
               setActiveCategory("All");
+              setActiveTag(null);
               setQuery("");
             }}
           >
-            Show All Articles ↗
+            Show all articles
           </button>
         </div>
       )}
