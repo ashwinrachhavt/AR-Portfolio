@@ -1,0 +1,58 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.25rem;
+  min-height: 65dvh;
+  padding: 4rem 1.5rem;
+}
+
+.main h1 {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.main p {
+  color: rgb(156 163 175);
+  max-width: 42ch;
+  margin: 0;
+}
+
+.links {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.ctaAction,
+.ctaGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 1.5rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.ctaAction {
+  background: rgb(59 130 246);
+  color: #fff;
+}
+
+.ctaAction:hover {
+  background: rgb(37 99 235);
+}
+
+.ctaGhost {
+  border: 1px solid rgb(55 65 81);
+  color: inherit;
+}
+
+.ctaGhost:hover {
+  border-color: rgb(107 114 128);
+}
