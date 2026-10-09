@@ -41,7 +41,6 @@ export const structuredProjects: StructuredProject[] = [
       "Automated mortgage file indexing and validation across pilot workflows, cutting file intake processing time from hours to under two minutes while maintaining strict tenant-scoped fail-closed security.",
     metrics: [
       { highlight: "-85%", label: "DOCUMENT CYCLE TIME", details: "Intake and classification under 2 minutes" },
-      { highlight: "100%", label: "FAIL-CLOSED SECURITY", details: "No ambient delete actions; tenant-scoped execution" },
       { highlight: "7+", label: "CLOUD WORKFLOWS", details: "Google Drive, Box, Salesforce, HubSpot, OneDrive" },
       { highlight: "FSM", label: "DETERMINISTIC AGENT", details: "LangGraph state machine on Bedrock AgentCore" },
     ],
@@ -200,7 +199,7 @@ export const structuredProjects: StructuredProject[] = [
     impact:
       "Connected and continuously synchronized thousands of business checking and credit accounts, providing the rock-solid foundation for both Classify AI and Cash-Based Underwriting.",
     metrics: [
-      { highlight: "99.9%", label: "SYNC RELIABILITY", details: "Resilient idempotency and webhook replay" },
+      { highlight: "50+", label: "BUSINESSES CONNECTED", details: "Checking and credit accounts", },
       { highlight: "2 Providers", label: "PLAID & TELLER", details: "Unified normalized financial schema" },
       { highlight: "AES-256", label: "TOKEN ENCRYPTION", details: "Zero-knowledge token security architecture" },
     ],
@@ -235,7 +234,6 @@ export const structuredProjects: StructuredProject[] = [
     impact:
       "Delivered low-latency image captioning and tactile object detection pipelines, enhancing assistive technology accessibility for visually impaired individuals.",
     metrics: [
-      { highlight: "100%", label: "ACCESSIBLE PIPELINES", details: "Built for screen readers & tactile displays" },
       { highlight: "<150ms", label: "PROCESSING LATENCY", details: "Real-time edge & cloud inference" },
     ],
     outcomes: [
