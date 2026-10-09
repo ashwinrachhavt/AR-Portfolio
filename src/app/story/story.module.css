@@ -13,15 +13,6 @@
   position: relative;
 }
 
-.storyEyebrow {
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #a1a1aa;
-  margin-bottom: 20px;
-}
-
 .heroRow {
   display: flex;
   align-items: center;
@@ -100,16 +91,6 @@
   margin: 0 auto 44px;
 }
 
-.chapterLabel {
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #8e8e96;
-  display: block;
-  margin-bottom: 12px;
-}
-
 .chapterTitle {
   font-size: clamp(32px, 4.5vw, 48px);
   line-height: 1.12;
@@ -147,14 +128,6 @@
 .trioCard:hover {
   transform: translateY(-3px);
   border-color: #3e3e48;
-}
-
-.trioNumber {
-  font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  color: #71717a;
-  display: block;
-  margin-bottom: 10px;
 }
 
 .trioTitle {

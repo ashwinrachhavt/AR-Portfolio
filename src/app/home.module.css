@@ -45,7 +45,6 @@
 .ctaPrimary:hover { background: #d4d4d8; }
 .cta:not(.ctaPrimary) { color: #d4d4d8; border: 1px solid #303033; }
 .cta:not(.ctaPrimary):hover { color: #fff; border-color: #55555e; }
-.sideRail { margin-top: 20px; color: #86868b; font-size: 12px; line-height: 1.7; text-align: center; }
 .sideRail blockquote { font-style: italic; margin: 0 0 8px; }
 .sideRail figcaption { margin-bottom: 12px; }
 .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 28px; margin-top: 34px; }

@@ -17,7 +17,7 @@ export default function NewsletterInvite({ newsletter }) {
   const stored = useSyncExternalStore(subscribe, storedDismissal, serverDismissal);
   if (!newsletter || dismissed || stored) return null;
   return <section className={`${styles.newsletter} ${newsletter.embedUrl ? "" : styles.newsletterSolo}`} aria-labelledby="newsletter-title">
-    <div><p className={styles.eyebrow}>A note from the workbench</p><h2 id="newsletter-title">New ideas, in your inbox.</h2>
+    <div><h2 id="newsletter-title">New ideas, in your inbox.</h2>
       <p>Essays and experiments on AI, product design, and bringing ideas to life. Free to read, with or without subscribing.</p>
       <div className={styles.subscribeActions}><a href={newsletter.url} onClick={() => track("newsletter_signup_opened")}>Subscribe free on Substack <span aria-hidden="true">↗</span></a>
         <button type="button" onClick={() => { setDismissed(true); try { sessionStorage.setItem("writing-invite-dismissed", "yes"); window.dispatchEvent(new Event("writing-invite-change")); } catch { /* Optional preference only. */ } track("newsletter_invite_skipped"); }}>Skip, keep reading</button></div>

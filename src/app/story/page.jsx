@@ -6,11 +6,11 @@ import Footer from "@/app/components/Footer";
 import styles from "./story.module.css";
 
 export const metadata = {
-  title: "The Story — Ashwin Rachha",
+  title: "The Story | Ashwin Rachha",
   description:
     "The trajectory of an applied AI engineer: from graduate systems research at Virginia Tech (4.0 GPA, 130+ citations) to transaction classification at Finally and agentic mortgage systems at Loan Labs.",
   openGraph: {
-    title: "The Story — Ashwin Rachha",
+    title: "The Story | Ashwin Rachha",
     description: "The trajectory of an applied AI engineer: research, production systems, and engineering principles.",
     url: "https://ashwinrachha.com/story",
   },
@@ -23,13 +23,11 @@ export default function StoryPage() {
       <main className={styles.main}>
         {/* Hero Section */}
         <section className={styles.heroSection}>
-          <div className={styles.storyEyebrow}>Background & Trajectory</div>
-
           <div className={styles.heroRow}>
             <div className={styles.heroText}>
               <h1 className={styles.heroTitle}>
-                Building systems from<br />
-                <span className={styles.heroAccent}>first principles.</span>
+                Building AI for where<br />
+                <span className={styles.heroAccent}>correctness matters.</span>
               </h1>
               <p className={styles.heroBio}>
                 I build AI systems for workflows where correctness matters. My path has moved from learning systems research at Virginia Tech to production bookkeeping at Finally and agentic mortgage infrastructure at Loan Labs.
@@ -68,7 +66,6 @@ export default function StoryPage() {
         {/* CHAPTER 01: CORE COMPETENCIES */}
         <section id="how-i-build" className={styles.chapterSection}>
           <div className={styles.chapterHeader}>
-            <span className={styles.chapterLabel}>Chapter 01 · How I Build</span>
             <h2 className={styles.chapterTitle}>Full-stack engineering with domain rigor.</h2>
             <p className={styles.chapterLead}>
               Reliable AI products require strong systems engineering beneath them: deterministic request boundaries, type safety, fail-closed permissions, and interfaces that respect user agency.
@@ -78,7 +75,6 @@ export default function StoryPage() {
           <div className={styles.cardsTrio}>
             {/* Engineering Card */}
             <div className={styles.trioCard}>
-              <span className={styles.trioNumber}>01</span>
               <h3 className={styles.trioTitle}>Systems Engineering</h3>
               <p className={styles.trioTagline}>Production services, resilient APIs, and deterministic orchestration.</p>
               <div className={styles.trioPills}>
@@ -95,7 +91,6 @@ export default function StoryPage() {
 
             {/* Product Card */}
             <div className={styles.trioCard}>
-              <span className={styles.trioNumber}>02</span>
               <h3 className={styles.trioTitle}>Product & Delivery</h3>
               <p className={styles.trioTagline}>Technical specifications, user research, and evaluation harnesses.</p>
               <div className={styles.trioPills}>
@@ -110,7 +105,6 @@ export default function StoryPage() {
 
             {/* AI & Systems Card */}
             <div className={styles.trioCard}>
-              <span className={styles.trioNumber}>03</span>
               <h3 className={styles.trioTitle}>Applied AI & Retrieval</h3>
               <p className={styles.trioTagline}>Dense vector embeddings, lexical search, and high-throughput pipelines.</p>
               <div className={styles.trioPills}>
@@ -141,7 +135,6 @@ export default function StoryPage() {
             </div>
 
             <div className={styles.foundationTextCol}>
-              <span className={styles.chapterLabel}>Chapter 02 · Academic Foundations</span>
               <h2 className={styles.chapterTitle}>Graduate research & systems fundamentals.</h2>
               <p className={styles.foundationLead}>
                 My engineering background combines academic research in machine learning with distributed systems foundations. At Virginia Tech, my thesis investigated how LLMs can guide students through complex problem-solving without leaking direct answers.
@@ -192,7 +185,6 @@ export default function StoryPage() {
         {/* CHAPTER 03: PROFESSIONAL EXPERIENCE */}
         <section id="track-record" className={styles.chapterSection}>
           <div className={styles.chapterHeaderCenter}>
-            <span className={styles.chapterLabel}>Chapter 03 · Production Track Record</span>
             <h2 className={styles.chapterTitle}>Shipping software that runs on real ledgers.</h2>
           </div>
 
@@ -280,7 +272,6 @@ export default function StoryPage() {
         {/* CHAPTER 04: ENGINEERING PRINCIPLES */}
         <section id="philosophy" className={styles.chapterSection}>
           <div className={styles.chapterHeader}>
-            <span className={styles.chapterLabel}>Chapter 04 · Engineering Philosophy</span>
             <h2 className={styles.chapterTitle}>How I think about building software.</h2>
             <p className={styles.chapterLead}>
               Software that touches financial ledgers, legal documents, or automated decisions cannot rely on prompt optimism. These core tenets define how I approach architecture and production reliability.
@@ -326,7 +317,6 @@ export default function StoryPage() {
 
         {/* CLOSING SECTION */}
         <section className={styles.closingSection}>
-          <span className={styles.chapterLabel}>Let&apos;s Connect</span>
           <h2 className={styles.closingTitle}>
             Interested in building together?
           </h2>
