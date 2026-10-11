@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
+import { hover } from "../../lib/motion.ts";
 import { structuredProjects, type StructuredProject } from "@/data/projectsStructured";
 import { PROJECT_MEDIA, type ProjectMedium } from "./projectMedia";
 import WorkModal from "./WorkModal";
@@ -92,7 +93,7 @@ export default function ProjectsSection() {
               key={project.id}
               className={styles.card}
               initial={false}
-              whileHover={reduceMotion ? undefined : { y: -6, transition: { duration: 0.2 } }}
+              whileHover={reduceMotion ? undefined : { y: -6, transition: hover(false) }}
               onClick={() => setSelectedProject(project)}
               role="button"
               tabIndex={0}

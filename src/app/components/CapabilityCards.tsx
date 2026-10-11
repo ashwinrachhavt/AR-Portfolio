@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { hover } from "../../lib/motion.ts";
 import styles from "./CapabilityCards.module.css";
 
 interface Capability {
@@ -269,6 +270,7 @@ const CAPABILITIES: Capability[] = [
 
 export default function CapabilityCards() {
   const [selectedCapability, setSelectedCapability] = useState<Capability | null>(null);
+  const reduceMotion = useReducedMotion();
 
   // Close modal on Escape
   useEffect(() => {
@@ -307,7 +309,7 @@ export default function CapabilityCards() {
             key={cap.id}
             className={styles.card}
             initial={false}
-            whileHover={{ y: -6, transition: { duration: 0.2 } }}
+            whileHover={reduceMotion ? undefined : { y: -6, transition: hover(false) }}
             onClick={() => setSelectedCapability(cap)}
             role="button"
             tabIndex={0}

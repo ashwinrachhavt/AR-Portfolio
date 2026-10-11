@@ -1,28 +1,44 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import resume from "../content/resume.json" with { type: "json" };
-import { capabilities, evidence, examples, buildRoleBrief, keywordCapabilities } from "./career-fit.mjs";
-import { createCareerFitHandler, hasFreeJevPrice, JEV_FREE_ACCESS_END } from "./career-fit-handler.ts";
-import { hasVerifiedJevPromotion } from "./jev.ts";
+import { capabilities, catalogCoverage, EVIDENCE_LIMIT, evidence, examples, buildRoleBrief, keywordCapabilities } from "./career-fit.mjs";
+import { curatedArticles } from "../data/writingCatalog.ts";
+import { createCareerFitHandler } from "./career-fit-handler.ts";
 import { createInMemoryWorkflowLimiter } from "./workflow/handler.ts";
 
 const request = (body = { jobDescription: examples[0].description }, headers = {}) => new Request("https://portfolio.example/api/career-fit", { method: "POST", headers: { "Content-Type": "application/json", ...headers }, body: typeof body === "string" ? body : JSON.stringify(body) });
 const makeHandler = (options = {}) => createCareerFitHandler({ env: {}, limiter: createInMemoryWorkflowLimiter({ maxRequests: 100 }), ...options });
-const freeCatalog = { data: [{ id: "typesafe-ai/jev", pricing: { input: "0", output: "0" } }] };
-const liveEnv = { AI_GATEWAY_API_KEY: "test-only", CAREER_FIT_PROVIDER: "vercel", CAREER_FIT_LIVE_ENABLED: "true" };
-const freeReceipt = { gateway: { cost: "0", gatewayCost: "0", surchargeCost: "0" } };
-const duringPromo = () => Date.parse("2026-09-22T00:00:00Z");
+const liveEnv = { OPENROUTER_API_KEY: "test-only", CAREER_FIT_LIVE_ENABLED: "true" };
+const answers = probability => Object.fromEntries(capabilities.map(item => [item.id, { noul: probability(item.id) }]));
 
-test("every evidence claim is a verbatim public resume fact with a source", () => {
-  const claims = resume.roles.flatMap(role => Object.values(role.bullets));
-  assert.equal(new Set(evidence.map(item => item.id)).size, evidence.length);
-  for (const item of evidence) { assert.ok(claims.includes(item.claim)); assert.match(item.href, /^\/work\/[a-z-]+$/); }
+test("every source is verbatim public content, never text generated from the role", () => {
+  const facts = resume.roles.flatMap(role => Object.values(role.bullets));
+  const catalog = curatedArticles.map(item => item.description);
+  for (const item of evidence) {
+    // A claim is either a résumé bullet or an existing catalog description, copied
+    // whole. The analysis may choose among these; it can never author one.
+    assert.ok(facts.includes(item.claim) || catalog.includes(item.claim), `not verbatim public content: ${item.id}`);
+    assert.ok(/^\/[a-z]/i.test(item.href) || /^https:\/\//.test(item.href), `unresolvable source: ${item.id}`);
+    assert.ok(item.capabilities.length > 0 && item.capabilities.every(id => capabilities.some(capability => capability.id === id)));
+  }
+});
+
+test("the source pool spans repositories and papers, not only résumé roles", () => {
+  const hosts = new Set(evidence.map(item => new URL(item.href, "https://ashwinrachha.vercel.app").host));
+  for (const host of ["github.com", "ieeexplore.ieee.org"]) assert.ok(hosts.has(host), `missing ${host}`);
+});
+
+test("published-work tagging is deliberate and cannot silently drift", () => {
+  const ids = new Set(curatedArticles.map(item => item.id));
+  const live = new Set(evidence.map(item => item.id));
+  // Every tag entry must point at a real catalog item and actually make it into the pool.
+  for (const id of catalogCoverage) assert.ok(ids.has(id) && live.has(`published:${id}`), `stale or unused catalog tag: ${id}`);
 });
 
 test("unrelated and unsupported requirements never fabricate evidence", () => {
   assert.deepEqual(buildRoleBrief([]).evidence, []);
-  assert.deepEqual(buildRoleBrief(["management", "growth", "design"]).evidence, []);
-  assert.equal(buildRoleBrief(["management", "growth", "design"]).gaps.length, 3);
+  assert.deepEqual(buildRoleBrief(["management", "growth"]).evidence, []);
+  assert.equal(buildRoleBrief(["management", "growth"]).gaps.length, 2);
   assert.equal(buildRoleBrief(["invented-capability"]).capabilities.length, 0);
 });
 
@@ -41,11 +57,22 @@ for (const [text, included, excluded] of [
   ["People management with direct reports", "management", "leadership"],
 ]) test(`keyword evaluation: ${text}`, () => { const ids = keywordCapabilities(text); assert.ok(ids.includes(included)); assert.ok(!ids.includes(excluded)); });
 
-test("retrieval excludes zero-overlap evidence and caps results deterministically", () => {
-  const result = buildRoleBrief(["agents"]);
-  assert.ok(result.evidence.length > 0 && result.evidence.length <= 3);
-  assert.ok(result.evidence.every(item => item.overlap.includes("agents")));
-  assert.deepEqual(result, buildRoleBrief(["agents", "agents"]));
+test("selection narrows a large pool and never pads it", () => {
+  for (const ids of [["agents"], ["fintech"], ["retrieval"], ["backend"], ["product"]]) {
+    const result = buildRoleBrief(ids);
+    assert.ok(result.evidence.length > 0 && result.evidence.length <= EVIDENCE_LIMIT, `${ids} returned ${result.evidence.length}`);
+    assert.ok(result.evidence.every(item => item.overlap.includes(ids[0])), `${ids} surfaced an unrelated source`);
+  }
+  // Ranked strongest-overlap-first, so the best match is never crowded out.
+  const ranked = buildRoleBrief(["agents", "permissions", "integrations"]).evidence;
+  for (let i = 1; i < ranked.length; i += 1) assert.ok(ranked[i - 1].overlap.length >= ranked[i].overlap.length);
+  assert.deepEqual(buildRoleBrief(["agents", "agents"]), buildRoleBrief(["agents"]));
+});
+
+test("a broad role draws on the whole catalog, not just résumé roles", () => {
+  const mixed = buildRoleBrief(["agents", "permissions", "retrieval", "backend", "fintech", "product", "ml"]);
+  assert.equal(mixed.catalog, evidence.length);
+  assert.ok(mixed.evidence.filter(item => item.external).length >= 2, "a broad role should surface published work");
 });
 
 test("unconfigured provider uses explicitly labeled keyword mode without a network call", async () => {
@@ -69,114 +96,45 @@ test("rate limits return a recoverable public error", async () => {
   assert.equal((await handler(request())).status, 429);
 });
 
+test("live mode requires both the OpenRouter key and the explicit live flag", async () => {
+  const forbidden = () => { throw new Error("Must not call provider"); };
+  for (const env of [{ OPENROUTER_API_KEY: "test-only" }, { CAREER_FIT_LIVE_ENABLED: "true" }, { CAREER_FIT_LIVE_ENABLED: "true", OPENROUTER_API_KEY: "" }]) {
+    assert.equal((await (await makeHandler({ env, fetcher: forbidden })(request())).json()).mode, "keyword");
+  }
+});
+
 test("Jev receives only fixed questions; no generated claim or URL reaches the brief", async () => {
   let outgoing;
-  const handler = makeHandler({ env: liveEnv, now: duringPromo, fetcher: async (url, init) => {
-    if (url.endsWith("/models")) { assert.equal(init.body, undefined); return Response.json(freeCatalog); }
-    assert.equal(url, "https://ai-gateway.vercel.sh/v1/evaluate"); outgoing = JSON.parse(init.body);
-    return Response.json({ providerMetadata: freeReceipt, answers: Object.fromEntries(capabilities.map(item => [item.id, { probability: item.id === "agents" ? .9 : .1 }])), claim: "Invented accomplishment", href: "https://attacker.example" });
+  const handler = makeHandler({ env: liveEnv, fetcher: async (url, init) => {
+    assert.equal(url, "https://openrouter.ai/api/alpha/decisions");
+    assert.equal(init.headers.Authorization, "Bearer test-only");
+    outgoing = JSON.parse(init.body);
+    return Response.json({ model: "typesafe/jev-1.13-20260917", usage: { cost: 0.00012 }, answers: answers(id => id === "agents" ? .9 : .1), claim: "Invented accomplishment", href: "https://attacker.example" });
   } });
-  const response = await handler(request()); const result = await response.json();
-  assert.equal(result.mode, "jev"); assert.equal(outgoing.model, "typesafe-ai/jev");
+  const result = await (await handler(request())).json();
+  assert.equal(result.mode, "jev"); assert.equal(outgoing.model, "typesafe/jev-1.13");
+  assert.ok(Object.values(outgoing.questions).every(item => item.type === "noul"));
   assert.equal(Object.keys(outgoing.questions).length, capabilities.length);
   assert.equal(result.capabilities.length, 1); assert.equal(result.capabilities[0].id, "agents");
+  assert.equal(result.analysis.provider, "openrouter"); assert.equal(result.analysis.model, "Jev 1.13");
+  assert.equal(result.analysis.signals.length, capabilities.length);
   assert.ok(!JSON.stringify(result).includes("Invented accomplishment"));
   assert.ok(!JSON.stringify(outgoing).includes(resume.email));
 });
 
+test("live analysis reports the provider's own metered cost, never a hardcoded constant", async () => {
+  for (const [usage, expected] of [[{ cost: "0.000198" }, 0.000198], [{ cost: 0.00012 }, 0.00012], [undefined, null]]) {
+    const handler = makeHandler({ env: liveEnv, fetcher: async () => Response.json({ usage, answers: answers(() => .9) }) });
+    assert.equal((await (await handler(request())).json()).analysis.costUsd, expected);
+  }
+});
+
 test("provider failures, missing answers and invalid probabilities fail closed and release the lease", async () => {
-  for (const evaluate of [async () => { throw new Error("secret-provider-detail"); }, async () => new Response("private upstream error", { status: 500 }), async () => Response.json({ answers: {} }), async () => Response.json({ answers: { agents: { probability: 4 } } })]) {
+  for (const evaluate of [async () => { throw new Error("secret-provider-detail"); }, async () => new Response("private upstream error", { status: 500 }), async () => Response.json({ answers: {} }), async () => Response.json({ answers: { agents: { noul: 4 } } })]) {
     let released = 0;
-    const handler = makeHandler({ env: liveEnv, now: duringPromo, fetcher: async url => url.endsWith("/models") ? Response.json(freeCatalog) : evaluate(), limiter: { acquire: () => ({ release: () => released++ }) } });
+    const handler = makeHandler({ env: liveEnv, fetcher: evaluate, limiter: { acquire: () => ({ release: () => released++ }) } });
     const response = await handler(request());
     assert.equal(response.status, 503); assert.equal(released, 1);
     assert.ok(!(await response.text()).includes("secret-provider-detail"));
   }
-});
-
-test("free access never treats missing prices, paid input, account credit or additional pricing as free", () => {
-  assert.equal(hasFreeJevPrice(freeCatalog), true);
-  for (const pricing of [undefined, {}, { input: null, output: "0" }, { input: "", output: "0" }, { input: "0.000000042", output: "0" }, { input: "0", output: "0", input_tiers: [{ cost: "1" }] }]) {
-    assert.equal(hasFreeJevPrice({ data: [{ id: "typesafe-ai/jev", pricing }] }), false);
-  }
-});
-
-test("paid or unavailable catalog and expired promotion never invoke evaluation", async () => {
-  for (const catalog of [async () => Response.json({ data: [] }), async () => Response.json({ data: [{ id: "typesafe-ai/jev", pricing: { input: "0.000000042", output: "0" } }] }), async () => new Response("unavailable", { status: 503 }), async () => { throw new Error("offline"); }]) {
-    const handler = makeHandler({ env: liveEnv, now: duringPromo, fetcher: async url => { assert.ok(url.endsWith("/models")); return catalog(); } });
-    assert.equal((await (await handler(request())).json()).mode, "keyword");
-  }
-  const expired = makeHandler({ env: liveEnv, now: () => JEV_FREE_ACCESS_END, fetcher: () => { throw new Error("Network forbidden after promotion"); } });
-  assert.equal((await (await expired(request())).json()).mode, "keyword");
-});
-
-test("Vercel OIDC can authenticate zero-priced Jev without a separate API key", async () => {
-  const handler = makeHandler({ env: { VERCEL_OIDC_TOKEN: "test-oidc", CAREER_FIT_PROVIDER: "vercel", CAREER_FIT_LIVE_ENABLED: "true" }, now: duringPromo, fetcher: async (url, init) => {
-    if (url.endsWith("/models")) return Response.json(freeCatalog);
-    assert.equal(init.headers.Authorization, "Bearer test-oidc");
-    return Response.json({ providerMetadata: freeReceipt, answers: Object.fromEntries(capabilities.map(item => [item.id, { probability: .1 }])) });
-  } });
-  assert.equal((await (await handler(request())).json()).mode, "jev");
-});
-
-const basePriceCatalog = { data: [{ id: "typesafe-ai/jev", pricing: { input: "0.000000042", output: "0" } }] };
-const verifiedPromoEnv = { ...liveEnv, CAREER_FIT_VERCEL_PROMO_VERIFIED: "2026-09-22" };
-
-test("verified promotion admits only the exact known base rate within its dates", () => {
-  assert.equal(hasVerifiedJevPromotion(basePriceCatalog, verifiedPromoEnv, duringPromo()), true);
-  for (const [catalog, env, timestamp] of [
-    [basePriceCatalog, liveEnv, duringPromo()],
-    [basePriceCatalog, verifiedPromoEnv, JEV_FREE_ACCESS_END],
-    [basePriceCatalog, verifiedPromoEnv, duringPromo() - 1],
-    [{ data: [{ id: "typesafe-ai/jev", pricing: { input: "0.000000043", output: "0" } }] }, verifiedPromoEnv, duringPromo()],
-    [{ data: [{ id: "typesafe-ai/jev", pricing: { input: "0.000000042", output: "0", fee: "1" } }] }, verifiedPromoEnv, duringPromo()],
-  ]) assert.equal(hasVerifiedJevPromotion(catalog, env, timestamp), false);
-});
-
-test("promotional base rate needs untouched free credits and a zero-cost receipt", async () => {
-  const calls = [];
-  const handler = makeHandler({ env: verifiedPromoEnv, now: duringPromo, fetcher: async url => {
-    calls.push(url);
-    if (url.endsWith("/models")) return Response.json(basePriceCatalog);
-    if (url.endsWith("/credits")) return Response.json({ balance: "5", total_used: "0" });
-    return Response.json({ providerMetadata: freeReceipt, answers: Object.fromEntries(capabilities.map(item => [item.id, { probability: .1 }])) });
-  } });
-  assert.equal((await (await handler(request())).json()).mode, "jev");
-  assert.deepEqual(calls.map(url => url.split("/").at(-1)), ["models", "credits", "evaluate"]);
-});
-
-test("any metered spend, different balance or unavailable credits blocks promotional inference", async () => {
-  for (const credits of [{ balance: "5", total_used: ".000001" }, { balance: "0", total_used: "0" }, { balance: "10", total_used: "0" }, { balance: null, total_used: "0" }, { balance: "5" }, null]) {
-    const handler = makeHandler({ env: verifiedPromoEnv, now: duringPromo, fetcher: async url => {
-      if (url.endsWith("/models")) return Response.json(basePriceCatalog);
-      assert.ok(url.endsWith("/credits"), "must not perform inference");
-      return credits ? Response.json(credits) : new Response("Unavailable", { status: 503 });
-    } });
-    assert.equal((await (await handler(request())).json()).mode, "keyword");
-  }
-});
-
-test("nonzero or missing gateway cost receipts are rejected without exposing provider data", async () => {
-  for (const gateway of [undefined, { cost: ".000001", gatewayCost: "0", surchargeCost: "0" }, { cost: "0", gatewayCost: "0", surchargeCost: ".1" }, { cost: "0" }]) {
-    const handler = makeHandler({ env: liveEnv, now: duringPromo, fetcher: async url => url.endsWith("/models") ? Response.json(freeCatalog) : Response.json({ providerMetadata: gateway ? { gateway } : undefined, answers: Object.fromEntries(capabilities.map(item => [item.id, { probability: .1 }])) }) });
-    assert.equal((await handler(request())).status, 503);
-  }
-});
-
-test("promotion expiry during credit verification prevents inference", async () => {
-  let currentTime = duringPromo();
-  const handler = makeHandler({ env: verifiedPromoEnv, now: () => currentTime, fetcher: async url => {
-    if (url.endsWith("/models")) return Response.json(basePriceCatalog);
-    assert.ok(url.endsWith("/credits")); currentTime = JEV_FREE_ACCESS_END;
-    return Response.json({ balance: "5", total_used: "0" });
-  } });
-  assert.equal((await (await handler(request())).json()).mode, "keyword");
-});
-
-test("a career-fit credential works without enabling the shared gateway credential", async () => {
-  const handler = makeHandler({ env: { CAREER_FIT_PROVIDER: "vercel", CAREER_FIT_LIVE_ENABLED: "true", CAREER_FIT_GATEWAY_API_KEY: "fit-only" }, now: duringPromo, fetcher: async (url, init) => {
-    assert.equal(init.headers.Authorization, "Bearer fit-only");
-    return url.endsWith("/models") ? Response.json(freeCatalog) : Response.json({ providerMetadata: freeReceipt, answers: Object.fromEntries(capabilities.map(item => [item.id, { probability: .1 }])) });
-  } });
-  assert.equal((await (await handler(request())).json()).mode, "jev");
 });

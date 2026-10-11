@@ -353,5 +353,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .postLink::before, .arrow, .viewBtn, .gridCard, .tagPill { transition: none; }
+  .postLink::before, .arrow, .viewBtn, .gridCard, .tagPill, .categoryTab { transition: none; }
 }
