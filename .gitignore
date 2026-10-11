@@ -40,3 +40,13 @@ next-env.d.ts
 .output/
 .env*
 !.env.example
+
+# Local-only. These are working files for this machine, not app code: a job-search
+# tracker, a generated resume, a 23MB index cache, and agent/editor tooling. None of
+# them affect the build, and a public repo must never carry the first two.
+.job-applications/
+.tmp_*
+.codebase-index-cache.pkl
+.mcp.json
+skills-lock.json
+agent/skills/

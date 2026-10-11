@@ -1,25 +1,24 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import { enter, settled } from "../../lib/motion.ts";
 import NavLink from "./NavLink";
 
 const MenuOverlay = ({ links, onNavClick }) => {
+  const reduceMotion = useReducedMotion();
   const containerVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.3,
-        staggerChildren: 0.1
-      }
-    }
+    // No y offset here: the exit variant is the same object, so a menu that slides
+    // in from above would slide back up on close and read as a second gesture.
+    hidden: reduceMotion ? settled : { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.3, staggerChildren: 0.06 } }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: { opacity: 1, x: 0 }
+    // Every row animates opacity only. A per-item x offset makes the list arrive
+    // left to right while the panel behind it is still arriving top down.
+    hidden: reduceMotion ? settled : { opacity: 0 },
+    visible: { opacity: 1, transition: enter() }
   };
 
   return (

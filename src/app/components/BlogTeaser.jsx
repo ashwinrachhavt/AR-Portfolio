@@ -1,27 +1,22 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import { enter, rise, settled } from "../../lib/motion.ts";
 
 const BlogTeaser = () => {
+  const reduceMotion = useReducedMotion();
+  // Reveal on scroll, but never hide the content to do it: `hidden` is already the
+  // settled state under reduced motion or before the observer fires, so the section
+  // is fully readable with JavaScript disabled or if it never enters the viewport.
   const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.6,
-        staggerChildren: 0.2
-      }
-    }
+    hidden: reduceMotion ? settled : { opacity: 0 },
+    visible: { opacity: 1, transition: { duration: 0.6, staggerChildren: 0.12 } }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 }
-    }
+    hidden: reduceMotion ? settled : rise,
+    visible: { ...settled, transition: enter() }
   };
 
   return (

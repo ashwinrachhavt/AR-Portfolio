@@ -2,7 +2,6 @@ import { z } from "zod";
 import { buildRoleBrief, keywordCapabilities } from "./career-fit.mjs";
 import { createInMemoryWorkflowLimiter, readBoundedBody, isSameOriginBrowserRequest, PayloadTooLargeError } from "./workflow/handler.ts";
 import { interpretRole, type JevStage } from "./jev.ts";
-export { JEV_FREE_ACCESS_END, hasFreeJevPrice } from "./jev.ts";
 
 export const careerFitInput = z.object({
   jobTitle: z.string().trim().max(160).optional().default(""),
@@ -11,7 +10,7 @@ export const careerFitInput = z.object({
 
 const sharedLimiter = createInMemoryWorkflowLimiter({ maxRequests: 8, windowMs: 60 * 60_000, maxConcurrent: 2 });
 const reply = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
-const unavailable = "Live Jev is unavailable right now. Your text is still here; try again or explore an example.";
+const unavailable = "Live analysis is unavailable right now. Your text is still here; try again or explore an example.";
 
 // Only capability probabilities cross the provider boundary. Evidence and final
 // claims stay in code: role text -> typed signals -> catalog -> public brief.

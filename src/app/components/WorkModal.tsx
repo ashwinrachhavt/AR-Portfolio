@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { StructuredProject } from "@/data/projectsStructured";
 import styles from "./WorkModal.module.css";
 
@@ -13,6 +13,7 @@ interface WorkModalProps {
 }
 
 export default function WorkModal({ project, onClose }: WorkModalProps) {
+  const reduceMotion = useReducedMotion();
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -34,13 +35,15 @@ export default function WorkModal({ project, onClose }: WorkModalProps) {
   return (
     <AnimatePresence>
       <div className={styles.overlay} onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="work-modal-title">
+        {/* The spring is deliberate: a modal is the one surface where a heavier settle
+            reads as weight rather than lag, so it opts out of the shared curve. */}
         <motion.div
           className={styles.modal}
           onClick={(e) => e.stopPropagation()}
-          initial={{ opacity: 0, scale: 0.95, y: 24 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 24 }}
-          transition={{ type: "spring", damping: 26, stiffness: 320 }}
+          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95, y: 24 }}
+          animate={reduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
+          exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95, y: 24 }}
+          transition={reduceMotion ? { duration: 0 } : { type: "spring", damping: 26, stiffness: 320 }}
         >
           {/* Header */}
           <div className={styles.header}>

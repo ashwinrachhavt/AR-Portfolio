@@ -270,6 +270,24 @@
   max-height: 100%;
   object-fit: contain;
   transform-origin: center center;
+  transition: transform 0.18s ease-out;
+}
+
+/* Zoom, hover overlays and the modal fade are all decoration: under reduced motion
+   the same states apply instantly rather than animating into place. */
+@media (prefers-reduced-motion: reduce) {
+  .modalImg,
+  .hoverOverlay,
+  .actionBtn,
+  .zoomBtn,
+  .closeBtn {
+    transition: none;
+  }
+
+  .modalOverlay,
+  .hoverText {
+    animation: none;
+  }
 }
 
 .modalCaption {

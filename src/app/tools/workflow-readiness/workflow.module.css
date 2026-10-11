@@ -156,7 +156,9 @@
   .experiment p { font-size: 14px; }
   .contact { flex-direction: column; align-items: start; gap: 20px; }
 }
-@media (prefers-reduced-motion: reduce) { .spinner { animation: none; } }
+/* Slowed rather than stopped: a pending submit still needs to read as working, and a
+   3s rotation carries that without the vestibular hit of the full-speed spin. */
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 3s; } }
 @media print {
   @page { margin: 14mm; background: #fff; }
   :global(html):has(.brief), :global(body):has(.brief) { background: #fff !important; color: #111 !important; color-scheme: light; }

@@ -201,10 +201,7 @@ export default function ArchitectureDiagram({
                 src={svgSrc}
                 alt={title}
                 className={styles.modalImg}
-                style={{
-                  transform: `scale(${zoomLevel})`,
-                  transition: "transform 0.18s ease-out",
-                }}
+                style={{ transform: `scale(${zoomLevel})` }}
               />
             </div>
 

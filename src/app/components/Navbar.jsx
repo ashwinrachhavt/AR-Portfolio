@@ -18,9 +18,6 @@ export default function Navbar({ activeSection }) {
           <Link href="/blog" aria-current={activeSection === "writing" ? "page" : undefined}>
             Writing
           </Link>
-          <Link href="/#experiments" aria-current={activeSection === "tools" ? "page" : undefined}>
-            Lab
-          </Link>
           <Link href="/fit" aria-current={activeSection === "fit" ? "page" : undefined}>
             Career Fit
           </Link>
