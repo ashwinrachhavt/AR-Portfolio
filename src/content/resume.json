@@ -14,7 +14,7 @@
       "dates": "Jan 2026–Present",
       "context": "Early-stage mortgage technology startup · Internal and pilot workflows",
       "bullets": {
-        "architecture": "Re-architected Lois from one-off Ruby LLM calls into a LangGraph agentic system on Amazon Bedrock AgentCore for mortgage-document classification, lender-specific renaming, and policy validation.",
+        "architecture": "Built Lois, an agentic mortgage processor that made loan origination for business-purpose lenders automatic and accurate — dropping the cost to originate a loan from an average of $8K down to roughly the token costs of the LLM of their choice. Re-architected Lois from one-off Ruby LLM calls into a LangGraph agentic system on Amazon Bedrock AgentCore for mortgage-document classification, lender-specific renaming, and policy validation.",
         "surfaces": "Built agent-facing Rails APIs, borrower email intake, and an in-product conversational interface so users could handle loan documents and initiate agent actions in LoanOS.",
         "permissions": "Designed fail-closed authorization for Composio integrations: tenant/owner scoping, separate write/send/merge/archive permissions, reviewed tool allowlists, and execution-time checks that invalidate revoked access.",
         "integrations": "Connected CRM and document workflows across Google Drive, Box, Salesforce, HubSpot, Pipedrive, OneDrive, and SharePoint with fine-grained access controls and blocked delete actions.",
@@ -28,11 +28,11 @@
       "dates": "Feb 2024–Jan 2026",
       "context": "AI bookkeeping, banking infrastructure, and corporate-card underwriting",
       "bullets": {
-        "classify": "Joined as the first AI Product Engineer and led a three-engineer team from prototype to production on Classify AI; processed 50K+ transactions daily and reduced manual categorization by approximately 80%.",
+        "classify": "Joined as the first AI Product Engineer and led a three-engineer team from prototype to production on Classify AI; processed 50K+ transactions daily and reduced manual categorization by approximately 80%, taking customer churn from 30% down to 5% while MRR grew from $600K to $1.2M.",
         "retrieval": "Built retrieval-augmented classification with LangChain, Pinecone, Elasticsearch, Redis, Celery, and Django, combining transaction history, merchant enrichment, and custom charts of accounts.",
         "close": "Evolved bookkeeping from CSV upload to Plaid/Teller bank ingestion, OCR-supported statements, reconciliation, and QuickBooks push; helped reduce first-month close from 4+ months to approximately 2 weeks.",
         "banking": "Architected reusable Plaid/Teller infrastructure for account linking, encrypted token storage, token lifecycle management, webhooks, transaction synchronization, and normalized account data.",
-        "underwriting": "Built cash-based underwriting with 90-day bank data, daily-balance reconstruction, weekly recalculation, audit history, and manual overrides; supported $3M+ in credit for 50+ companies in approximately three months."
+        "underwriting": "Built cash-based underwriting with 90-day bank data, daily-balance reconstruction, weekly recalculation, audit history, and manual overrides; supported $3M+ in credit for 50+ companies in approximately three months, part of $15M+ in credit deployed in total."
       }
     },
     {

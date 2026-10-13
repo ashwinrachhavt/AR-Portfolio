@@ -106,7 +106,7 @@ export default function GurukulThesisPage() {
                   <h4>Explainable AI in education: Current trends, challenges, and opportunities</h4>
                   <p className={styles.paperAuthors}>A Rachha, M Seyam · IEEE SoutheastCon 2023, 232-239</p>
                   <p className={styles.paperExcerpt}>
-                    A comprehensive survey analyzing explainability mechanisms in educational AI systems, establishing transparency frameworks for pedagogical trust.
+                    A survey of explainability mechanisms in educational AI systems, and what transparency actually requires to earn a teacher&apos;s trust.
                   </p>
                 </div>
               </div>

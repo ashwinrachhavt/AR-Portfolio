@@ -20,7 +20,7 @@ export default function StoryPage() {
   return (
     <>
       <Navbar activeSection="story" />
-      <main className={styles.main}>
+      <main id="main" className={styles.main}>
         {/* Hero */}
         <section className={styles.heroSection}>
           <div className={styles.heroRow}>

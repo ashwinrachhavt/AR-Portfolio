@@ -1,23 +1,20 @@
 import Image from "next/image";
-import PortfolioIcon from "./PortfolioIcon";
 import styles from "../home.module.css";
 
 const HERO_COPY = {
   eyebrow: "AI Product Engineer",
   headline: "Ideas into products. Curiosity into work.",
   intro:
-    "I've built and scaled two AI product teams at Finally and Loan Labs, and I care about the whole journey: the idea, the design, and why someone chooses it.",
-  interests: ["AI", "startups", "fintech", "philosophy", "chess"],
+    "Hi, I'm Ashwin — an AI engineer with four years in the software industry, most recently as a founding AI engineer at Finally (series B) and LoanLabs (a16z speedrun).",
 };
 
 export default function HeroSection() {
   return (
-    <section id="about" className={styles.hero} aria-labelledby="hero-title">
+    <section id="top" className={styles.hero} aria-labelledby="hero-title">
       <div className={styles.heroContent}>
         <p className={styles.heroEyebrow}>{HERO_COPY.eyebrow}</p>
         <h1 id="hero-title">{HERO_COPY.headline}</h1>
         <p className={styles.intro}>{HERO_COPY.intro}</p>
-        <p className={styles.interests}>{HERO_COPY.interests.join(" · ")}</p>
 
         <div className={styles.ctaRow}>
           <a
@@ -27,7 +24,6 @@ export default function HeroSection() {
           >
             Download Résumé
           </a>
-          {/* 2 & 3: keep existing hrefs, secondary style */}
           <a className={styles.cta} href="#work">
             See what I&apos;ve built
           </a>
