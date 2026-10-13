@@ -181,9 +181,6 @@ importers:
       autoprefixer:
         specifier: 10.4.21
         version: 10.4.21(postcss@8.5.6)
-      classnames:
-        specifier: ^2.5.1
-        version: 2.5.1
       eve:
         specifier: ^0.63.0
         version: 0.63.0(@opentelemetry/api@1.9.0)(ai@7.0.107(zod@4.6.5))
@@ -1478,9 +1475,6 @@ packages:
     engines: {node: '>=20.19.0 <22.0.0 || >=22.12.0'}
     peerDependencies:
       devtools-protocol: '*'
-
-  classnames@2.5.1:
-    resolution: {integrity: sha512-saHYOzhIQs6wy2sVxTM6bUDsQO4F50V9RQ22qBpEdCW+I+/Wmke2HOl6lS6dTpdxVhb88/I6+Hs+438c3lfUow==}
 
   client-only@0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
@@ -4390,8 +4384,6 @@ snapshots:
       devtools-protocol: 0.0.1687809
       mitt: 3.0.1
       zod: 3.25.76
-
-  classnames@2.5.1: {}
 
   client-only@0.0.1: {}
 
