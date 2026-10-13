@@ -1,5 +1,5 @@
-import Link from "next/link";
 import HeroSection from "./components/HeroSection";
+import AboutSection from "./components/AboutSection";
 import Navbar from "./components/Navbar";
 import CapabilityCards from "./components/CapabilityCards";
 import ExperienceSection from "./components/ExperienceSection";
@@ -21,19 +21,22 @@ export default function Home() {
         {/* 1. Profile Intro (Hero) */}
         <HeroSection />
 
-        {/* 2. Professional Experience */}
+        {/* 2. About: the story and the numbers */}
+        <AboutSection />
+
+        {/* 3. Professional Experience */}
         <ExperienceSection />
 
-        {/* 3. Featured Projects */}
+        {/* 4. Featured Projects */}
         <ProjectsSection />
 
-        {/* 4. How I Think & Build */}
+        {/* 5. How I Think & Build */}
         <CapabilityCards />
 
-        {/* 5. Newsletter Invite */}
+        {/* 6. Newsletter Invite */}
         <NewsletterInvite newsletter={newsletterSubscription()} />
 
-        {/* 6. Contact ("Let's work together") */}
+        {/* 7. Contact ("Let's work together") */}
         <EmailSection />
       </main>
       <Footer />
