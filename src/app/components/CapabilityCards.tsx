@@ -35,7 +35,7 @@ const CAPABILITIES: Capability[] = [
     id: "engineering",
     number: "01",
     title: "Engineering",
-    tagline: "Production apps, resilient APIs, agentic orchestration, and CI/CD that ships.",
+    tagline: "Production apps, resilient APIs, agent pipelines, and CI/CD that ships.",
     skills: ["LangGraph", "Bedrock AgentCore", "Django", "FastAPI", "Rails", "Next.js", "Docker", "Kubernetes"],
     setupHighlight: "Spec-first planning in Claude Code; every change ships behind tests and PR review.",
     claudeCodexSetup: {
@@ -299,7 +299,7 @@ export default function CapabilityCards() {
           </h2>
         </div>
         <p className={styles.subtitle}>
-          Click any discipline to inspect what I use with my Claude Code & Codex setup, my engineering workflows, and direct backlinks to my work.
+          Click any card to see how I work, the workflows I run, and the work that came out of it.
         </p>
       </div>
 
@@ -323,7 +323,7 @@ export default function CapabilityCards() {
           >
             <div className={styles.cardTop}>
               <span className={styles.cardNumber}>{cap.number}</span>
-              <span className={styles.inspectHint}>Inspect setup ↗</span>
+              <span className={styles.inspectHint}>How I work ↗</span>
             </div>
 
             <h3 className={styles.cardTitle}>{cap.title}</h3>
@@ -364,10 +364,10 @@ export default function CapabilityCards() {
               <div className={styles.modalHeader}>
                 <div>
                   <div className={styles.modalEyebrow}>
-                    <span>DISCIPLINE {selectedCapability.number}</span> · CLAUDE CODE & CODEX SETUP
+                    {selectedCapability.title}
                   </div>
                   <h3 id="modal-cap-title" className={styles.modalTitle}>
-                    {selectedCapability.title} Architecture
+                    How I work
                   </h3>
                 </div>
                 <button
@@ -383,13 +383,13 @@ export default function CapabilityCards() {
               <div className={styles.modalBody}>
                 {/* Overview Box */}
                 <div className={styles.overviewBox}>
-                  <h4>System Methodology</h4>
+                  <h4>The setup</h4>
                   <p>{selectedCapability.claudeCodexSetup.overview}</p>
                 </div>
 
                 {/* Workflows */}
                 <div className={styles.sectionBlock}>
-                  <h4>Claude Code & Codex Workflows</h4>
+                  <h4>Workflows</h4>
                   <div className={styles.workflowGrid}>
                     {selectedCapability.claudeCodexSetup.workflows.map((wf) => (
                       <div key={wf.name} className={styles.workflowCard}>
@@ -407,7 +407,7 @@ export default function CapabilityCards() {
 
                 {/* Core Principles */}
                 <div className={styles.sectionBlock}>
-                  <h4>Core Operational Invariants</h4>
+                  <h4>What I hold to</h4>
                   <ul className={styles.principlesList}>
                     {selectedCapability.claudeCodexSetup.principles.map((pr, i) => (
                       <li key={i}>{pr}</li>
@@ -417,9 +417,9 @@ export default function CapabilityCards() {
 
                 {/* Backlinks & Interconnectivity */}
                 <div className={styles.sectionBlock}>
-                  <h4>Connected Work & Backlinks</h4>
+                  <h4>Where this shows up in my work</h4>
                   <p className={styles.backlinksNote}>
-                    Cross-references between codebases, active projects, technical deep dives, and academic research:
+                    Projects, deep dives, and research that use this:
                   </p>
                   <div className={styles.backlinksList}>
                     {selectedCapability.backlinks.map((link) => {
